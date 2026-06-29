@@ -1,427 +1,127 @@
-<!doctype html>
-<html class="no-js" lang="zxx">
-    <head>
-        <!-- Meta Tags -->
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="keywords" content="Site keywords here">
-		<meta name="description" content="">
-		<meta name='copyright' content=''>
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		
-		<!-- Title -->
-        <title>Coming Soon · Share Hubs Engineering</title>
-        <meta name="description" content="This feature is coming soon. Request a quote and our team will help you in the meantime.">
-		
-	<!-- Android Chrome Icons -->
-				<link rel="icon" type="image/png" href="/assets/img/favicon_io (1)/android-chrome-192x192.png" sizes="192x192">
-				<link rel="icon" type="image/png" href="/assets/img/favicon_io (1)/android-chrome-512x512.png" sizes="512x512">
-		
-				<!-- Apple Touch Icons -->
-				<link rel="icon" type="image/png" href="/assets/img/favicon_io (1)/apple-touch-icon.png">
-		
-				<!-- Favicons -->
-				<link rel="icon" type="image/x-icon" href="/assets/img/favicon_io (1)/favicon.ico">
-				<link rel="icon" type="image/png" href="/assets/img/favicon_io (1)/favicon-16x16.png" sizes="16x16">
-				<link rel="icon" type="image/png" href="/assets/img/favicon_io (1)/favicon-32x32.png" sizes="32x32">
-				
-		
-		<!-- Google Fonts -->
-		<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coming Soon · Share Hubs Engineering</title>
+  <meta name="description" content="This feature is coming soon. Request a quote and our team will help you in the meantime." />
+  <link rel="icon" href="/assets/img/share-hubs-engineering.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/design-system.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-body); }
+    body {
+      min-height: 100vh; display: flex; flex-direction: column;
+      background: radial-gradient(circle at 50% 0%, #1b0406 0%, #0a0a0a 55%, #000 100%);
+      color: var(--text-100); overflow-x: hidden;
+    }
+    /* slim header */
+    .cs-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px; border-bottom: 1px solid var(--ink-800);
+    }
+    .cs-header img { height: 44px; width: auto; }
+    .cs-nav { display: flex; gap: 26px; }
+    .cs-nav a { color: var(--text-300); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .18s; }
+    .cs-nav a:hover { color: var(--red-400); }
+    @media (max-width: 720px) { .cs-nav { display: none; } }
 
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-		<!-- Nice Select CSS -->
-		<link rel="stylesheet" href="/assets/css/nice-select.css">
-		<!-- Font Awesome CSS -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
-		<!-- icofont CSS -->
-        <link rel="stylesheet" href="/assets/css/icofont.css">
-		<!-- Slicknav -->
-		<link rel="stylesheet" href="/assets/css/slicknav.min.css">
-		<!-- Owl Carousel CSS -->
-        <link rel="stylesheet" href="/assets/css/owl-carousel.css">
-		<!-- Datepicker CSS -->
-		<link rel="stylesheet" href="/assets/css/datepicker.css">
-		<!-- Animate CSS -->
-        <link rel="stylesheet" href="/assets/css/animate.min.css">
-		<!-- Magnific Popup CSS -->
-        <link rel="stylesheet" href="/assets/css/magnific-popup.css">
-		
-		<!-- Medipro CSS -->
-        <link rel="stylesheet" href="/assets/css/normalize.css">
-        <link rel="stylesheet" href="/assets/style.css">
-        <link rel="stylesheet" href="/assets/css/responsive.css">
-		
-      <link rel="stylesheet" href="/css/design-system.css" />
+    /* hero */
+    .cs-main {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; padding: 60px 24px;
+      position: relative;
+    }
+    /* ambient gear accents */
+    .cs-gear {
+      position: absolute; opacity: 0.05; pointer-events: none;
+      animation: cs-spin 40s linear infinite;
+    }
+    .cs-gear.one { top: 10%; left: 8%; font-size: 180px; }
+    .cs-gear.two { bottom: 8%; right: 6%; font-size: 240px; animation-direction: reverse; }
+    @keyframes cs-spin { to { transform: rotate(360deg); } }
+
+    .cs-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--red-400); margin-bottom: 22px;
+    }
+    .cs-eyebrow::before, .cs-eyebrow::after { content: ""; width: 28px; height: 2px; background: var(--red-500); }
+    .cs-title {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(38px, 7vw, 72px); line-height: 1.02; letter-spacing: -.02em;
+      margin-bottom: 18px;
+    }
+    .cs-title .accent { color: var(--red-500); }
+    .cs-sub { max-width: 540px; color: var(--text-300); font-size: 16px; line-height: 1.6; margin-bottom: 16px; }
+    .cs-typed { min-height: 24px; color: var(--text-500); font-size: 14.5px; margin-bottom: 34px; }
+    .cs-typed .cursor { display: inline-block; width: 2px; background: var(--red-500); margin-left: 2px; animation: cs-blink 1s steps(1) infinite; }
+    @keyframes cs-blink { 50% { opacity: 0; } }
+    .cs-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+    /* progress bar flourish */
+    .cs-progress { width: min(420px, 80vw); height: 6px; background: var(--ink-800); border-radius: 99px; margin: 38px auto 0; overflow: hidden; }
+    .cs-progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--red-600), var(--red-400)); border-radius: 99px; animation: cs-fill 2.4s ease forwards; }
+    @keyframes cs-fill { to { width: 72%; } }
+
+    .cs-footer { padding: 20px; text-align: center; color: var(--text-700); font-size: 13px; border-top: 1px solid var(--ink-800); }
+    @media (prefers-reduced-motion: reduce) { .cs-gear, .cs-progress span { animation: none; } }
+  </style>
 </head>
-    <body class="sh">
-	
-		<!-- Preloader -->
-        <div class="preloader">
-            <div class="loader">
-                <div class="loader-outter"></div>
-                <div class="loader-inner"></div>
+<body class="sh">
+  <header class="cs-header">
+    <a href="/"><img src="/assets/img/share-hubs-engineering.png" alt="Share Hubs Engineering" /></a>
+    <nav class="cs-nav">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/agriculture">Agriculture</a>
+      <a href="/automobile">Automobile</a>
+      <a href="/medicine">Medical</a>
+      <a href="/oil-and-gas">Oil &amp; Gas</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
 
-                <div class="indicator"> 
-                    <svg width="16px" height="12px">
-                        <polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
-                        <polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        <!-- End Preloader -->
-		
-		
-	
-		<!-- Header Area -->
-		<header class="header" >
-			
-			<!-- Header Inner -->
-			<div class="header-inner">
-				<div class="container">
-					<div class="inner">
-						<div class="row">
-							<div class="col-lg-3 col-md-3 col-12">
-								<!-- Start Logo -->
-								<div class="logo">
-									<a href="/"><img src="/assets/img/resized_logo.png" alt="#"></a>
-								</div>
-								<!-- End Logo -->
-								<!-- Mobile Nav -->
-								<div class="mobile-nav"></div>
-								<!-- End Mobile Nav -->
-							</div>
-							<div class="col-lg-7 col-md-9 col-12">
-								<!-- Main Menu -->
-								<div class="main-menu">
-									<nav class="navigation">
-										<ul class="nav menu">
-											<li><a href="/agriculture">Agriculture</a>
-												<!-- <ul class="dropdown">
-													<li><a href="/">Home Page 1</a></li>
-												</ul> -->
-											</li>
-											<li><a href="/automobile">Automobile</a></li>
-											<li><a href="/medicine">Medical Solutions </a></li>
-											<!-- <li><a href="#">Pages <i class="icofont-rounded-down"></i></a>
-												<ul class="dropdown">
-													<li><a href="/coming-soon">404 Error</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Blogs <i class="icofont-rounded-down"></i></a>
-												<ul class="dropdown">
-													<li><a href="/coming-soon">Blog Details</a></li>
-												</ul> -->
-											</li>
-											<li><a href="/oil-and-gas">Oil and Gas</a></li>
-											<li><a href="/home-and-office">Home and Offices</a></li>
-										</ul>
-									</nav>
-								</div>
-								<!--/ End Main Menu -->
-							</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--/ End Header Inner -->
-		</header>
-		<!-- End Header Area -->
-		
-		
-		<!-- Error Page -->
-		<section class="error-page section">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-6 offset-lg-3 col-12">
-						<!-- 404 Page Content -->
-<!-- 404 Page Content -->
-<section class="coming-soon text-center">
+  <main class="cs-main">
+    <i class="bx bx-cog cs-gear one"></i>
+    <i class="bx bx-cog cs-gear two"></i>
 
-	 <!-- Animated Picture -->
-  <div class="coming-image">
-    <img loading="lazy" decoding="async" src="/assets/img/COMING_SOON-removebg-preview.png" alt="Coming Soon" class="animated-img">
-  </div>
+    <span class="cs-eyebrow">In the workshop</span>
+    <h1 class="cs-title">Coming <span class="accent">Soon</span></h1>
+    <p class="cs-sub">We're engineering this part of the experience. It'll be worth the wait.</p>
+    <p class="cs-typed"><span id="typed"></span><span class="cursor">&nbsp;</span></p>
 
-  <h1 class="coming-title"><span id="coming-title"></span><span class="cursor"></span></h1>
-  <p class="coming-text"><span id="coming-text"></span><span class="cursor"></span></p>
-  <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-    <a href="/request-quote" class="sh-btn sh-btn--primary">Request a Quote</a>
-    <a href="/" class="sh-btn sh-btn--ghost">Back to Home</a>
-  </div>
-</section>
+    <div class="cs-actions">
+      <a href="/request-quote" class="sh-btn sh-btn--primary">Request a Quote</a>
+      <a href="/" class="sh-btn sh-btn--ghost">Back to Home</a>
+    </div>
 
+    <div class="cs-progress"><span></span></div>
+  </main>
 
-<script>
-  const titleText = "Coming Soon!";
-  const bodyText = "We are working very hard to complete it as soon as possible, stay tuned for more updates!";
+  <footer class="cs-footer">© <span id="yr"></span> Share Hubs Engineering. All rights reserved.</footer>
 
-  function typeEffect(element, text, delay = 0, speed = 50) {
-    setTimeout(() => {
-      let i = 0;
-      function type() {
-        if (i < text.length) {
-          element.textContent += text.charAt(i);
-          i++;
-          // Faster for spaces
-          setTimeout(type, text.charAt(i - 1) === " " ? speed / 3 : speed);
-        }
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    // typing effect
+    const lines = ["Building something useful…", "Refining the details…", "Almost ready for you."];
+    const el = document.getElementById('typed');
+    let li = 0, ci = 0, deleting = false;
+    function tick() {
+      const line = lines[li];
+      if (!deleting) {
+        el.textContent = line.slice(0, ++ci);
+        if (ci === line.length) { deleting = true; return setTimeout(tick, 1600); }
+      } else {
+        el.textContent = line.slice(0, --ci);
+        if (ci === 0) { deleting = false; li = (li + 1) % lines.length; }
       }
-      type();
-    }, delay);
-  }
-
-  const titleEl = document.getElementById("coming-title");
-  const bodyEl = document.getElementById("coming-text");
-
-  typeEffect(titleEl, titleText, 500, 120); // Title slower
-  typeEffect(bodyEl, bodyText, 2500, 60);   // Body smoother
-</script>
-
-
-					</div>
-				</div>
-			</div>
-		</section>	
-		<!--/ End Error Page -->
-		<!-- Footer Area -->
-		<footer id="footer" class="footer ">
-			<!-- Footer Top -->
-			<div class="footer-top">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-3 col-md-6 col-12">
-							<div class="single-footer">
-								<h2>About Us</h2>
-								<p>We are an innovative engineering company delivering cutting-edge solutions in research, design and development, sales of engineering products and manufacturing of machine component, equipment and tools.</p>
-								<!-- Social -->
-								<ul class="social">
-									<li><a href="#"><i class="icofont-facebook"></i></a></li>
-									<li><a href="#"><i class="icofont-google-plus"></i></a></li>
-									<li><a href="#"><i class="icofont-twitter"></i></a></li>
-									<li><a href="#"><i class="icofont-vimeo"></i></a></li>
-									<li><a href="#"><i class="icofont-pinterest"></i></a></li>
-								</ul>
-								<!-- End Social -->
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-6 col-12">
-							<div class="single-footer f-link">
-								<h2>Quick Links</h2>
-								<div class="row">
-									<div class="col-lg-6 col-md-6 col-12">
-										<ul>
-											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Home</a></li>
-											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Contact</a></li>
-											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services</a></li>
-	
-										</ul>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<ul>
-											<li><a href="store.html"><i class="fa fa-caret-right" aria-hidden="true"></i>Consulting</a></li>
-											<li><a href="agric.html"><i class="fa fa-caret-right" aria-hidden="true"></i>Finance</a></li>
-											<li><a  href="javascript:void(0);" onclick="showPopup()"><i class="fa fa-caret-right" aria-hidden="true" ></i>Logout</a></li>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-6 col-12">
-							<div class="single-footer">
-								<h2>Open Hours</h2>
-								<p>Our office is open Monday to Friday, 8:00 AM to 5:00 PM, providing prompt and reliable services.</p>
-								<ul class="time-sidual">
-									<li class="day">Monday - Friday <span>8am - 5pm</span></li>
-									<li class="day">Saturday<span>1pm - 5pm</span>(Limited Services)</li>
-									<li class="day">Sunday <span>Closed</span></li>
-								</ul>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-6 col-12">
-							<div class="single-footer">
-								<h2>Newsletter</h2>
-								<p>Subscribe to our newsletter to get allour news in your inbox.</p>
-								<form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-									<input name="email" placeholder="Email Address" class="common-input" onfocus="this.placeholder = ''"
-										onblur="this.placeholder = 'Your email address'" required="" type="email">
-									<button class="button"><i class="icofont icofont-paper-plane"></i></button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--/ End Footer Top -->
-			<!-- Copyright -->
-			<div class="copyright">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12 col-md-12 col-12">
-							<div class="copyright-content">
-								<p>© Copyright 2025 |  All Rights Reserved by <a href="" target="_blank">Share Hubs Engineering</a> </p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--/ End Copyright -->
-		</footer>
-		<!--/ End Footer Area -->
-
-
-		<!-- Overlay -->
-<div id="overlay"></div>
-
-<!-- Popup Container -->
-<div id="popupMessage" class="popup">
-    <div class="popup-content">
-        <p>Are you sure you want to logout?</p>
-        <button class="confirm-btn" onclick="logout()">Yes</button>
-        <button class="cancel-btn" onclick="closePopup()">No</button>
-    </div>
-</div>
-
-<!-- Timed Tip Modal -->
-<div id="timedPopup" class="popup">
-    <div class="popup-content">
-        <p>Don't forget to check our Products!</p>
-        <button class="cancel-btn" onclick="closeTimedPopup()">Close</button>
-    </div>
-</div>
-
-
-
-		<script>
-
-
-
-			document.addEventListener("DOMContentLoaded", function () {
-				const profileIcon = document.querySelector(".profile-icon");
-				const profileMenu = document.querySelector(".profile-menu");
-				if (!profileIcon || !profileMenu) return;
-			
-				profileIcon.addEventListener("click", function () {
-					profileMenu.classList.toggle("active");
-				});
-			
-				// Close menu when clicking outside
-				document.addEventListener("click", function (event) {
-					if (!profileIcon.contains(event.target) && !profileMenu.contains(event.target)) {
-						profileMenu.classList.remove("active");
-					}
-				});
-			});
-			
-			
-			
-	 		
-	 // Show timed modal every 2 minutes
-  function showTimedPopup() {
-    document.getElementById("timedPopup").classList.add("show");
-    document.getElementById("timedPopup").style.display = "block";
-    document.getElementById("overlay").style.display = "block";
-  }
-
-  function closeTimedPopup() {
-    document.getElementById("timedPopup").classList.remove("show");
-    setTimeout(() => {
-      document.getElementById("timedPopup").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
-    }, 200);
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    showTimedPopup(); // First popup after 30 seconds
-    setInterval(showTimedPopup, 300000); // Then every 5 minutes (300,000 ms)
-  }, 30000); // 30,000 ms = 30 seconds
-});	
-			
-					// Function to show the popup
-			function showPopup() {
-				document.getElementById("popupMessage").classList.add("show");
-				document.getElementById("popupMessage").style.display = "block"; // Ensure it appears
-				document.getElementById("overlay").style.display = "block"; // Show blurred background
-			}
-			
-			// Function to close the popup
-			function closePopup() {
-				document.getElementById("popupMessage").classList.remove("show");
-				setTimeout(() => {
-					document.getElementById("popupMessage").style.display = "none"; // Hide after animation
-					document.getElementById("overlay").style.display = "none";
-				}, 200); // Delay to match the transition effect
-			}
-
-			function logout() {
-		// Show preloader
-		const preloader = document.getElementById('preloader');
-		if (preloader) {
-			preloader.style.display = 'block';
-		}
-
-		// Add a short pause to let the animation play, then redirect
-		setTimeout(() => {
-			fetch('/logout')
-				.then(() => {
-					window.location.href = '/'; // go to login
-				})
-				.catch(err => {
-					console.error('Logout failed:', err);
-					if (preloader) preloader.style.display = 'none'; // fallback
-				});
-		}, 500); // Adjust if you want it slightly slower/faster
-	}
-					</script>
-		
-			
-		
-		
-		<!-- jquery Min JS -->
-        <script src="/js/jquery.min.js" defer></script>
-		<!-- jquery Migrate JS -->
-		<script src="/js/jquery-migrate-3.0.0.js" defer></script>
-		<!-- jquery Ui JS -->
-		<script src="/js/jquery-ui.min.js" defer></script>
-		<!-- Easing JS -->
-        <script src="/js/easing.js" defer></script>
-		<!-- Color JS -->
-		<script src="/js/colors.js" defer></script>
-		<!-- Popper JS -->
-		<script src="/js/popper.min.js" defer></script>
-		<!-- Bootstrap Datepicker JS -->
-		<script src="/js/bootstrap-datepicker.js" defer></script>
-		<!-- Jquery Nav JS -->
-        <script src="/js/jquery.nav.js" defer></script>
-		<!-- Slicknav JS -->
-		<script src="/js/slicknav.min.js" defer></script>
-		<!-- ScrollUp JS -->
-        <script src="/js/jquery.scrollUp.min.js" defer></script>
-		<!-- Niceselect JS -->
-		<script src="/js/niceselect.js" defer></script>
-		<!-- Tilt Jquery JS -->
-		<script src="/js/tilt.jquery.min.js" defer></script>
-		<!-- Owl Carousel JS -->
-        <script src="/js/owl-carousel.js" defer></script>
-		<!-- counterup JS -->
-		<script src="/js/jquery.counterup.min.js" defer></script>
-		<!-- Steller JS -->
-		<script src="/js/steller.js" defer></script>
-		<!-- Wow JS -->
-		<script src="/js/wow.min.js" defer></script>
-		<!-- Magnific Popup JS -->
-		<script src="/js/jquery.magnific-popup.min.js" defer></script>
-		<!-- Counter Up CDN JS -->
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-		<!-- Bootstrap JS -->
-		<script src="/js/bootstrap.min.js" defer></script>
-		<!-- Main JS -->
-		<script src="/js/main.js" defer></script>
-      <script src="/js/header-auth.js" defer></script>
+      setTimeout(tick, deleting ? 30 : 55);
+    }
+    tick();
+  </script>
 </body>
 </html>
