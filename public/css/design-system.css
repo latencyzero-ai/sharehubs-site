@@ -1,0 +1,317 @@
+/* =====================================================================
+   SHARE HUBS ENGINEERING — Design System
+   One source of truth. Imported by every page. Derived from the
+   quote-page aesthetic: dark crimson/black, Sora + Poppins.
+   ===================================================================== */
+
+:root {
+  /* Ink scale */
+  --ink-950: #0a0a0a;
+  --ink-900: #121212;
+  --ink-850: #161616;
+  --ink-800: #1a1a1a;
+  --ink-700: #242424;
+  --ink-600: #2e2e2e;
+
+  /* Brand crimson */
+  --red-700: #a30f1a;
+  --red-600: #c41320;
+  --red-500: #e11d2a;
+  --red-400: #f0434f;
+  --red-glow: rgba(225, 29, 42, 0.18);
+
+  /* Text */
+  --text-100: #f5f5f5;
+  --text-200: #e2e2e2;
+  --text-300: #c9c9c9;
+  --text-500: #9a9a9a;
+  --text-700: #6a6a6a;
+
+  /* Status */
+  --ok: #2ecc71;
+  --err: #ff5b6a;
+
+  /* Geometry */
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 22px;
+
+  --shadow-sm: 0 4px 14px -4px rgba(0, 0, 0, 0.5);
+  --shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.04);
+
+  /* Type */
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-body: "Poppins", system-ui, sans-serif;
+
+  /* Motion */
+  --t-fast: 0.18s ease;
+  --t-mid: 0.3s ease;
+
+  /* Layout */
+  --container: 1200px;
+  --gutter: 24px;
+}
+
+/* ---------- Reset-ish ---------- */
+.sh * { box-sizing: border-box; }
+
+/* ---------- Buttons ---------- */
+.sh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 26px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+  line-height: 1;
+}
+.sh-btn--primary { background: var(--red-500); color: #fff; }
+.sh-btn--primary:hover { background: var(--red-600); box-shadow: 0 8px 24px -6px var(--red-glow); }
+.sh-btn--primary:active { transform: translateY(1px); }
+.sh-btn--ghost { background: transparent; color: var(--text-100); border: 1.5px solid var(--ink-600); }
+.sh-btn--ghost:hover { border-color: var(--red-500); color: #fff; }
+.sh-btn:focus-visible { outline: 2px solid var(--red-400); outline-offset: 2px; }
+
+/* ---------- Cards ---------- */
+.sh-card {
+  background: var(--ink-900);
+  border: 1px solid var(--ink-700);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--t-mid), border-color var(--t-mid);
+}
+.sh-card--accent { border-left: 3px solid var(--red-500); }
+.sh-card--hover:hover { transform: translateY(-4px); border-color: var(--red-500); }
+
+/* ---------- Eyebrow / section labels ---------- */
+.sh-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red-400);
+}
+.sh-eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: var(--red-500);
+}
+
+/* ---------- Form fields ---------- */
+.sh-field { margin-bottom: 18px; }
+.sh-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-300);
+  margin-bottom: 7px;
+  font-family: var(--font-body);
+}
+.sh-input,
+.sh-select,
+.sh-textarea {
+  width: 100%;
+  padding: 13px 15px;
+  background: var(--ink-800);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-100);
+  font-size: 15px;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color var(--t-fast), background var(--t-fast);
+}
+.sh-input::placeholder, .sh-textarea::placeholder { color: var(--text-500); }
+.sh-input:focus, .sh-select:focus, .sh-textarea:focus {
+  border-color: var(--red-500);
+  background: var(--ink-700);
+}
+.sh-input:focus-visible { outline: 2px solid var(--red-400); outline-offset: 1px; }
+.sh-textarea { resize: vertical; min-height: 110px; }
+.sh-field-error { display: block; min-height: 15px; margin-top: 5px; font-size: 12px; color: var(--err); }
+.sh-field--invalid .sh-input,
+.sh-field--invalid .sh-textarea { border-color: var(--err); }
+
+/* ---------- Toast ---------- */
+.sh-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-24px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 280px;
+  max-width: 90vw;
+  padding: 14px 18px;
+  background: var(--ink-800);
+  border: 1px solid var(--ink-700);
+  border-left: 4px solid var(--red-500);
+  border-radius: 12px;
+  color: var(--text-100);
+  font-size: 14px;
+  font-family: var(--font-body);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-fast), transform var(--t-fast);
+  z-index: 2000;
+}
+.sh-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.sh-toast--ok { border-left-color: var(--ok); }
+.sh-toast--err { border-left-color: var(--err); }
+
+/* ---------- Modal / prompt ---------- */
+.sh-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(3px);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px; z-index: 9999;
+}
+.sh-modal-overlay.show { display: flex; }
+.sh-modal {
+  background: var(--ink-900);
+  color: var(--text-100);
+  border: 1px solid var(--ink-700);
+  border-radius: var(--radius-lg);
+  max-width: 420px; width: 100%;
+  padding: 34px 30px; text-align: center;
+  box-shadow: var(--shadow);
+  font-family: var(--font-body);
+  position: relative;
+  animation: sh-pop 0.25s ease;
+}
+@keyframes sh-pop { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sh-modal h3 { font-family: var(--font-display); font-size: 21px; margin: 0 0 8px; font-weight: 700; }
+.sh-modal p { font-size: 14.5px; color: var(--text-300); line-height: 1.55; margin: 0 0 22px; }
+
+/* ---------- Utilities ---------- */
+.sh-container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+.sh-spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: sh-spin 0.7s linear infinite;
+}
+@keyframes sh-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* =====================================================================
+   TEMPLATE HARMONISATION
+   Overrides that bring the existing Mediplus template classes into the
+   design system — applied site-wide so every page is in unison.
+   ===================================================================== */
+
+/* Section headings — fix low-contrast dim grey (accessibility + polish) */
+.section-title h2,
+.appointment .title h2,
+.schedule .title h2 {
+  color: var(--text-100) !important;
+}
+.section-title p,
+.appointment .title p {
+  color: var(--text-300) !important;
+}
+
+/* Homepage appointment form — unify to the dark card style */
+.appointment .form .form-group input,
+.appointment .form .form-group textarea,
+.appointment .form .form-group .nice-select,
+.appointment .form .form-group select {
+  background: var(--ink-800) !important;
+  border: 1.5px solid var(--ink-700) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-100) !important;
+}
+.appointment .form .form-group input::placeholder,
+.appointment .form .form-group textarea::placeholder {
+  color: var(--text-500) !important;
+}
+.appointment .form .form-group input:focus,
+.appointment .form .form-group textarea:focus,
+.appointment .form .form-group select:focus {
+  border-color: var(--red-500) !important;
+  background: var(--ink-700) !important;
+  outline: none;
+}
+.appointment .form .nice-select .list {
+  background: var(--ink-800) !important;
+  border: 1px solid var(--ink-700) !important;
+}
+.appointment .form .nice-select .option:hover,
+.appointment .form .nice-select .option.selected {
+  background: var(--ink-700) !important;
+}
+
+/* Newsletter input harmonisation */
+.subscribe .form-inner input,
+.newsletter input {
+  background: var(--ink-800) !important;
+  border: 1.5px solid var(--ink-700) !important;
+  color: var(--text-100) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* Buttons across template → brand crimson, consistent radius */
+.btn, .button .btn, .appointment .form .button .btn {
+  border-radius: var(--radius-sm) !important;
+}
+
+/* Schedule cards (Projects / Book Appointment / Manufacturing) hover polish */
+.schedule .single-schedule:hover {
+  transform: translateY(-4px);
+  transition: transform var(--t-mid);
+}
+
+/* Focus visibility site-wide (accessibility / Lighthouse) */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--red-400);
+  outline-offset: 2px;
+}
+
+/* Service section icons + headings consistency */
+.single-service .icon i { color: var(--red-500) !important; }
+
+/* Contact page form harmonisation */
+.contact-us .form .form-group input,
+.contact-us .form .form-group textarea,
+.contact .form input,
+.contact .form textarea,
+.form-main input,
+.form-main textarea {
+  background: var(--ink-800) !important;
+  border: 1.5px solid var(--ink-700) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-100) !important;
+}
+.contact-us .form input::placeholder,
+.contact-us .form textarea::placeholder,
+.form-main input::placeholder,
+.form-main textarea::placeholder { color: var(--text-500) !important; }
+.contact-us .form input:focus,
+.contact-us .form textarea:focus,
+.form-main input:focus,
+.form-main textarea:focus { border-color: var(--red-500) !important; outline: none; }
+
+/* Contact section heading brightness */
+.contact-us .title h2,
+.contact-us .section-title h2,
+.contact .title h2 { color: var(--text-100) !important; }
+.contact-us .title p { color: var(--text-300) !important; }

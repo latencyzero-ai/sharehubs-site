@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request a Quote · Share Hubs Engineering</title>
+  <meta name="description" content="Tell us about your project and get a tailored quote from Share Hubs Engineering." />
+  <link rel="icon" href="/img/share hubs engineering.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+    body{background:radial-gradient(circle at 30% 15%,#1b0406 0%,#0a0a0a 55%,#000 100%);
+      color:#f5f5f5;min-height:100vh;padding:40px 20px}
+    .wrap{max-width:640px;margin:0 auto}
+    .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+    .top a{color:#c9c9c9;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+    .top a:hover{color:#fff}
+    .card{background:#121212;border:1px solid #242424;border-radius:20px;padding:40px;
+      box-shadow:0 24px 60px -12px rgba(0,0,0,.6)}
+    h1{font-family:'Sora',sans-serif;font-size:28px;letter-spacing:-.02em;margin-bottom:8px}
+    .sub{color:#9a9a9a;font-size:14.5px;line-height:1.55;margin-bottom:28px}
+    label{display:block;font-size:13px;color:#c9c9c9;margin:0 0 7px;font-weight:500}
+    .field{margin-bottom:18px}
+    input,select,textarea{width:100%;padding:13px 15px;background:#1a1a1a;
+      border:1.5px solid transparent;border-radius:9px;color:#f5f5f5;font-size:15px;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:#e11d2a;background:#242424}
+    textarea{resize:vertical;min-height:110px}
+    .btn{width:100%;background:#e11d2a;color:#fff;border:none;padding:14px;border-radius:9px;
+      font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px}
+    .btn:hover{background:#c41320}
+    .hint{font-size:12.5px;color:#777;text-align:center;margin-top:14px}
+    .hint a{color:#e11d2a;text-decoration:none}
+    .saved-tag{font-size:12px;color:#2ecc71;display:none;margin-top:8px}
+    .saved-tag.show{display:block}
+    .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-20px);
+      background:#1a1a1a;border:1px solid #242424;border-left:4px solid #2ecc71;
+      border-radius:11px;padding:13px 18px;font-size:14px;opacity:0;pointer-events:none;
+      transition:.2s;z-index:9998}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
+  <link rel="stylesheet" href="/css/design-system.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a href="/"><i class='bx bx-arrow-back'></i> Back to site</a>
+      <a href="/become-partner">Become a partner instead →</a>
+    </div>
+    <div class="card">
+      <h1>Request a quote</h1>
+      <p class="sub">Tell us about your project. No account needed to start —
+        we'll only ask you to sign up when you're ready to send, so we can keep
+        you updated on our response.</p>
+
+      <form id="quoteForm" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" placeholder="Full name" required />
+        </div>
+        <div class="field">
+          <label for="company">Company (optional)</label>
+          <input id="company" name="company" placeholder="Company name" />
+        </div>
+        <div class="field">
+          <label for="sector">Sector</label>
+          <select id="sector" name="sector">
+            <option value="">Select a sector</option>
+            <option>Agriculture</option>
+            <option>Automobile</option>
+            <option>Medicine</option>
+            <option>Oil &amp; Gas</option>
+            <option>Home &amp; Office</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="details">Project details</label>
+          <textarea id="details" name="details" placeholder="Briefly describe what you need…" required></textarea>
+        </div>
+        <button type="submit" class="btn"><i class='bx bx-send'></i> Send request</button>
+        <p class="saved-tag" id="savedTag"><i class='bx bx-check'></i> Draft saved — it'll be here when you sign in.</p>
+        <p class="hint">Already have an account? <a href="/login?next=/request-quote">Sign in</a></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/js/signup-hook.js" defer></script>
+  <script>
+    const form = document.getElementById('quoteForm');
+    const DRAFT_KEY = 'sh_quote_draft';
+
+    // Restore a draft a returning/just-signed-up user left behind (in-memory + URL only;
+    // no localStorage dependency — we keep it on the page object).
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = Object.fromEntries(new FormData(form).entries());
+      if (!payload.name || !payload.details) {
+        showToast('Please add your name and project details.', false);
+        return;
+      }
+      try {
+        const res = await fetch('/request-quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload),
+        });
+        if (res.status === 401) {
+          // Guest — show the soft prompt instead of blocking.
+          document.getElementById('savedTag').classList.add('show');
+          window.SHPrompt.open({
+            title: 'One quick step',
+            body: "Create a free account to send this quote and track our reply. Your details are saved — you won't lose them.",
+            next: '/request-quote',
+          });
+          return;
+        }
+        const data = await res.json();
+        if (res.ok) {
+          showToast(data.message, true);
+          form.reset();
+        } else {
+          showToast(data.error || 'Something went wrong.', false);
+        }
+      } catch {
+        showToast('Network error. Please try again.', false);
+      }
+    });
+
+    function showToast(msg, ok) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.borderLeftColor = ok ? '#2ecc71' : '#ff5b6a';
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 4000);
+    }
+  </script>
+</body>
+</html>
