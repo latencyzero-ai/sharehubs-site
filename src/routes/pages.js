@@ -44,7 +44,7 @@ for (const [route, file] of Object.entries(publicPages)) {
 
 // --- GATED ACTION PAGES (guest can view & start; submit needs auth) ---
 router.get('/request-quote', send('request-quote.html'));
-router.get('/become-partner', send('supplier.html'));
+router.get('/become-partner', send('coming_soon.html'));
 
 // Genuinely private area
 router.get('/profile', protect, send('profile.html'));
