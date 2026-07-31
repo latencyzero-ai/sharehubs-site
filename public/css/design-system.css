@@ -329,12 +329,12 @@ select:focus-visible, textarea:focus-visible {
 .header .logo a { display: inline-flex; align-items: center; }
 .header .logo img {
   width: auto !important;
-  height: 48px !important;       /* crisp, consistent header height */
-  max-width: 220px;
+  height: 80px !important;       /* crisp, consistent header height */
+  max-width: 260px;
   object-fit: contain;
 }
 @media (max-width: 768px) {
-  .header .logo img { height: 40px !important; }
+  .header .logo img { height: 60px !important; }
 }
 
 /* Modal close button */
@@ -343,4 +343,4 @@ select:focus-visible, textarea:focus-visible {
   background: none; border: none; color: var(--text-500);
   font-size: 24px; line-height: 1; cursor: pointer;
 }
-.sh-modal-close:hover { color: var(--text-100); }
+.sh-modal-close:hover { color: var(--text-100); } 
