@@ -320,11 +320,13 @@ select:focus-visible, textarea:focus-visible {
    LOGO — sizing & alignment
    ===================================================================== */
 .header .logo {
+  float: none !important;        /* legacy template floats this — floats are excluded from flex alignment, which was pinning the logo to the top instead of centering it with the rest of the row */
   width: auto !important;
   margin-top: 0 !important;
   display: flex;
   align-items: center;
   min-height: 56px;
+  align-self: center;
 }
 .header .logo a { display: inline-flex; align-items: center; }
 .header .logo img {
