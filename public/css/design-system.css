@@ -320,13 +320,13 @@ select:focus-visible, textarea:focus-visible {
    LOGO — sizing & alignment
    ===================================================================== */
 .header .logo {
-  float: none !important;        /* legacy template floats this — floats are excluded from flex alignment, which was pinning the logo to the top instead of centering it with the rest of the row */
+  float: none !important;        /* legacy template floats this, which stops it filling its column */
   width: auto !important;
   margin-top: 0 !important;
-  display: flex;
-  align-items: center;
+  height: 100%;                  /* fill the Bootstrap column, which is stretched to match the taller nav column (Bootstrap rows default to align-items: stretch, not center) */
   min-height: 56px;
-  align-self: center;
+  display: flex;
+  align-items: center;           /* now centers the logo within that full column height */
 }
 .header .logo a { display: inline-flex; align-items: center; }
 .header .logo img {
