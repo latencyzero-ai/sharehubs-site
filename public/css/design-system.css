@@ -319,14 +319,18 @@ select:focus-visible, textarea:focus-visible {
 /* =====================================================================
    LOGO — sizing & alignment
    ===================================================================== */
+.header-inner .col-lg-3 {
+  display: flex;                 /* logo + mobile-nav (hamburger) are siblings in this column — */
+  align-items: center;           /* lay them out side by side instead of stacked, both centered */
+  justify-content: space-between;
+}
 .header .logo {
-  float: none !important;        /* legacy template floats this, which stops it filling its column */
+  float: none !important;        /* legacy template floats this, which stops it centering properly */
   width: auto !important;
   margin-top: 0 !important;
-  height: 100%;                  /* fill the Bootstrap column, which is stretched to match the taller nav column (Bootstrap rows default to align-items: stretch, not center) */
   min-height: 56px;
   display: flex;
-  align-items: center;           /* now centers the logo within that full column height */
+  align-items: center;
 }
 .header .logo a { display: inline-flex; align-items: center; }
 .header .logo img {
