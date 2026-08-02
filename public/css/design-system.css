@@ -343,6 +343,19 @@ select:focus-visible, textarea:focus-visible {
   .header .logo img { height: 40px !important; }
 }
 
+/* Mobile hamburger (Slicknav) — fix hardcoded asymmetric 28px/6px top/bottom
+   margin baked into the vendor library, which was pushing the icon bars
+   off-center within their container */
+.header .slicknav_menu {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100%;
+}
+.header .slicknav_btn {
+  margin: 0 !important;
+}
+
 /* Modal close button */
 .sh-modal-close {
   position: absolute; top: 14px; right: 16px;
