@@ -363,11 +363,16 @@ select:focus-visible, textarea:focus-visible {
   width: auto !important;
   margin: 0 !important;           /* Slicknav's own CSS has margin-top:60px, meant for its original
                                       normal-flow layout — leftover here, it just creates a gap */
-  min-height: 100vh;              /* cover the rest of the page while open, not just its own content
-                                      height — otherwise hero text/image peek in above and below it */
   background: var(--ink-900) !important;  /* was fully transparent — hero slider (z-index:1) was */
   z-index: 500 !important;                /* showing straight through it */
   box-shadow: var(--shadow);
+}
+.header .slicknav_nav::after {
+  content: "";                    /* dims the rest of the page below the compact dropdown, so hero */
+  position: fixed;                /* content is still hidden even though the dropdown itself is only */
+  inset: 0;                       /* as tall as its 5 links, not full-height */
+  background: rgba(0, 0, 0, 0.6);
+  z-index: -1;
 }
 
 /* Modal close button */
