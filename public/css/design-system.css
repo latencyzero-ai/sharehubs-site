@@ -361,6 +361,9 @@ select:focus-visible, textarea:focus-visible {
   left: 0 !important;
   right: 0 !important;
   width: auto !important;
+  background: var(--ink-900) !important;  /* was fully transparent — hero slider (z-index:1) was */
+  z-index: 500 !important;                /* showing straight through it */
+  box-shadow: var(--shadow);
 }
 
 /* Modal close button */

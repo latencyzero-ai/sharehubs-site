@@ -1,0 +1,42 @@
+From a3835e143417839aa822f05f9f3cec0e69b12575 Mon Sep 17 00:00:00 2001
+From: "Claude (via chat)" <noreply@anthropic.com>
+Date: Thu, 6 Aug 2026 23:34:01 +0000
+Subject: [PATCH 2/2] fix: dropdown menu was transparent with no z-index,
+ letting hero slider show through
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+.slicknav_nav had background: rgba(0,0,0,0) (fully transparent) and
+z-index: auto, while .hero-slider explicitly sets z-index: 1 — so the
+rotating hero carousel was painting on top of the see-through dropdown,
+creating an overlapping, unreadable mess of both sets of text.
+
+Fix: give the dropdown a solid background (var(--ink-900), matching
+the site's dark theme) and z-index: 500 so it properly sits above the
+hero slider instead of blending with it.
+
+Verified live: dropdown is now solid and readable immediately on open
+and after 2s+ of carousel auto-rotation behind it. All 5 menu links
+confirmed present and intact.
+---
+ public/css/design-system.css | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/public/css/design-system.css b/public/css/design-system.css
+index 39b9e98..aca8f0d 100644
+--- a/public/css/design-system.css
++++ b/public/css/design-system.css
+@@ -361,6 +361,9 @@ select:focus-visible, textarea:focus-visible {
+   left: 0 !important;
+   right: 0 !important;
+   width: auto !important;
++  background: var(--ink-900) !important;  /* was fully transparent — hero slider (z-index:1) was */
++  z-index: 500 !important;                /* showing straight through it */
++  box-shadow: var(--shadow);
+ }
+ 
+ /* Modal close button */
+-- 
+2.43.0
+
