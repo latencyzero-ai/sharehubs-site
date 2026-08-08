@@ -361,6 +361,10 @@ select:focus-visible, textarea:focus-visible {
   left: 0 !important;
   right: 0 !important;
   width: auto !important;
+  margin: 0 !important;           /* Slicknav's own CSS has margin-top:60px, meant for its original
+                                      normal-flow layout — leftover here, it just creates a gap */
+  min-height: 100vh;              /* cover the rest of the page while open, not just its own content
+                                      height — otherwise hero text/image peek in above and below it */
   background: var(--ink-900) !important;  /* was fully transparent — hero slider (z-index:1) was */
   z-index: 500 !important;                /* showing straight through it */
   box-shadow: var(--shadow);
