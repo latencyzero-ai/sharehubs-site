@@ -354,6 +354,9 @@ select:focus-visible, textarea:focus-visible {
 .header .slicknav_btn {
   margin-top: 17px !important;
   margin-bottom: 17px !important;
+  position: relative !important;  /* the dropdown's backdrop (below) is elevated to z-index:500 as a */
+  z-index: 600 !important;        /* whole stacking context — without this, it blocks clicks on the
+                                      button itself, even though geometrically it sits above the dropdown */
 }
 .header .slicknav_nav {
   position: absolute !important;  /* removes it from the flex row entirely, so its width comes from */
@@ -373,6 +376,21 @@ select:focus-visible, textarea:focus-visible {
   inset: 0;                       /* as tall as its 5 links, not full-height */
   background: rgba(0, 0, 0, 0.6);
   z-index: -1;
+}
+
+/* Hamburger -> X, so it's visually clear the same button now closes the menu
+   (bars measured at 3px tall, 6px apart center-to-center) */
+.header .slicknav_icon-bar {
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.header .slicknav_btn.slicknav_open .slicknav_icon-bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.header .slicknav_btn.slicknav_open .slicknav_icon-bar:nth-child(2) {
+  opacity: 0;
+}
+.header .slicknav_btn.slicknav_open .slicknav_icon-bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 /* Modal close button */
