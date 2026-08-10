@@ -1,0 +1,16 @@
+<!-- Shared navbar partial — one source of truth for all pages -->
+<!-- Usage: include('partials/navbar') -->
+<% const items = [
+  { path: '/agriculture',    label: 'Agriculture' },
+  { path: '/automobile',      label: 'Automobile' },
+  { path: '/medicine',        label: 'Medical Solutions' },
+  { path: '/oil-and-gas',     label: 'Oil & Gas' },
+  { path: '/home-and-office', label: 'Home & Offices' },
+]; %>
+<ul class="nav menu">
+  <% items.forEach(item => { %>
+    <li class="<%= path === item.path ? 'active' : '' %>">
+      <a href="<%= item.path %>"><%= item.label %></a>
+    </li>
+  <% }); %>
+</ul>

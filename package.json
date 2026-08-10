@@ -7,7 +7,9 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js"
   },
-  "engines": { "node": ">=18.0.0" },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "author": "LatencyZero",
   "license": "UNLICENSED",
   "private": true,
@@ -23,6 +25,7 @@
     "helmet": "^8.0.0",
     "mysql2": "^3.11.5",
     "nodemailer": "^6.9.16",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "ejs": "^3.1.10"
   }
 }

@@ -100,28 +100,8 @@
 								<!-- Main Menu -->
 								<div class="main-menu">
 									<nav class="navigation">
-										<ul class="nav menu">
-											<li><a href="/">Home</a>
-											<li><a href="/agriculture">Agriculture</a>
-												<!-- <ul class="dropdown">
-													<li><a href="/">Home Page 1</a></li>
-												</ul> -->
-											</li>
-											<!-- <li><a href="/automobile">Automobile</a></li> -->
-											<li><a href="/medicine">Medical Solutions </a></li>
-											<!-- <li><a href="#">Pages <i class="icofont-rounded-down"></i></a>
-												<ul class="dropdown">
-													<li><a href="/coming-soon">404 Error</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Blogs <i class="icofont-rounded-down"></i></a>
-												<ul class="dropdown">
-													<li><a href="/coming-soon">Blog Details</a></li>
-												</ul> -->
-											</li>
-											<li><a href="/oil-and-gas">Oil & Gas</a></li>
-											<li><a href="/home-and-office">Home & Offices</a></li>
-										</ul>
+										<%- include('partials/navbar') %>
+
 									</nav>
 								</div>
 								<!--/ End Main Menu -->
@@ -388,7 +368,7 @@ Our goal is to become a recognized solution center for engineering innovation, d
 							<h3 style="color: #fff; font-weight: bold;">Let’s build something that works for you.</h3>
 							<p>Have a challenge? Let’s solve it together. Our expert team is ready to provide efficiency and sustainability in your operations.</p>
 							<div class="button">
-								<a href="#" class="btn">Request a Consultation</a>
+								<a href="/request-consultation" class="btn">Request a Consultation</a>
 								<!-- <a href="#" class="btn second">Send us a mail.<i class="fa fa-long-arrow-right"></i></a> -->
 							</div>
 						</div>

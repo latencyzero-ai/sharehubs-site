@@ -10,7 +10,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		
 		<!-- Title -->
-        <title>Oil & Gas | Share Hubs Engineering</title>
+        <title>Share Hubs Engineering</title>
 		
 		<!-- Android Chrome Icons -->
 		<link rel="icon" type="image/png" href="/assets/img/favicon_io (1)/android-chrome-192x192.png" sizes="192x192">
@@ -52,7 +52,7 @@
 <link rel="stylesheet" href="/assets/css/normalize.css">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="stylesheet" href="/assets/css/responsive.css">
-		
+
       <link rel="stylesheet" href="/css/design-system.css" />
 </head>
     <body>
@@ -73,9 +73,10 @@
         </div>
         <!-- End Preloader -->
 		
+		<!-- (promo widget removed) -->
+	
 		<!-- Header Area -->
 		<header class="header" >
-			
 			<!-- Header Inner -->
 			<div class="header-inner">
 				<div class="container">
@@ -95,28 +96,8 @@
 								<!-- Main Menu -->
 								<div class="main-menu">
 									<nav class="navigation">
-										<ul class="nav menu">
-											<li><a href="/">Home</a>
-												<!-- <ul class="dropdown">
-													<li><a href="/">Home Page 1</a></li>
-												</ul> -->
-											</li>
-											<li><a href="/agriculture">Agriculture</a>
-											<li><a href="/automobile">Automobile</a></li>
-											<li><a href="/medicine">Medical Solutions </a></li>
-											<!-- <li><a href="#">Pages <i class="icofont-rounded-down"></i></a>
-												<ul class="dropdown">
-													<li><a href="/coming-soon">404 Error</a></li>
-												</ul>
-											</li>
-											<li><a href="#">Blogs <i class="icofont-rounded-down"></i></a>
-												<ul class="dropdown">
-													<li><a href="/coming-soon">Blog Details</a></li>
-												</ul> -->
-											</li>
-											<!-- <li><a href="/oil-and-gas">Oil & Gas</a></li> -->
-											<li><a href="/home-and-office">Home & Offices</a></li>
-										</ul>
+										<%- include('partials/navbar') %>
+
 									</nav>
 								</div>
 								<!--/ End Main Menu -->
@@ -130,18 +111,18 @@
 			<!--/ End Header Inner -->
 		</header>
 		<!-- End Header Area -->
-		
+	
 		<!-- Breadcrumbs -->
-		<div class="breadcrumbs overlay" style="background-image: url(/assets/img/cutech-oilfield.jpeg);">
+		<div class="breadcrumbs overlay" style="background-image: url(/assets/img/eng2.jpg);">
 			<div class="container">
 				<div class="bread-inner">
 					<div class="row">
 						<div class="col-12">
-							<h2>Oil & Gas</h2>
+							<h2>Contact Us</h2>
 							<ul class="bread-list">
 								<li><a href="/">Home</a></li>
 								<li><i class="icofont-simple-right"></i></li>
-								<li class="active">Oil & Gas</li>
+								<li class="active">Contact Us</li>
 							</ul>
 						</div>
 					</div>
@@ -149,121 +130,86 @@
 			</div>
 		</div>
 		<!-- End Breadcrumbs -->
-		<div class="bg">
-		<h2 class="campaign-heading"></h2>
-
-    <div class="campaign-card">
-      <div class="video-thumbnail">
-       
-      </div>
-
-      <div class="campaign-text">
-        <p class="campaign-subheading"></p>
-        <h3 class="campaign-title">Empowering the Oil and Gas Sector</h3>
-        <p class="campaign-desc">
-         At Share Hubs Engineering, we specialize in designing, fabricating, and supplying high-quality components that support the daily operations of the oil and gas industry. Our product portfolio includes precision-built pipes, valves, nozzles, and gauges, each engineered to deliver reliable performance in challenging environments.
-
-
-        </p>
-        <a href="/coming-soon" class="campaign-button" style="color: #fff;">Check our Store.</a>
-      </div>
-    </div>
-
-
- <!-- Medicine Services Section -->
-<section class="medicine-section">
-  <div class="medicine-container">
-    <!-- Left Content -->
-    <div class="medicine-text">
-      <span class="tag">Our Expertise</span>
-      <h2>From Design to Delivery: <br> Tailored Engineering for Oil & Gas Success</h2>
-      <p>
-        Powering the oil and gas industry with precision engineering, innovative design, and reliable solutions for safer, smarter operations.
-      </p>
-      <a href="med.html" class="cta-btn">Get Started →</a>
-    </div>
-
-    <!-- Right Features Grid -->
-    <div class="medicine-cards">
-      <div class="card">
-        <div class="icon"></div>
-        <h3>DESIGN & FABRICATION</h3>
-		<hr>
-        <p>We utilize advanced design software such as AutoCAD and Solid Works to ensure accuracy and compliance with industry standards.</p>
-      </div>
-      <div class="card">
-        <div class="icon"></div>
-        <h3>PRODUCT SOLUTIONS</h3>
-		<hr>
-        <p>Our products are designed to meet operational goals and withstand the demands of the oil and gas sector.</p>
-      </div>
-      <div class="card">
-        <div class="icon"></div>
-        <h3>CLIENT-CENTRIC APPROACH</h3>
-		<hr>
-        <p>We work closely with our clients to deliver practical solutions that align with their project objectives.</p>
-      </div>
-      
-    </div>
-  </div>
-</section>
-
-
-
-		<section class="campaign-section">
-			<div class="campaign-card">
-				<div class="campaign-text">
-					<p class="campaign-subheading"></p>
-					<h3 class="campaign-title">Certifications & Partnerships </h3>
-					<hr>
-					<!-- <p class="campaign-desc">
-         We are certified/partnered with: Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facilis, saepe.
-
-        </p>
-		 -->
-					<div class="certifications">
-						<ul class="certification-list">
-							<li><strong>ISO 9001:</strong> Quality Management Systems</li>
-							<li><strong>ISO 14001:</strong> Environmental Management Systems</li>
-							<li><strong>ISO 45001:</strong> Occupational Health & Safety Management</li>
-							<li><strong>SONCAP:</strong> Standards Organisation of Nigeria Conformity Assessment Program
-							</li>
-							<li><strong>NIS:</strong> Nigerian Industrial Standards Compliance</li>
-							<li><strong>ASABE:</strong> American Society of Agricultural and Biological Engineers
-								Certification</li>
-						</ul>
+				
+		<!-- Start Contact Us -->
+		<section class="contact-us section">
+			<div class="container">
+				<div class="inner">
+					<div class="row justify-content-center">
+						<div class="col-lg-8 col-md-10 col-12">
+							<div class="contact-us-form" style="text-align:center;margin:0 auto">
+								<h2>Contact With Us</h2>
+								<p>Have a question or a project in mind? Send us a message and our team will get back to you.</p>
+								<!-- Form -->
+								<form class="form" method="post" action="mail/mail.php" style="text-align:left;margin-top:24px">
+									<div class="row">
+										<div class="col-lg-6">
+											<div class="form-group">
+												<input type="text" name="name" placeholder="Name" required="">
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<input type="email" name="email" placeholder="Email" required="">
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<input type="text" name="phone" placeholder="Phone" required="">
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<input type="text" name="subject" placeholder="Subject" required="">
+											</div>
+										</div>
+										<div class="col-lg-12">
+											<div class="form-group">
+												<textarea name="message" placeholder="Your Message" required=""></textarea>
+											</div>
+										</div>
+										<div class="col-12" style="text-align:center">
+											<div class="form-group login-btn">
+												<button class="btn" type="submit">Send Message</button>
+											</div>
+											<div class="checkbox">
+												<label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox"> Subscribe to our newsletter</label>
+											</div>
+										</div>
+									</div>
+								</form>
+								<!--/ End Form -->
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</section>
-	
-
-
-<!-- Start Call to action -->
-		<section class="call-action overlay" data-stellar-background-ratio="0.5">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-12">
-						<div class="content">
-							<h3 style="color: #fff; font-weight: bold;">Partner With Us.</h3>
-							<p>Our expert team is ready to provide efficiency and sustainability in your operations. Contact us today to request a consultation
-								
-
-							</p>
-							<div class="button">
-								<a href="#" class="btn">Request a Consultation</a>
-								<!-- <a href="#" class="btn second">Send us a mail.<i class="fa fa-long-arrow-right"></i></a> -->
+				<div class="contact-info">
+					<div class="row justify-content-center">
+						<!-- single-info: phone -->
+						<div class="col-lg-5 col-md-6 col-12">
+							<div class="single-info">
+								<i class="icofont icofont-ui-call"></i>
+								<div class="content">
+									<h3>+234 913 511 6716</h3>
+									<p>info@sharehubsengineering.com</p>
+								</div>
+							</div>
+						</div>
+						<!-- single-info: hours -->
+						<div class="col-lg-5 col-md-6 col-12">
+							<div class="single-info">
+								<i class="icofont icofont-wall-clock"></i>
+								<div class="content">
+									<h3>Mon - Sat: 8am - 5pm</h3>
+									<p>Sunday Closed</p>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</section>
-		<!--/ End Call to action -->
-
-
-
-  </div>
+		<!--/ End Contact Us -->
 		
 		<!-- Footer Area -->
 		<footer id="footer" class="footer ">
@@ -274,7 +220,7 @@
 						<div class="col-lg-3 col-md-6 col-12">
 							<div class="single-footer">
 								<h2>About Us</h2>
-								<p>We are an innovative engineering company delivering cutting-edge solutions in research, design and development, sales of engineering products and manufacturing of machine component, equipment and tools.</p>
+								<p>Lorem ipsum dolor sit am consectetur adipisicing elit do eiusmod tempor incididunt ut labore dolore magna.</p>
 								<!-- Social -->
 								<ul class="social">
 									<li><a href="#"><i class="icofont-facebook"></i></a></li>
@@ -293,16 +239,19 @@
 									<div class="col-lg-6 col-md-6 col-12">
 										<ul>
 											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Home</a></li>
-											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Contact</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>About Us</a></li>
 											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services</a></li>
-	
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Our Cases</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Other Links</a></li>	
 										</ul>
 									</div>
 									<div class="col-lg-6 col-md-6 col-12">
 										<ul>
-											<li><a href="store.html"><i class="fa fa-caret-right" aria-hidden="true"></i>Consulting</a></li>
-											<li><a href="agric.html"><i class="fa fa-caret-right" aria-hidden="true"></i>Finance</a></li>
-											<li><a  href="javascript:void(0);" onclick="showPopup()"><i class="fa fa-caret-right" aria-hidden="true" ></i>Logout</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Consuling</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Finance</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Testimonials</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>FAQ</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Contact Us</a></li>	
 										</ul>
 									</div>
 								</div>
@@ -311,18 +260,18 @@
 						<div class="col-lg-3 col-md-6 col-12">
 							<div class="single-footer">
 								<h2>Open Hours</h2>
-								<p>Our office is open Monday to Friday, 8:00 AM to 5:00 PM, providing prompt and reliable services.</p>
+								<p>Lorem ipsum dolor sit ame consectetur adipisicing elit do eiusmod tempor incididunt.</p>
 								<ul class="time-sidual">
-									<li class="day">Monday - Friday <span>8am - 5pm</span></li>
-									<li class="day">Saturday<span>1pm - 5pm</span>(Limited Services)</li>
-									<li class="day">Sunday <span>Closed</span></li>
+									<li class="day">Monday - Fridayp <span>8.00-20.00</span></li>
+									<li class="day">Saturday <span>9.00-18.30</span></li>
+									<li class="day">Monday - Thusday <span>9.00-15.00</span></li>
 								</ul>
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-6 col-12">
 							<div class="single-footer">
 								<h2>Newsletter</h2>
-								<p>Subscribe to our newsletter to get allour news in your inbox.</p>
+								<p>subscribe to our newsletter to get allour news in your inbox.. Lorem ipsum dolor sit amet, consectetur adipisicing elit,</p>
 								<form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
 									<input name="email" placeholder="Email Address" class="common-input" onfocus="this.placeholder = ''"
 										onblur="this.placeholder = 'Your email address'" required="" type="email">
@@ -340,7 +289,7 @@
 					<div class="row">
 						<div class="col-lg-12 col-md-12 col-12">
 							<div class="copyright-content">
-								<p>© Copyright 2025 |  All Rights Reserved by <a href="" target="_blank">Share Hubs Engineering</a> </p>
+								<p>© Copyright 2018  |  All Rights Reserved by <a href="https://www.wpthemesgrid.com" target="_blank">wpthemesgrid.com</a> </p>
 							</div>
 						</div>
 					</div>
@@ -349,7 +298,6 @@
 			<!--/ End Copyright -->
 		</footer>
 		<!--/ End Footer Area -->
-
 		
 		<!-- jquery Min JS -->
         <script src="/js/jquery.min.js" defer></script>
@@ -387,6 +335,12 @@
 		<script src="/js/jquery.magnific-popup.min.js" defer></script>
 		<!-- Counter Up CDN JS -->
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+		<!-- Google Map API Key JS -->
+		<!-- map disabled: add your own Maps embed if needed -->
+		<!-- Gmaps JS -->
+		<!-- gmaps disabled -->
+		<!-- Map Active JS -->
+		<!-- map-active disabled -->
 		<!-- Bootstrap JS -->
 		<script src="/js/bootstrap.min.js" defer></script>
 		<!-- Main JS -->
