@@ -1,0 +1,41 @@
+<!-- Skip link -->
+<a href="#main-content" class="sh-skip-link">Skip to main content</a>
+
+<!-- Header -->
+<header class="sh-header" id="sh-header">
+  <div class="sh-container sh-header__inner">
+    <!-- Logo -->
+    <a href="/" class="sh-logo" aria-label="Share Hubs Engineering Home">
+      <img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" width="160" height="44">
+    </a>
+
+    <!-- Desktop Nav -->
+    <%- include('navbar') %>
+
+    <!-- Actions -->
+    <div class="sh-flex sh-items-center sh-gap-4">
+      <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--sm sh-hidden" style="display:inline-flex;">Get a Quote</a>
+      <button class="sh-theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="sh-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="sh-icon-moon" viewBox="0 0 24 24" aria-hidden="true" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="sh-menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<div class="sh-mobile-nav" id="mobile-nav" aria-hidden="true">
+  <a href="/" class="sh-mobile-nav__link <%= path === '/' ? 'is-active' : '' %>">Home</a>
+  <a href="/about" class="sh-mobile-nav__link <%= path === '/about' ? 'is-active' : '' %>">About</a>
+  <a href="/services" class="sh-mobile-nav__link <%= path === '/services' ? 'is-active' : '' %>">Services</a>
+  <a href="/agriculture" class="sh-mobile-nav__link <%= path === '/agriculture' ? 'is-active' : '' %>">Agriculture</a>
+  <a href="/automobile" class="sh-mobile-nav__link <%= path === '/automobile' ? 'is-active' : '' %>">Automobile</a>
+  <a href="/medicine" class="sh-mobile-nav__link <%= path === '/medicine' ? 'is-active' : '' %>">Medical</a>
+  <a href="/oil-and-gas" class="sh-mobile-nav__link <%= path === '/oil-and-gas' ? 'is-active' : '' %>">Oil & Gas</a>
+  <a href="/home-and-office" class="sh-mobile-nav__link <%= path === '/home-and-office' ? 'is-active' : '' %>">Home & Office</a>
+  <a href="/contact" class="sh-mobile-nav__link <%= path === '/contact' ? 'is-active' : '' %>">Contact</a>
+  <a href="/request-quote" class="sh-mobile-nav__link">Get a Quote</a>
+</div>

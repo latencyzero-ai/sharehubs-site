@@ -1,127 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Coming Soon · Share Hubs Engineering</title>
-  <meta name="description" content="This feature is coming soon. Request a quote and our team will help you in the meantime." />
-  <link rel="icon" href="/assets/img/share-hubs-engineering.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet" />
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/design-system.css" />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-body); }
-    body {
-      min-height: 100vh; display: flex; flex-direction: column;
-      background: radial-gradient(circle at 50% 0%, #1b0406 0%, #0a0a0a 55%, #000 100%);
-      color: var(--text-100); overflow-x: hidden;
-    }
-    /* slim header */
-    .cs-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 32px; border-bottom: 1px solid var(--ink-800);
-    }
-    .cs-header img { height: 44px; width: auto; }
-    .cs-nav { display: flex; gap: 26px; }
-    .cs-nav a { color: var(--text-300); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .18s; }
-    .cs-nav a:hover { color: var(--red-400); }
-    @media (max-width: 720px) { .cs-nav { display: none; } }
+<%- include('partials/head') %>
 
-    /* hero */
-    .cs-main {
-      flex: 1; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; text-align: center; padding: 60px 24px;
-      position: relative;
-    }
-    /* ambient gear accents */
-    .cs-gear {
-      position: absolute; opacity: 0.05; pointer-events: none;
-      animation: cs-spin 40s linear infinite;
-    }
-    .cs-gear.one { top: 10%; left: 8%; font-size: 180px; }
-    .cs-gear.two { bottom: 8%; right: 6%; font-size: 240px; animation-direction: reverse; }
-    @keyframes cs-spin { to { transform: rotate(360deg); } }
-
-    .cs-eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
-      color: var(--red-400); margin-bottom: 22px;
-    }
-    .cs-eyebrow::before, .cs-eyebrow::after { content: ""; width: 28px; height: 2px; background: var(--red-500); }
-    .cs-title {
-      font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(38px, 7vw, 72px); line-height: 1.02; letter-spacing: -.02em;
-      margin-bottom: 18px;
-    }
-    .cs-title .accent { color: var(--red-500); }
-    .cs-sub { max-width: 540px; color: var(--text-300); font-size: 16px; line-height: 1.6; margin-bottom: 16px; }
-    .cs-typed { min-height: 24px; color: var(--text-500); font-size: 14.5px; margin-bottom: 34px; }
-    .cs-typed .cursor { display: inline-block; width: 2px; background: var(--red-500); margin-left: 2px; animation: cs-blink 1s steps(1) infinite; }
-    @keyframes cs-blink { 50% { opacity: 0; } }
-    .cs-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-
-    /* progress bar flourish */
-    .cs-progress { width: min(420px, 80vw); height: 6px; background: var(--ink-800); border-radius: 99px; margin: 38px auto 0; overflow: hidden; }
-    .cs-progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--red-600), var(--red-400)); border-radius: 99px; animation: cs-fill 2.4s ease forwards; }
-    @keyframes cs-fill { to { width: 72%; } }
-
-    .cs-footer { padding: 20px; text-align: center; color: var(--text-700); font-size: 13px; border-top: 1px solid var(--ink-800); }
-    @media (prefers-reduced-motion: reduce) { .cs-gear, .cs-progress span { animation: none; } }
-  </style>
 </head>
-<body class="sh">
-  <header class="cs-header">
-    <a href="/"><img src="/assets/img/share-hubs-engineering.png" alt="Share Hubs Engineering" /></a>
-    <nav class="cs-nav">
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/agriculture">Agriculture</a>
-      <a href="/automobile">Automobile</a>
-      <a href="/medicine">Medical</a>
-      <a href="/oil-and-gas">Oil &amp; Gas</a>
-      <a href="/contact">Contact</a>
-    </nav>
-  </header>
+<body>
+<%- include('partials/header') %>
+<main id="main-content">
 
-  <main class="cs-main">
-    <i class="bx bx-cog cs-gear one"></i>
-    <i class="bx bx-cog cs-gear two"></i>
-
-    <span class="cs-eyebrow">In the workshop</span>
-    <h1 class="cs-title">Coming <span class="accent">Soon</span></h1>
-    <p class="cs-sub">We're engineering this part of the experience. It'll be worth the wait.</p>
-    <p class="cs-typed"><span id="typed"></span><span class="cursor">&nbsp;</span></p>
-
-    <div class="cs-actions">
-      <a href="/request-quote" class="sh-btn sh-btn--primary">Request a Quote</a>
-      <a href="/" class="sh-btn sh-btn--ghost">Back to Home</a>
+<section class="sh-section sh-text-center" style="padding-top:calc(var(--sh-header-height) + var(--sh-space-24));" aria-label="Coming soon">
+  <div class="sh-container sh-container-narrow">
+    <div style="font-size:var(--sh-text-6xl);font-weight:var(--sh-weight-bold);color:var(--sh-brand);line-height:1;margin-bottom:var(--sh-space-6);"><i class="icofont-tools-alt-2"></i></div>
+    <h1 style="margin-bottom:var(--sh-space-4);">Coming Soon</h1>
+    <p class="sh-text-lead" style="margin-bottom:var(--sh-space-8);">This page is under development. We are working hard to bring you something great.</p>
+    <div class="sh-flex sh-justify-center sh-gap-4">
+      <a href="/" class="sh-btn sh-btn--primary">Go Home</a>
+      <a href="/contact" class="sh-btn sh-btn--outline">Contact Us</a>
     </div>
+  </div>
+</section>
 
-    <div class="cs-progress"><span></span></div>
-  </main>
-
-  <footer class="cs-footer">© <span id="yr"></span> Share Hubs Engineering. All rights reserved.</footer>
-
-  <script>
-    document.getElementById('yr').textContent = new Date().getFullYear();
-    // typing effect
-    const lines = ["Building something useful…", "Refining the details…", "Almost ready for you."];
-    const el = document.getElementById('typed');
-    let li = 0, ci = 0, deleting = false;
-    function tick() {
-      const line = lines[li];
-      if (!deleting) {
-        el.textContent = line.slice(0, ++ci);
-        if (ci === line.length) { deleting = true; return setTimeout(tick, 1600); }
-      } else {
-        el.textContent = line.slice(0, --ci);
-        if (ci === 0) { deleting = false; li = (li + 1) % lines.length; }
-      }
-      setTimeout(tick, deleting ? 30 : 55);
-    }
-    tick();
-  </script>
+</main>
+<%- include('partials/footer') %>
+<%- include('partials/scripts') %>
 </body>
 </html>

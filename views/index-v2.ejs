@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+<style>
+  /* Hero-specific styles */
+  .sh-hero {
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(10,10,15,0.92) 0%, rgba(44,45,63,0.88) 100%),
+                url('/img/engineering-scene-1.webp') center/cover no-repeat;
+    overflow: hidden;
+  }
+  .sh-hero__content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+  }
+  .sh-hero__tag {
+    display: inline-block;
+    padding: var(--sh-space-2) var(--sh-space-4);
+    background: rgba(128,0,0,0.2);
+    border: 1px solid var(--sh-brand);
+    border-radius: var(--sh-radius-full);
+    color: var(--sh-accent);
+    font-size: var(--sh-text-xs);
+    font-weight: var(--sh-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--sh-space-6);
+  }
+  .sh-hero__title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: var(--sh-weight-bold);
+    line-height: var(--sh-leading-tight);
+    color: var(--sh-text-inverse);
+    margin-bottom: var(--sh-space-6);
+  }
+  .sh-hero__title .accent { color: var(--sh-accent); }
+  .sh-hero__desc {
+    font-size: var(--sh-text-lg);
+    color: rgba(255,255,255,0.8);
+    line-height: var(--sh-leading-relaxed);
+    margin-bottom: var(--sh-space-8);
+    max-width: 560px;
+  }
+  .sh-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sh-space-4);
+    align-items: center;
+  }
+  .sh-hero__phone {
+    display: flex;
+    align-items: center;
+    gap: var(--sh-space-3);
+    color: rgba(255,255,255,0.9);
+    font-size: var(--sh-text-sm);
+    font-weight: var(--sh-weight-medium);
+  }
+  .sh-hero__phone a { color: var(--sh-accent); text-decoration: none; }
+  .sh-hero__phone a:hover { text-decoration: underline; }
+
+  /* Capabilities section */
+  .sh-capabilities {
+    background: var(--sh-surface);
+  }
+  .sh-capability-card {
+    background: var(--sh-surface-elevated);
+    border: 1px solid var(--sh-border);
+    border-radius: var(--sh-radius-lg);
+    padding: var(--sh-space-8);
+    text-align: center;
+    transition: all var(--sh-transition-base);
+    height: 100%;
+  }
+  .sh-capability-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--sh-shadow-lg);
+    border-color: var(--sh-brand);
+  }
+  .sh-capability-card__icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--sh-space-6);
+    background: rgba(128,0,0,0.1);
+    border-radius: var(--sh-radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--sh-brand);
+  }
+  .sh-capability-card h3 {
+    font-size: var(--sh-text-xl);
+    margin-bottom: var(--sh-space-3);
+    color: var(--sh-text-primary);
+  }
+  .sh-capability-card p {
+    font-size: var(--sh-text-sm);
+    color: var(--sh-text-muted);
+    margin: 0;
+  }
+
+  /* Software stack */
+  .sh-software {
+    background: var(--sh-bg);
+  }
+  .sh-software__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--sh-space-6);
+    margin-top: var(--sh-space-10);
+  }
+  .sh-software__item {
+    background: var(--sh-surface);
+    border: 1px solid var(--sh-border);
+    border-radius: var(--sh-radius-md);
+    padding: var(--sh-space-6) var(--sh-space-4);
+    text-align: center;
+    transition: all var(--sh-transition-fast);
+  }
+  .sh-software__item:hover {
+    border-color: var(--sh-brand);
+    background: var(--sh-surface-elevated);
+  }
+  .sh-software__item h4 {
+    font-size: var(--sh-text-base);
+    margin: var(--sh-space-3) 0 0;
+    color: var(--sh-text-primary);
+  }
+  .sh-software__item p {
+    font-size: var(--sh-text-xs);
+    color: var(--sh-text-muted);
+    margin: var(--sh-space-1) 0 0;
+  }
+
+  /* Industries */
+  .sh-industries {
+    background: var(--sh-surface);
+  }
+  .sh-industry-card {
+    position: relative;
+    border-radius: var(--sh-radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--sh-space-6);
+    text-decoration: none;
+    transition: transform var(--sh-transition-base);
+  }
+  .sh-industry-card:hover {
+    transform: scale(1.02);
+    text-decoration: none;
+  }
+  .sh-industry-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+    z-index: 1;
+  }
+  .sh-industry-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  .sh-industry-card h3,
+  .sh-industry-card p {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    margin: 0;
+  }
+  .sh-industry-card h3 {
+    font-size: var(--sh-text-xl);
+    margin-bottom: var(--sh-space-2);
+  }
+  .sh-industry-card p {
+    font-size: var(--sh-text-sm);
+    opacity: 0.9;
+  }
+
+  /* Services */
+  .sh-services {
+    background: var(--sh-bg);
+  }
+  .sh-service-item {
+    display: flex;
+    gap: var(--sh-space-5);
+    padding: var(--sh-space-6);
+    background: var(--sh-surface);
+    border: 1px solid var(--sh-border);
+    border-radius: var(--sh-radius-lg);
+    transition: all var(--sh-transition-base);
+    height: 100%;
+  }
+  .sh-service-item:hover {
+    border-color: var(--sh-brand);
+    box-shadow: var(--sh-shadow-md);
+  }
+  .sh-service-item__icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: rgba(128,0,0,0.1);
+    border-radius: var(--sh-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sh-brand);
+    font-size: 20px;
+  }
+  .sh-service-item h4 {
+    font-size: var(--sh-text-lg);
+    margin-bottom: var(--sh-space-2);
+    color: var(--sh-text-primary);
+  }
+  .sh-service-item p {
+    font-size: var(--sh-text-sm);
+    color: var(--sh-text-muted);
+    margin: 0;
+  }
+
+  /* CTA Section */
+  .sh-cta {
+    position: relative;
+    background: linear-gradient(135deg, var(--sh-brand) 0%, var(--sh-brand-dark) 100%);
+    text-align: center;
+    padding: var(--sh-space-24) var(--sh-space-6);
+  }
+  .sh-cta h2 {
+    color: #fff;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin-bottom: var(--sh-space-4);
+  }
+  .sh-cta p {
+    color: rgba(255,255,255,0.9);
+    font-size: var(--sh-text-lg);
+    max-width: 600px;
+    margin: 0 auto var(--sh-space-8);
+  }
+  .sh-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sh-space-4);
+    justify-content: center;
+    align-items: center;
+  }
+  .sh-cta .sh-btn--ghost {
+    border-color: rgba(255,255,255,0.4);
+  }
+  .sh-cta .sh-btn--ghost:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.6);
+  }
+
+  /* Section title utility */
+  .sh-section-title {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto var(--sh-space-12);
+  }
+  .sh-section-title h2 {
+    margin-bottom: var(--sh-space-4);
+  }
+  .sh-section-title p {
+    color: var(--sh-text-muted);
+    margin: 0;
+  }
+
+  /* Trust bar */
+  .sh-trust {
+    background: var(--sh-surface);
+    border-top: 1px solid var(--sh-border);
+    border-bottom: 1px solid var(--sh-border);
+    padding: var(--sh-space-8) 0;
+  }
+  .sh-trust__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sh-space-8);
+    text-align: center;
+  }
+  .sh-trust__item h4 {
+    font-size: var(--sh-text-2xl);
+    color: var(--sh-brand);
+    margin-bottom: var(--sh-space-1);
+  }
+  .sh-trust__item p {
+    font-size: var(--sh-text-sm);
+    color: var(--sh-text-muted);
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    .sh-trust__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<%- include('partials/header') %>
+
+<main id="main-content">
+
+  <!-- Hero -->
+  <section class="sh-hero" aria-label="Hero">
+    <div class="sh-container">
+      <div class="sh-hero__content">
+        <span class="sh-hero__tag">Engineering & Manufacturing — Lagos, Nigeria</span>
+        <h1 class="sh-hero__title">
+          Precision Manufacturing for <span class="accent">Agriculture, Automotive, Medical &amp; More</span>
+        </h1>
+        <p class="sh-hero__desc">
+          From concept to component — Share Hubs Engineering turns your ideas into physical reality using 3D printing, laser cutting, CNC punching, and plasma cutting.
+        </p>
+        <div class="sh-hero__actions">
+          <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Discuss Your Project</a>
+          <a href="/services" class="sh-btn sh-btn--ghost sh-btn--lg">Explore Capabilities</a>
+        </div>
+        <div class="sh-hero__phone" style="margin-top: var(--sh-space-6);">
+          <i class="fa fa-phone" aria-hidden="true"></i>
+          <span>Or call us: <a href="tel:+2349135116716">+234 913 511 6716</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Bar -->
+  <section class="sh-trust" aria-label="Company facts">
+    <div class="sh-container">
+      <div class="sh-trust__grid">
+        <div class="sh-trust__item">
+          <h4>5+</h4>
+          <p>Industries Served</p>
+        </div>
+        <div class="sh-trust__item">
+          <h4>4</h4>
+          <p>Manufacturing Technologies</p>
+        </div>
+        <div class="sh-trust__item">
+          <h4>2022</h4>
+          <p>Founded in Lagos</p>
+        </div>
+        <div class="sh-trust__item">
+          <h4>2–10</h4>
+          <p>Expert Engineers</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Manufacturing Capabilities -->
+  <section class="sh-section sh-capabilities" aria-labelledby="capabilities-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="capabilities-heading">Manufacturing Capabilities</h2>
+        <p>Modern fabrication technologies that transform designs into precision-engineered components.</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+          <article class="sh-capability-card">
+            <div class="sh-capability-card__icon" aria-hidden="true">
+              <i class="icofont-cube"></i>
+            </div>
+            <h3>3D Printing</h3>
+            <p>Rapid prototyping and production of complex geometries in plastic, resin, and metal for custom parts and low-volume runs.</p>
+          </article>
+        </div>
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+          <article class="sh-capability-card">
+            <div class="sh-capability-card__icon" aria-hidden="true">
+              <i class="icofont-flash"></i>
+            </div>
+            <h3>Laser Cutting</h3>
+            <p>High-precision cutting of sheet metal, acrylic, and wood with clean edges and tight tolerances for industrial applications.</p>
+          </article>
+        </div>
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+          <article class="sh-capability-card">
+            <div class="sh-capability-card__icon" aria-hidden="true">
+              <i class="icofont-settings"></i>
+            </div>
+            <h3>CNC Punching</h3>
+            <p>Automated punching of holes, slots, and forms in sheet metal with high repeatability for mass-produced components.</p>
+          </article>
+        </div>
+        <div class="col-lg-3 col-md-6 col-12 mb-4">
+          <article class="sh-capability-card">
+            <div class="sh-capability-card__icon" aria-hidden="true">
+              <i class="icofont-fire-burn"></i>
+            </div>
+            <h3>Plasma Cutting</h3>
+            <p>High-speed cutting of thick steel and aluminum plates for heavy-duty structural and industrial fabrication projects.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Software Stack -->
+  <section class="sh-section sh-software" aria-labelledby="software-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="software-heading">Engineering Software Stack</h2>
+        <p>Industry-standard CAD, CAM, and simulation tools ensuring precision from design to production.</p>
+      </div>
+      <div class="sh-software__grid">
+        <article class="sh-software__item">
+          <h4>SolidWorks</h4>
+          <p>3D CAD Design</p>
+        </article>
+        <article class="sh-software__item">
+          <h4>AutoCAD</h4>
+          <p>2D Drafting</p>
+        </article>
+        <article class="sh-software__item">
+          <h4>ANSYS</h4>
+          <p>FEA Simulation</p>
+        </article>
+        <article class="sh-software__item">
+          <h4>CNCKAD</h4>
+          <p>CNC Programming</p>
+        </article>
+        <article class="sh-software__item">
+          <h4>Bodor Laser</h4>
+          <p>Laser Control</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industries -->
+  <section class="sh-section sh-industries" aria-labelledby="industries-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="industries-heading">Industries We Serve</h2>
+        <p>Engineering components and solutions tailored to the demands of each sector.</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-12 mb-4">
+          <a href="/agriculture" class="sh-industry-card">
+            <img src="/img/agroback.jpeg" alt="Agricultural machinery in a field" loading="lazy" width="400" height="300">
+            <h3>Agriculture</h3>
+            <p>Irrigation systems, mechanized equipment, and precision farming tools.</p>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12 mb-4">
+          <a href="/automobile" class="sh-industry-card">
+            <img src="/img/automobile.jpg" alt="Automotive manufacturing facility" loading="lazy" width="400" height="300">
+            <h3>Automobile</h3>
+            <p>Vehicle parts, maintenance components, and performance enhancements.</p>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12 mb-4">
+          <a href="/medicine" class="sh-industry-card">
+            <img src="/img/med.jpeg" alt="Medical engineering equipment" loading="lazy" width="400" height="300">
+            <h3>Medical</h3>
+            <p>Custom devices, diagnostic equipment housings, and healthcare infrastructure.</p>
+          </a>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12 mb-4">
+          <a href="/oil-and-gas" class="sh-industry-card">
+            <img src="/img/oilfield.jpeg" alt="Oil and gas field operations" loading="lazy" width="600" height="300">
+            <h3>Oil &amp; Gas</h3>
+            <p>Drilling components, pipeline fittings, and field equipment fabrication.</p>
+          </a>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12 mb-4">
+          <a href="/home-and-office" class="sh-industry-card">
+            <img src="/img/home&office.jpg" alt="Home and office furniture and appliances" loading="lazy" width="600" height="300">
+            <h3>Home &amp; Office</h3>
+            <p>Durable furniture, ergonomic appliances, and custom fixtures.</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="sh-section sh-services" aria-labelledby="services-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="services-heading">What We Offer</h2>
+        <p>End-to-end engineering support from design consultation to finished product.</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-12 mb-4">
+          <article class="sh-service-item">
+            <div class="sh-service-item__icon" aria-hidden="true"><i class="icofont-gear"></i></div>
+            <div>
+              <h4>Manufacturing</h4>
+              <p>Precision fabrication of machine components, equipment parts, and tools using 3D printing, laser, punching, and plasma technologies.</p>
+            </div>
+          </article>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12 mb-4">
+          <article class="sh-service-item">
+            <div class="sh-service-item__icon" aria-hidden="true"><i class="icofont-brainstorming"></i></div>
+            <div>
+              <h4>Engineering Consultancy</h4>
+              <p>Expert advice on design feasibility, material selection, manufacturing processes, and cost optimization for your projects.</p>
+            </div>
+          </article>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12 mb-4">
+          <article class="sh-service-item">
+            <div class="sh-service-item__icon" aria-hidden="true"><i class="icofont-read-book"></i></div>
+            <div>
+              <h4>Research &amp; Development</h4>
+              <p>Collaborative product development, prototyping, and testing to bring innovative concepts from idea to physical reality.</p>
+            </div>
+          </article>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12 mb-4">
+          <article class="sh-service-item">
+            <div class="sh-service-item__icon" aria-hidden="true"><i class="icofont-graduate"></i></div>
+            <div>
+              <h4>Training &amp; Education</h4>
+              <p>Technical training for individuals and organizations in CAD/CAM, manufacturing processes, and engineering best practices.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sh-cta" aria-labelledby="cta-heading">
+    <div class="sh-container">
+      <h2 id="cta-heading">Ready to Manufacture Your Next Component?</h2>
+      <p>Tell us what you need and our engineers will get back to you with a tailored quote. Built for agriculture, automotive, medical, oil &amp; gas, and more.</p>
+      <div class="sh-cta__actions">
+        <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Request a Quote</a>
+        <a href="/contact" class="sh-btn sh-btn--ghost sh-btn--lg">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/scripts') %>
+</body>
+</html>

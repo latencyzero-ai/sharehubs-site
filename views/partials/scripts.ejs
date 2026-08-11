@@ -1,0 +1,10 @@
+<!-- Bootstrap JS (for legacy components) -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Core JS (theme, nav, animations) -->
+<script src="/js/core.js"></script>
+
+<!-- Page JS -->
+<% if (typeof pageJs !== 'undefined' && pageJs) { %>
+<script src="<%= pageJs %>"></script>
+<% } %>

@@ -70,7 +70,9 @@ app.use('/auth', authRoutes);
 app.use('/', pageRoutes);
 
 // --- 404 ----------------------------------------------------------
-app.use((_req, res) => res.status(404).render('404', { title: 'Page Not Found', path: '/404' }));
+app.use((req, res) => {
+  res.status(404).render('404', { title: 'Page Not Found', path: '/404' });
+});
 
 app.listen(config.port, () => {
   console.log(`🚀 Share Hubs site running on http://localhost:${config.port} [${config.env}]`);

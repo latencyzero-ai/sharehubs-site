@@ -1,16 +1,16 @@
-<!-- Shared navbar partial — one source of truth for all pages -->
-<!-- Usage: include('partials/navbar') -->
-<% const items = [
-  { path: '/agriculture',    label: 'Agriculture' },
-  { path: '/automobile',      label: 'Automobile' },
-  { path: '/medicine',        label: 'Medical Solutions' },
-  { path: '/oil-and-gas',     label: 'Oil & Gas' },
-  { path: '/home-and-office', label: 'Home & Offices' },
-]; %>
-<ul class="nav menu">
-  <% items.forEach(item => { %>
-    <li class="<%= path === item.path ? 'active' : '' %>">
-      <a href="<%= item.path %>"><%= item.label %></a>
-    </li>
-  <% }); %>
-</ul>
+<nav class="sh-nav" aria-label="Main navigation">
+  <a href="/" class="sh-nav__link <%= path === '/' ? 'is-active' : '' %>" <%= path === '/' ? 'aria-current="page"' : '' %>>Home</a>
+  <a href="/about" class="sh-nav__link <%= path === '/about' ? 'is-active' : '' %>" <%= path === '/about' ? 'aria-current="page"' : '' %>>About</a>
+  <div class="sh-nav__item">
+    <a href="/services" class="sh-nav__link <%= ['/services','/agriculture','/automobile','/medicine','/oil-and-gas','/home-and-office'].includes(path) ? 'is-active' : '' %>">Industries <i class="fa fa-chevron-down" style="font-size:10px;margin-left:4px;"></i></a>
+    <div class="sh-dropdown">
+      <a href="/agriculture" class="sh-dropdown__link">Agriculture</a>
+      <a href="/automobile" class="sh-dropdown__link">Automobile</a>
+      <a href="/medicine" class="sh-dropdown__link">Medical</a>
+      <a href="/oil-and-gas" class="sh-dropdown__link">Oil & Gas</a>
+      <a href="/home-and-office" class="sh-dropdown__link">Home & Office</a>
+    </div>
+  </div>
+  <a href="/services" class="sh-nav__link <%= path === '/services' ? 'is-active' : '' %>" <%= path === '/services' ? 'aria-current="page"' : '' %>>Services</a>
+  <a href="/contact" class="sh-nav__link <%= path === '/contact' ? 'is-active' : '' %>" <%= path === '/contact' ? 'aria-current="page"' : '' %>>Contact</a>
+</nav>

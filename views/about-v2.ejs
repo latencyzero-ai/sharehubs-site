@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+<style>
+  .sh-about-hero {
+    background: linear-gradient(135deg, rgba(10,10,15,0.9) 0%, rgba(44,45,63,0.85) 100%),
+                url('/img/about.jpg') center/cover no-repeat;
+    padding: 140px 0 80px;
+    text-align: center;
+    color: #fff;
+  }
+  .sh-about-hero h1 { color: #fff; margin-bottom: var(--sh-space-4); }
+  .sh-about-hero p { color: rgba(255,255,255,0.85); max-width: 600px; margin: 0 auto; }
+
+  .sh-mission-card {
+    background: var(--sh-surface);
+    border: 1px solid var(--sh-border);
+    border-radius: var(--sh-radius-lg);
+    padding: var(--sh-space-8);
+    height: 100%;
+    transition: all var(--sh-transition-base);
+  }
+  .sh-mission-card:hover {
+    box-shadow: var(--sh-shadow-lg);
+    border-color: var(--sh-brand);
+  }
+  .sh-mission-card h3 {
+    color: var(--sh-brand);
+    font-size: var(--sh-text-xl);
+    margin-bottom: var(--sh-space-4);
+  }
+  .sh-mission-card p { margin: 0; }
+
+  .sh-value-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--sh-space-6);
+    margin-top: var(--sh-space-10);
+  }
+  .sh-value-item {
+    background: var(--sh-surface);
+    border-top: 3px solid var(--sh-brand);
+    border-radius: 0 0 var(--sh-radius-lg) var(--sh-radius-lg);
+    padding: var(--sh-space-6);
+    transition: all var(--sh-transition-base);
+  }
+  .sh-value-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sh-shadow-md);
+    border-top-color: var(--sh-accent);
+  }
+  .sh-value-item h4 {
+    font-size: var(--sh-text-lg);
+    margin-bottom: var(--sh-space-2);
+    color: var(--sh-text-primary);
+  }
+  .sh-value-item p {
+    font-size: var(--sh-text-sm);
+    color: var(--sh-text-muted);
+    margin: 0;
+  }
+
+  .sh-why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sh-space-8);
+    margin-top: var(--sh-space-10);
+  }
+  @media (max-width: 992px) { .sh-why-grid { grid-template-columns: 1fr; } }
+  .sh-why-item {
+    text-align: center;
+  }
+  .sh-why-item__num {
+    font-size: var(--sh-text-4xl);
+    font-weight: var(--sh-weight-bold);
+    color: var(--sh-brand);
+    line-height: 1;
+    margin-bottom: var(--sh-space-3);
+  }
+  .sh-why-item h4 {
+    font-size: var(--sh-text-lg);
+    margin-bottom: var(--sh-space-2);
+  }
+  .sh-why-item p { margin: 0; }
+</style>
+</head>
+<body>
+<%- include('partials/header') %>
+
+<main id="main-content">
+
+  <!-- Hero -->
+  <section class="sh-about-hero" aria-label="About hero">
+    <div class="sh-container">
+      <h1>About Share Hubs Engineering</h1>
+      <p>A Lagos-based engineering company turning ideas into precision-manufactured reality for industries across Nigeria and beyond.</p>
+    </div>
+  </section>
+
+  <!-- Mission / Vision / Goal -->
+  <section class="sh-section" aria-labelledby="mission-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="mission-heading">Our Purpose</h2>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-12 mb-4">
+          <article class="sh-mission-card">
+            <h3>Vision</h3>
+            <p>To be a leading engineering fabrication company in Africa, delivering innovative, affordable, and sustainable solutions that improve lives and transform industries through research and technology.</p>
+          </article>
+        </div>
+        <div class="col-lg-4 col-md-4 col-12 mb-4">
+          <article class="sh-mission-card">
+            <h3>Mission</h3>
+            <p>To design, fabricate, and develop world-class engineering products that are innovative, affordable, and sustainable — empowering industries and communities while improving human living through research and technology.</p>
+          </article>
+        </div>
+        <div class="col-lg-4 col-md-4 col-12 mb-4">
+          <article class="sh-mission-card">
+            <h3>Goal</h3>
+            <p>To become a recognized solution center for engineering innovation, delivering sustainable technologies that improve lives and transform industries across Africa and beyond.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section class="sh-section" style="background: var(--sh-surface);" aria-labelledby="values-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="values-heading">Core Values</h2>
+        <p>The principles that guide every project we undertake.</p>
+      </div>
+      <div class="sh-value-grid">
+        <article class="sh-value-item">
+          <h4>Innovation</h4>
+          <p>Harnessing research and creativity to solve real-world engineering challenges.</p>
+        </article>
+        <article class="sh-value-item">
+          <h4>Affordability</h4>
+          <p>Delivering cost-effective solutions without compromising on quality or precision.</p>
+        </article>
+        <article class="sh-value-item">
+          <h4>Sustainability</h4>
+          <p>Promoting eco-friendly engineering practices for a better future.</p>
+        </article>
+        <article class="sh-value-item">
+          <h4>Excellence</h4>
+          <p>Committed to precision, quality, and adherence to global engineering standards.</p>
+        </article>
+        <article class="sh-value-item">
+          <h4>Integrity</h4>
+          <p>Building trust with clients through honesty, transparency, and accountability.</p>
+        </article>
+        <article class="sh-value-item">
+          <h4>Customer-Centricity</h4>
+          <p>Putting industries and people at the heart of every solution we design.</p>
+        </article>
+        <article class="sh-value-item">
+          <h4>Impact</h4>
+          <p>Creating engineering solutions that transform societies and strengthen industries.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="sh-section" aria-labelledby="why-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="why-heading">Why Choose Share Hubs Engineering?</h2>
+      </div>
+      <div class="sh-why-grid">
+        <article class="sh-why-item">
+          <div class="sh-why-item__num" aria-hidden="true">01</div>
+          <h4>Built for Performance</h4>
+          <p>Our products are designed to withstand the most challenging industrial environments, ensuring stability and reliability under pressure.</p>
+        </article>
+        <article class="sh-why-item">
+          <div class="sh-why-item__num" aria-hidden="true">02</div>
+          <h4>Client-Centered Approach</h4>
+          <p>We work closely with clients to deliver solutions that are practical, cost-effective, and aligned with project goals.</p>
+        </article>
+        <article class="sh-why-item">
+          <div class="sh-why-item__num" aria-hidden="true">03</div>
+          <h4>Innovation Driven</h4>
+          <p>We use up-to-date engineering methods and digital tools to ensure every solution meets today's industry demands.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Company Info -->
+  <section class="sh-section" style="background: var(--sh-surface);" aria-labelledby="info-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="info-heading">Company Information</h2>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="sh-card" style="padding: var(--sh-space-10);">
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <h5 style="color: var(--sh-brand); margin-bottom: var(--sh-space-2);">Phone</h5>
+                <p><a href="tel:+2349135116716">+234 913 511 6716</a></p>
+              </div>
+              <div class="col-md-6 mb-4">
+                <h5 style="color: var(--sh-brand); margin-bottom: var(--sh-space-2);">Industry</h5>
+                <p>Manufacturing & Engineering</p>
+              </div>
+              <div class="col-md-6 mb-4">
+                <h5 style="color: var(--sh-brand); margin-bottom: var(--sh-space-2);">Company Size</h5>
+                <p>2–10 employees</p>
+              </div>
+              <div class="col-md-6 mb-4">
+                <h5 style="color: var(--sh-brand); margin-bottom: var(--sh-space-2);">Headquarters</h5>
+                <p>Lagos, Oshodi, Nigeria</p>
+              </div>
+              <div class="col-md-6 mb-4">
+                <h5 style="color: var(--sh-brand); margin-bottom: var(--sh-space-2);">Founded</h5>
+                <p>2022</p>
+              </div>
+              <div class="col-md-6 mb-4">
+                <h5 style="color: var(--sh-brand); margin-bottom: var(--sh-space-2);">Email</h5>
+                <p><a href="mailto:info@sharehubseng.com">info@sharehubseng.com</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/scripts') %>
+</body>
+</html>

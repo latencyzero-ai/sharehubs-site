@@ -1,179 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Request a Consultation · Share Hubs Engineering</title>
-  <meta name="description" content="Request expert engineering consultation from Share Hubs Engineering." />
-  <link rel="icon" href="/img/share hubs engineering.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet" />
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-    body{background:radial-gradient(circle at 30% 15%,#1b0406 0%,#0a0a0a 55%,#000 100%);
-      color:#f5f5f5;min-height:100vh;padding:40px 20px}
-    .wrap{max-width:640px;margin:0 auto}
-    .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
-    .top a{color:#c9c9c9;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px}
-    .top a:hover{color:#fff}
-    .card{background:#121212;border:1px solid #242424;border-radius:20px;padding:40px;
-      box-shadow:0 24px 60px -12px rgba(0,0,0,.6)}
-    h1{font-family:'Sora',sans-serif;font-size:28px;letter-spacing:-.02em;margin-bottom:8px}
-    .sub{color:#9a9a9a;font-size:14.5px;line-height:1.55;margin-bottom:28px}
-    label{display:block;font-size:13px;color:#c9c9c9;margin:0 0 7px;font-weight:500}
-    .field{margin-bottom:18px}
-    input,select,textarea{width:100%;padding:13px 15px;background:#1a1a1a;
-      border:1.5px solid transparent;border-radius:9px;color:#f5f5f5;font-size:15px;outline:none}
-    input:focus,select:focus,textarea:focus{border-color:#e11d2a;background:#242424}
-    textarea{resize:vertical;min-height:110px}
-    .btn{width:100%;background:#e11d2a;color:#fff;border:none;padding:14px;border-radius:9px;
-      font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px}
-    .btn:hover{background:#c41320}
-    .hint{font-size:12.5px;color:#777;text-align:center;margin-top:14px}
-    .hint a{color:#e11d2a;text-decoration:none}
-    .saved-tag{font-size:12px;color:#2ecc71;display:none;margin-top:8px}
-    .saved-tag.show{display:block}
-    .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-20px);
-      background:#1a1a1a;border:1px solid #242424;border-left:4px solid #2ecc71;
-      border-radius:11px;padding:13px 18px;font-size:14px;opacity:0;pointer-events:none;
-      transition:.2s;z-index:9998}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    .toast.err{border-left-color:#e11d2a}
-    .spinner{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.25);
-      border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .bx{font-size:18px}
-  </style>
-  <link rel="stylesheet" href="/css/design-system.css" />
+<%- include('partials/head') %>
+
 </head>
 <body>
-  <div class="wrap">
-    <div class="top">
-      <a href="/"><i class='bx bx-arrow-back'></i> Back to site</a>
-      <a href="/coming-soon">Become a partner (coming soon) →</a>
-    </div>
-    <div class="card">
-      <h1>Request a Consultation</h1>
-      <p class="sub">Tell us about your challenge. No account needed to start —
-        we'll only ask you to sign up when you're ready to send, so we can keep
-        you updated on our response.</p>
+<%- include('partials/header') %>
+<main id="main-content">
 
-      <form id="consultationForm" novalidate>
-        <div class="field">
-          <label>Your name</label>
-          <input type="text" name="name" placeholder="John Doe" required />
-        </div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" name="email" placeholder="john@company.com" required />
-        </div>
-        <div class="field">
-          <label>Company (optional)</label>
-          <input type="text" name="company" placeholder="Acme Corp" />
-        </div>
-        <div class="field">
-          <label>Phone (optional)</label>
-          <input type="tel" name="phone" placeholder="+234 800 000 0000" />
-        </div>
-        <div class="field">
-          <label>Sector</label>
-          <select name="sector" required>
-            <option value="" disabled selected>Select a sector</option>
-            <option value="agriculture">Agriculture</option>
-            <option value="automobile">Automobile</option>
-            <option value="medicine">Medical / Healthcare</option>
-            <option value="oil-and-gas">Oil & Gas</option>
-            <option value="home-and-office">Home & Office</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>What do you need help with?</label>
-          <textarea name="details" placeholder="Describe your project, challenge, or the kind of consultation you need..." required></textarea>
-        </div>
-        <button type="submit" class="btn" id="submitBtn">
-          <span class="spinner" id="spinner"></span>
-          <span id="btnText">Request a Consultation</span>
-        </button>
-        <p class="saved-tag" id="savedTag">Draft saved — it'll be here when you sign in.</p>
-      </form>
+<!-- Hero -->
+<section class="sh-page-hero" aria-label="Consultation hero">
+  <div class="sh-container">
+    <h1>Request a Consultation</h1>
+    <p>Schedule a session with our engineering team to discuss your project feasibility, design, and manufacturing strategy.</p>
+  </div>
+</section>
 
-      <p class="hint">Already have an account? <a href="/login?next=/request-consultation">Sign in</a></p>
+<!-- Form -->
+<section class="sh-section" aria-labelledby="cons-form-heading">
+  <div class="sh-container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="sh-card" style="padding:var(--sh-space-10);">
+          <div class="sh-section-title" style="margin-bottom:var(--sh-space-8);">
+            <h2 id="cons-form-heading">Consultation Request</h2>
+            <p>Fill in your details and we will contact you to schedule a convenient time.</p>
+          </div>
+          <form action="/request-consultation" method="POST">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="sh-form-group">
+                  <label for="c-name" class="sh-label">Full Name *</label>
+                  <input type="text" id="c-name" name="name" class="sh-input" required autocomplete="name">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="sh-form-group">
+                  <label for="c-email" class="sh-label">Email *</label>
+                  <input type="email" id="c-email" name="email" class="sh-input" required autocomplete="email">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="sh-form-group">
+                  <label for="c-phone" class="sh-label">Phone *</label>
+                  <input type="tel" id="c-phone" name="phone" class="sh-input" required autocomplete="tel">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="sh-form-group">
+                  <label for="c-company" class="sh-label">Company / Organization</label>
+                  <input type="text" id="c-company" name="company" class="sh-input">
+                </div>
+              </div>
+            </div>
+            <div class="sh-form-group">
+              <label for="c-topic" class="sh-label">Consultation Topic *</label>
+              <select id="c-topic" name="topic" class="sh-select" required>
+                <option value="">Select a topic</option>
+                <option value="design-review">Design Review & Feasibility</option>
+                <option value="material-selection">Material Selection Advice</option>
+                <option value="process-planning">Manufacturing Process Planning</option>
+                <option value="cost-optimization">Cost Optimization</option>
+                <option value="prototype">Prototype Development</option>
+                <option value="training">Training & Skills Development</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="sh-form-group">
+              <label for="c-pref" class="sh-label">Preferred Contact Method</label>
+              <select id="c-pref" name="preference" class="sh-select">
+                <option value="phone">Phone Call</option>
+                <option value="video">Video Call (Zoom/Teams)</option>
+                <option value="in-person">In-Person Meeting</option>
+                <option value="email">Email Exchange</option>
+              </select>
+            </div>
+            <div class="sh-form-group">
+              <label for="c-message" class="sh-label">Tell Us About Your Project</label>
+              <textarea id="c-message" name="message" class="sh-textarea" placeholder="Brief overview of what you need help with..."></textarea>
+            </div>
+            <div class="sh-form-group" style="margin-bottom:0;">
+              <button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Request Consultation</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <div id="toast" class="toast"></div>
-
-  <script>
-  (function(){
-    const form = document.getElementById('consultationForm');
-    const btn = document.getElementById('submitBtn');
-    const spinner = document.getElementById('spinner');
-    const btnText = document.getElementById('btnText');
-    const toast = document.getElementById('toast');
-    const savedTag = document.getElementById('savedTag');
-
-    function showToast(msg, isErr) {
-      toast.textContent = msg;
-      toast.className = 'toast' + (isErr ? ' err' : '') + ' show';
-      setTimeout(() => toast.classList.remove('show'), 4000);
-    }
-
-    // Draft auto-save to localStorage
-    const STORAGE_KEY = 'consultation_draft';
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        Object.keys(data).forEach(k => {
-          const el = form.querySelector('[name="' + k + '"]');
-          if (el) el.value = data[k];
-        });
-        savedTag.classList.add('show');
-      } catch(e) {}
-    }
-    form.addEventListener('input', () => {
-      const data = {};
-      new FormData(form).forEach((v, k) => data[k] = v);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      savedTag.classList.add('show');
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      btn.disabled = true;
-      spinner.style.display = 'inline-block';
-      btnText.textContent = 'Sending...';
-      try {
-        const res = await fetch('/request-consultation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(Object.fromEntries(new FormData(form)))
-        });
-        const data = await res.json();
-        if (res.status === 401 && data.error === 'signup_required') {
-          showToast('Create an account to send & track your consultation.', true);
-          setTimeout(() => location.href = '/login?next=' + encodeURIComponent('/request-consultation'), 2000);
-          return;
-        }
-        if (!res.ok) throw new Error(data.error || 'Failed');
-        showToast(data.message || 'Consultation request sent!');
-        localStorage.removeItem(STORAGE_KEY);
-        form.reset();
-        savedTag.classList.remove('show');
-      } catch (err) {
-        showToast(err.message || 'Something went wrong. Please try again.', true);
-      } finally {
-        btn.disabled = false;
-        spinner.style.display = 'none';
-        btnText.textContent = 'Request a Consultation';
-      }
-    });
-  })();
-  </script>
+</main>
+<%- include('partials/footer') %>
+<%- include('partials/scripts') %>
 </body>
 </html>
