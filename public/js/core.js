@@ -1,46 +1,42 @@
-/**
- * Share Hubs Engineering — Core JavaScript v3.0
- * Vanilla JS. No jQuery required for core functionality.
- * Handles: theme, mobile nav, header scroll, smooth scroll, animations.
- */
-
 (function() {
   'use strict';
 
   /* ================================================================
-     THEME MANAGER — Light default, dark optional
+     PRELOADER
+     ================================================================ */
+  const Preloader = {
+    init() {
+      this.el = document.getElementById('sh-preloader');
+      if (!this.el) return;
+      window.addEventListener('load', () => {
+        setTimeout(() => this.el.classList.add('is-done'), 800);
+      });
+    }
+  };
+
+  /* ================================================================
+     THEME — Light default, dark optional
      ================================================================ */
   const ThemeManager = {
     init() {
       const saved = localStorage.getItem('sh-theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-      // DEFAULT: light mode. Only go dark if explicitly saved or system prefers AND no saved preference
-      if (saved === 'dark') {
-        this.set('dark');
-      } else if (saved === 'light') {
-        this.set('light');
-      } else if (prefersDark) {
-        this.set('dark');
-      } else {
-        this.set('light');
-      }
-
+      if (saved === 'dark') { this.set('dark'); }
+      else if (saved === 'light') { this.set('light'); }
+      else if (prefersDark) { this.set('dark'); }
+      else { this.set('light'); }
       this.bindToggle();
       this.listenSystem();
     },
-
     set(theme) {
       document.documentElement.setAttribute('data-theme', theme);
       localStorage.setItem('sh-theme', theme);
       this.updateIcon(theme);
     },
-
     toggle() {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
       this.set(current === 'dark' ? 'light' : 'dark');
     },
-
     updateIcon(theme) {
       const btn = document.getElementById('theme-toggle');
       if (!btn) return;
@@ -51,104 +47,95 @@
         moon.style.display = theme === 'dark' ? 'block' : 'none';
       }
     },
-
     bindToggle() {
       const btn = document.getElementById('theme-toggle');
-      if (btn) {
-        btn.addEventListener('click', () => this.toggle());
-      }
+      if (btn) btn.addEventListener('click', () => this.toggle());
     },
-
     listenSystem() {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        // Only auto-switch if user hasn't manually set a preference
-        if (!localStorage.getItem('sh-theme')) {
-          this.set(e.matches ? 'dark' : 'light');
-        }
+        if (!localStorage.getItem('sh-theme')) this.set(e.matches ? 'dark' : 'light');
       });
     }
   };
 
   /* ================================================================
-     MOBILE NAVIGATION
+     HERO SLIDER — 3 slides with auto-rotation
+     ================================================================ */
+  const HeroSlider = {
+    init() {
+      this.slides = document.querySelectorAll('.sh-hero__slide');
+      this.dots = document.querySelectorAll('.sh-hero__dot');
+      if (!this.slides.length) return;
+      this.current = 0;
+      this.total = this.slides.length;
+      this.interval = null;
+      this.startAuto();
+      this.bindDots();
+    },
+    goTo(index) {
+      this.slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+      this.dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+      this.current = index;
+    },
+    next() {
+      this.goTo((this.current + 1) % this.total);
+    },
+    startAuto() {
+      this.interval = setInterval(() => this.next(), 6000);
+    },
+    bindDots() {
+      this.dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          clearInterval(this.interval);
+          this.goTo(i);
+          this.startAuto();
+        });
+      });
+    }
+  };
+
+  /* ================================================================
+     MOBILE NAV
      ================================================================ */
   const MobileNav = {
     init() {
       this.toggle = document.getElementById('menu-toggle');
       this.panel = document.getElementById('mobile-nav');
       this.body = document.body;
-
       if (!this.toggle || !this.panel) return;
-
       this.toggle.addEventListener('click', () => this.toggleMenu());
-
-      // Close on link click
-      this.panel.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => this.close());
-      });
-
-      // Close on Escape
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this.isOpen()) this.close();
-      });
-
-      // Close on outside click
+      this.panel.querySelectorAll('a').forEach(link => link.addEventListener('click', () => this.close()));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.isOpen()) this.close(); });
       document.addEventListener('click', (e) => {
-        if (this.isOpen() && !this.panel.contains(e.target) && !this.toggle.contains(e.target)) {
-          this.close();
-        }
+        if (this.isOpen() && !this.panel.contains(e.target) && !this.toggle.contains(e.target)) this.close();
       });
     },
-
-    isOpen() {
-      return this.panel.classList.contains('is-open');
-    },
-
-    toggleMenu() {
-      this.isOpen() ? this.close() : this.open();
-    },
-
-    open() {
-      this.panel.classList.add('is-open');
-      this.toggle.setAttribute('aria-expanded', 'true');
-      this.body.style.overflow = 'hidden';
-    },
-
-    close() {
-      this.panel.classList.remove('is-open');
-      this.toggle.setAttribute('aria-expanded', 'false');
-      this.body.style.overflow = '';
-    }
+    isOpen() { return this.panel.classList.contains('is-open'); },
+    toggleMenu() { this.isOpen() ? this.close() : this.open(); },
+    open() { this.panel.classList.add('is-open'); this.toggle.setAttribute('aria-expanded', 'true'); this.body.style.overflow = 'hidden'; },
+    close() { this.panel.classList.remove('is-open'); this.toggle.setAttribute('aria-expanded', 'false'); this.body.style.overflow = ''; }
   };
 
   /* ================================================================
-     HEADER SCROLL BEHAVIOR
+     HEADER SCROLL
      ================================================================ */
   const HeaderScroll = {
     init() {
       this.header = document.getElementById('sh-header');
       if (!this.header) return;
-
       let ticking = false;
       window.addEventListener('scroll', () => {
         if (!ticking) {
-          window.requestAnimationFrame(() => {
-            this.update();
-            ticking = false;
-          });
+          window.requestAnimationFrame(() => { this.update(); ticking = false; });
           ticking = true;
         }
       });
     },
-
-    update() {
-      const scrolled = window.scrollY > 20;
-      this.header.classList.toggle('is-scrolled', scrolled);
-    }
+    update() { this.header.classList.toggle('is-scrolled', window.scrollY > 20); }
   };
 
   /* ================================================================
-     SMOOTH SCROLL FOR ANCHOR LINKS
+     SMOOTH SCROLL
      ================================================================ */
   const SmoothScroll = {
     init() {
@@ -156,18 +143,11 @@
         anchor.addEventListener('click', (e) => {
           const targetId = anchor.getAttribute('href');
           if (targetId === '#') return;
-
           const target = document.querySelector(targetId);
           if (target) {
             e.preventDefault();
-            const headerOffset = 80;
-            const elementPosition = target.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
+            const offset = target.getBoundingClientRect().top + window.pageYOffset - 80;
+            window.scrollTo({ top: offset, behavior: 'smooth' });
           }
         });
       });
@@ -179,22 +159,12 @@
      ================================================================ */
   const ScrollAnimations = {
     init() {
-      const elements = document.querySelectorAll('.sh-animate');
-      if (!elements.length) return;
-
+      const els = document.querySelectorAll('.sh-animate');
+      if (!els.length) return;
       const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      });
-
-      elements.forEach(el => observer.observe(el));
+        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+      els.forEach(el => observer.observe(el));
     }
   };
 
@@ -207,33 +177,30 @@
         btn.addEventListener('click', () => {
           const item = btn.closest('.sh-faq-item');
           const isOpen = item.classList.contains('is-open');
-
-          // Close all others (optional — remove this loop for multi-open)
-          document.querySelectorAll('.sh-faq-item.is-open').forEach(openItem => {
-            if (openItem !== item) openItem.classList.remove('is-open');
-          });
-
+          document.querySelectorAll('.sh-faq-item.is-open').forEach(openItem => { if (openItem !== item) openItem.classList.remove('is-open'); });
           item.classList.toggle('is-open', !isOpen);
+          btn.setAttribute('aria-expanded', !isOpen);
         });
       });
     }
   };
 
   /* ================================================================
-     CURRENT YEAR IN FOOTER
+     CURRENT YEAR
      ================================================================ */
   const CurrentYear = {
     init() {
-      const els = document.querySelectorAll('[data-current-year]');
-      els.forEach(el => el.textContent = new Date().getFullYear());
+      document.querySelectorAll('[data-current-year]').forEach(el => el.textContent = new Date().getFullYear());
     }
   };
 
   /* ================================================================
-     INITIALIZE EVERYTHING
+     INIT
      ================================================================ */
   document.addEventListener('DOMContentLoaded', () => {
+    Preloader.init();
     ThemeManager.init();
+    HeroSlider.init();
     MobileNav.init();
     HeaderScroll.init();
     SmoothScroll.init();
@@ -241,5 +208,4 @@
     FAQAccordion.init();
     CurrentYear.init();
   });
-
 })();

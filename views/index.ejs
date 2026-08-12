@@ -8,11 +8,18 @@
 <%- include('partials/header') %>
 <main id="main-content">
 
-<!-- Hero -->
+<!-- Hero Slider — 3 slides, left-aligned text -->
 <section class="sh-hero" aria-label="Hero">
-  <div class="sh-hero__bg">
-    <img src="/img/engineering-scene-1.webp" alt="" loading="eager" width="1920" height="1080">
+  <div class="sh-hero__slide is-active">
+    <img src="/assets/img/monochrome-scene-depicting-life-workers-construction-industry-site.jpg" alt="" loading="eager" width="1920" height="1080">
   </div>
+  <div class="sh-hero__slide">
+    <img src="/assets/img/GEAR_1.png" alt="" loading="lazy" width="1920" height="1080">
+  </div>
+  <div class="sh-hero__slide">
+    <img src="/assets/img/black-white-scene-showcasing-life-construction-workers-site.jpg" alt="" loading="lazy" width="1920" height="1080">
+  </div>
+
   <div class="sh-container sh-hero__content">
     <span class="sh-hero__tag">Engineering & Manufacturing — Lagos, Nigeria</span>
     <h1 class="sh-hero__title">Precision Manufacturing for <span class="accent">Agriculture, Automotive, Medical & More</span></h1>
@@ -21,6 +28,12 @@
       <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Discuss Your Project</a>
       <a href="/services" class="sh-btn sh-btn--ghost sh-btn--lg">Explore Capabilities</a>
     </div>
+  </div>
+
+  <div class="sh-hero__dots">
+    <button class="sh-hero__dot is-active" aria-label="Slide 1"></button>
+    <button class="sh-hero__dot" aria-label="Slide 2"></button>
+    <button class="sh-hero__dot" aria-label="Slide 3"></button>
   </div>
 </section>
 
@@ -138,37 +151,25 @@
       <div class="col-lg-6 col-md-6 col-12 mb-4">
         <article class="sh-service sh-animate">
           <div class="sh-service__icon"><i class="icofont-gear"></i></div>
-          <div>
-            <h4>Manufacturing</h4>
-            <p>Precision fabrication of machine components, equipment parts, and tools using 3D printing, laser, punching, and plasma technologies.</p>
-          </div>
+          <div><h4>Manufacturing</h4><p>Precision fabrication of machine components, equipment parts, and tools using 3D printing, laser, punching, and plasma technologies.</p></div>
         </article>
       </div>
       <div class="col-lg-6 col-md-6 col-12 mb-4">
         <article class="sh-service sh-animate">
           <div class="sh-service__icon"><i class="icofont-brainstorming"></i></div>
-          <div>
-            <h4>Engineering Consultancy</h4>
-            <p>Expert advice on design feasibility, material selection, manufacturing processes, and cost optimization for your projects.</p>
-          </div>
+          <div><h4>Engineering Consultancy</h4><p>Expert advice on design feasibility, material selection, manufacturing processes, and cost optimization for your projects.</p></div>
         </article>
       </div>
       <div class="col-lg-6 col-md-6 col-12 mb-4">
         <article class="sh-service sh-animate">
           <div class="sh-service__icon"><i class="icofont-read-book"></i></div>
-          <div>
-            <h4>Research & Development</h4>
-            <p>Collaborative product development, prototyping, and testing to bring innovative concepts from idea to physical reality.</p>
-          </div>
+          <div><h4>Research & Development</h4><p>Collaborative product development, prototyping, and testing to bring innovative concepts from idea to physical reality.</p></div>
         </article>
       </div>
       <div class="col-lg-6 col-md-6 col-12 mb-4">
         <article class="sh-service sh-animate">
           <div class="sh-service__icon"><i class="icofont-graduate"></i></div>
-          <div>
-            <h4>Training & Education</h4>
-            <p>Technical training for individuals and organizations in CAD/CAM, manufacturing processes, and engineering best practices.</p>
-          </div>
+          <div><h4>Training & Education</h4><p>Technical training for individuals and organizations in CAD/CAM, manufacturing processes, and engineering best practices.</p></div>
         </article>
       </div>
     </div>
@@ -186,37 +187,25 @@
       <div class="col-lg-3 col-md-6 col-12 mb-4">
         <div class="sh-step sh-animate">
           <div class="sh-step__num">1</div>
-          <div class="sh-step__content">
-            <h4>Consultation</h4>
-            <p class="sh-text-small">Discuss your project requirements, timeline, and budget with our engineering team.</p>
-          </div>
+          <div class="sh-step__content"><h4>Consultation</h4><p class="sh-text-small">Discuss your project requirements, timeline, and budget with our engineering team.</p></div>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 col-12 mb-4">
         <div class="sh-step sh-animate">
           <div class="sh-step__num">2</div>
-          <div class="sh-step__content">
-            <h4>Design & Analysis</h4>
-            <p class="sh-text-small">We create detailed CAD models and run simulations to validate the design before production.</p>
-          </div>
+          <div class="sh-step__content"><h4>Design & Analysis</h4><p class="sh-text-small">We create detailed CAD models and run simulations to validate the design before production.</p></div>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 col-12 mb-4">
         <div class="sh-step sh-animate">
           <div class="sh-step__num">3</div>
-          <div class="sh-step__content">
-            <h4>Manufacturing</h4>
-            <p class="sh-text-small">Precision fabrication using the optimal technology for your component requirements.</p>
-          </div>
+          <div class="sh-step__content"><h4>Manufacturing</h4><p class="sh-text-small">Precision fabrication using the optimal technology for your component requirements.</p></div>
         </div>
       </div>
       <div class="col-lg-3 col-md-6 col-12 mb-4">
         <div class="sh-step sh-animate">
           <div class="sh-step__num">4</div>
-          <div class="sh-step__content">
-            <h4>Delivery</h4>
-            <p class="sh-text-small">Quality inspection, packaging, and delivery of your finished components.</p>
-          </div>
+          <div class="sh-step__content"><h4>Delivery</h4><p class="sh-text-small">Quality inspection, packaging, and delivery of your finished components.</p></div>
         </div>
       </div>
     </div>

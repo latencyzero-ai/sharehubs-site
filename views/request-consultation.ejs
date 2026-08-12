@@ -8,7 +8,6 @@
 <%- include('partials/header') %>
 <main id="main-content">
 
-<!-- Hero -->
 <section class="sh-page-hero" aria-label="Consultation hero">
   <div class="sh-container">
     <h1>Request a Consultation</h1>
@@ -16,7 +15,6 @@
   </div>
 </section>
 
-<!-- Form -->
 <section class="sh-section" aria-labelledby="cons-form-heading">
   <div class="sh-container">
     <div class="row justify-content-center">
@@ -28,32 +26,12 @@
           </div>
           <form action="/request-consultation" method="POST">
             <div class="row">
-              <div class="col-md-6">
-                <div class="sh-form-group">
-                  <label for="c-name" class="sh-label">Full Name *</label>
-                  <input type="text" id="c-name" name="name" class="sh-input" required autocomplete="name">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="sh-form-group">
-                  <label for="c-email" class="sh-label">Email *</label>
-                  <input type="email" id="c-email" name="email" class="sh-input" required autocomplete="email">
-                </div>
-              </div>
+              <div class="col-md-6"><div class="sh-form-group"><label for="c-name" class="sh-label">Full Name *</label><input type="text" id="c-name" name="name" class="sh-input" required autocomplete="name"></div></div>
+              <div class="col-md-6"><div class="sh-form-group"><label for="c-email" class="sh-label">Email *</label><input type="email" id="c-email" name="email" class="sh-input" required autocomplete="email"></div></div>
             </div>
             <div class="row">
-              <div class="col-md-6">
-                <div class="sh-form-group">
-                  <label for="c-phone" class="sh-label">Phone *</label>
-                  <input type="tel" id="c-phone" name="phone" class="sh-input" required autocomplete="tel">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="sh-form-group">
-                  <label for="c-company" class="sh-label">Company / Organization</label>
-                  <input type="text" id="c-company" name="company" class="sh-input">
-                </div>
-              </div>
+              <div class="col-md-6"><div class="sh-form-group"><label for="c-phone" class="sh-label">Phone *</label><input type="tel" id="c-phone" name="phone" class="sh-input" required autocomplete="tel"></div></div>
+              <div class="col-md-6"><div class="sh-form-group"><label for="c-company" class="sh-label">Company / Organization</label><input type="text" id="c-company" name="company" class="sh-input"></div></div>
             </div>
             <div class="sh-form-group">
               <label for="c-topic" class="sh-label">Consultation Topic *</label>
@@ -77,13 +55,8 @@
                 <option value="email">Email Exchange</option>
               </select>
             </div>
-            <div class="sh-form-group">
-              <label for="c-message" class="sh-label">Tell Us About Your Project</label>
-              <textarea id="c-message" name="message" class="sh-textarea" placeholder="Brief overview of what you need help with..."></textarea>
-            </div>
-            <div class="sh-form-group" style="margin-bottom:0;">
-              <button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Request Consultation</button>
-            </div>
+            <div class="sh-form-group"><label for="c-message" class="sh-label">Tell Us About Your Project</label><textarea id="c-message" name="message" class="sh-textarea" placeholder="Brief overview of what you need help with..."></textarea></div>
+            <div class="sh-form-group" style="margin-bottom:0;"><button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Request Consultation</button></div>
           </form>
         </div>
       </div>

@@ -9,7 +9,6 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="<%= typeof canonical !== 'undefined' ? canonical : 'https://sharehubseng.com' + (typeof path !== 'undefined' ? path : '/') %>">
 
-<!-- Open Graph -->
 <meta property="og:type" content="<%= typeof ogType !== 'undefined' ? ogType : 'website' %>">
 <meta property="og:site_name" content="Share Hubs Engineering">
 <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Share Hubs Engineering' %>">
@@ -18,68 +17,33 @@
 <meta property="og:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://sharehubseng.com/img/share-hubs-engineering.png' %>">
 <meta property="og:locale" content="en_NG">
 
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Share Hubs Engineering' %>">
 <meta name="twitter:description" content="<%= typeof description !== 'undefined' ? description : 'Precision manufacturing and engineering solutions in Lagos, Nigeria.' %>">
 <meta name="twitter:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://sharehubseng.com/img/share-hubs-engineering.png' %>">
 
-<!-- Favicons -->
 <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon_io (1)/android-chrome-192x192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/img/favicon_io (1)/android-chrome-512x512.png">
 <link rel="apple-touch-icon" href="/img/favicon_io (1)/apple-touch-icon.png">
 <link rel="icon" type="image/x-icon" href="/img/favicon_io (1)/favicon.ico">
 
-<!-- Preconnect -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<!-- Bootstrap (grid compatibility) -->
 <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-<!-- Icofont -->
 <link rel="stylesheet" href="/assets/css/icofont.css">
+<link rel="stylesheet" href="/css/design-system-v4.css">
 
-<!-- Design System v3 -->
-<link rel="stylesheet" href="/css/design-system-v3.css">
-
-<!-- Page CSS -->
 <% if (typeof pageCss !== 'undefined' && pageCss) { %>
 <link rel="stylesheet" href="<%= pageCss %>">
 <% } %>
 
-<!-- Structured Data -->
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Share Hubs Engineering",
-  "url": "https://sharehubseng.com",
-  "logo": "https://sharehubseng.com/img/share-hubs-engineering.png",
-  "description": "Engineering and manufacturing company specializing in components for agriculture, automotive, medical, oil & gas, and home & office industries.",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Lagos",
-    "addressRegion": "Lagos State",
-    "addressCountry": "NG"
-  },
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+234-913-511-6716",
-    "contactType": "customer service",
-    "availableLanguage": "English"
-  },
-  "foundingDate": "2022"
-}
+{"@context":"https://schema.org","@type":"Organization","name":"Share Hubs Engineering","url":"https://sharehubseng.com","logo":"https://sharehubseng.com/img/share-hubs-engineering.png","description":"Engineering and manufacturing company specializing in components for agriculture, automotive, medical, oil & gas, and home & office industries.","address":{"@type":"PostalAddress","addressLocality":"Lagos","addressRegion":"Lagos State","addressCountry":"NG"},"contactPoint":{"@type":"ContactPoint","telephone":"+234-913-511-6716","contactType":"customer service","availableLanguage":"English"},"foundingDate":"2022"}
 </script>
 
-<!-- Theme init (prevents flash) -->
 <script>
 (function() {
   const saved = localStorage.getItem('sh-theme');

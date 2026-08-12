@@ -1,16 +1,12 @@
 <nav class="sh-nav" aria-label="Main navigation">
   <a href="/" class="sh-nav__link <%= path === '/' ? 'is-active' : '' %>" <%= path === '/' ? 'aria-current="page"' : '' %>>Home</a>
   <a href="/about" class="sh-nav__link <%= path === '/about' ? 'is-active' : '' %>" <%= path === '/about' ? 'aria-current="page"' : '' %>>About</a>
-  <div class="sh-nav__item">
-    <a href="/services" class="sh-nav__link <%= ['/services','/agriculture','/automobile','/medicine','/oil-and-gas','/home-and-office'].includes(path) ? 'is-active' : '' %>">Industries <i class="fa fa-chevron-down" style="font-size:10px;margin-left:4px;"></i></a>
-    <div class="sh-dropdown">
-      <a href="/agriculture" class="sh-dropdown__link">Agriculture</a>
-      <a href="/automobile" class="sh-dropdown__link">Automobile</a>
-      <a href="/medicine" class="sh-dropdown__link">Medical</a>
-      <a href="/oil-and-gas" class="sh-dropdown__link">Oil & Gas</a>
-      <a href="/home-and-office" class="sh-dropdown__link">Home & Office</a>
-    </div>
-  </div>
   <a href="/services" class="sh-nav__link <%= path === '/services' ? 'is-active' : '' %>" <%= path === '/services' ? 'aria-current="page"' : '' %>>Services</a>
+  <a href="/agriculture" class="sh-nav__link <%= path === '/agriculture' ? 'is-active' : '' %>" <%= path === '/agriculture' ? 'aria-current="page"' : '' %>>Agriculture</a>
+  <a href="/automobile" class="sh-nav__link <%= path === '/automobile' ? 'is-active' : '' %>" <%= path === '/automobile' ? 'aria-current="page"' : '' %>>Automobile</a>
+  <a href="/medicine" class="sh-nav__link <%= path === '/medicine' ? 'is-active' : '' %>" <%= path === '/medicine' ? 'aria-current="page"' : '' %>>Medical</a>
+  <a href="/oil-and-gas" class="sh-nav__link <%= path === '/oil-and-gas' ? 'is-active' : '' %>" <%= path === '/oil-and-gas' ? 'aria-current="page"' : '' %>>Oil & Gas</a>
+  <a href="/home-and-office" class="sh-nav__link <%= path === '/home-and-office' ? 'is-active' : '' %>" <%= path === '/home-and-office' ? 'aria-current="page"' : '' %>>Home & Office</a>
   <a href="/contact" class="sh-nav__link <%= path === '/contact' ? 'is-active' : '' %>" <%= path === '/contact' ? 'aria-current="page"' : '' %>>Contact</a>
+  <a href="/faq" class="sh-nav__link <%= path === '/faq' ? 'is-active' : '' %>" <%= path === '/faq' ? 'aria-current="page"' : '' %>>FAQ</a>
 </nav>

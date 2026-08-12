@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-// Helper for consistent page rendering
 const renderPage = (res, view, opts = {}) => {
   const defaults = {
     title: 'Share Hubs Engineering',
@@ -12,7 +11,6 @@ const renderPage = (res, view, opts = {}) => {
   res.render(view, { ...defaults, ...opts });
 };
 
-// Public pages
 router.get('/', (req, res) => renderPage(res, 'index', {
   title: 'Share Hubs Engineering — Precision Manufacturing & Engineering Solutions',
   path: '/'
@@ -36,7 +34,6 @@ router.get('/contact', (req, res) => renderPage(res, 'contact', {
   path: '/contact'
 }));
 
-// Industry pages
 router.get('/agriculture', (req, res) => renderPage(res, 'agriculture', {
   title: 'Agricultural Engineering — Share Hubs Engineering',
   description: 'Custom agricultural equipment, irrigation systems, and mechanized farming tools engineered for Nigerian agriculture.',
@@ -67,7 +64,6 @@ router.get('/home-and-office', (req, res) => renderPage(res, 'home-and-office', 
   path: '/home-and-office'
 }));
 
-// Conversion pages
 router.get('/request-quote', (req, res) => renderPage(res, 'request-quote', {
   title: 'Request a Quote — Share Hubs Engineering',
   description: 'Request a tailored manufacturing quote from Share Hubs Engineering. Tell us about your project and we will respond within 24 hours.',
@@ -80,15 +76,14 @@ router.get('/request-consultation', (req, res) => renderPage(res, 'request-consu
   path: '/request-consultation'
 }));
 
-// Other pages
 router.get('/faq', (req, res) => renderPage(res, 'faq', { path: '/faq' }));
 router.get('/coming-soon', (req, res) => renderPage(res, 'coming_soon', { path: '/coming-soon' }));
 router.get('/404', (req, res) => renderPage(res, '404', { title: 'Page Not Found', path: '/404' }));
 
-// Auth pages (keep existing templates until migrated)
 router.get('/login', (req, res) => renderPage(res, 'login', { path: '/login' }));
 router.get('/profile', (req, res) => renderPage(res, 'profile', { path: '/profile' }));
 router.get('/portfolio-details', (req, res) => renderPage(res, 'portfolio-details', { path: '/portfolio-details' }));
 router.get('/supplier', (req, res) => renderPage(res, 'supplier', { path: '/supplier' }));
+
 
 module.exports = router;

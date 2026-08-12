@@ -8,7 +8,6 @@
 <%- include('partials/header') %>
 <main id="main-content">
 
-<!-- Hero -->
 <section class="sh-page-hero" aria-label="Quote hero">
   <div class="sh-container">
     <h1>Request a Quote</h1>
@@ -16,7 +15,6 @@
   </div>
 </section>
 
-<!-- Form -->
 <section class="sh-section" aria-labelledby="quote-form-heading">
   <div class="sh-container">
     <div class="row justify-content-center">
@@ -28,32 +26,12 @@
           </div>
           <form action="/request-quote" method="POST">
             <div class="row">
-              <div class="col-md-6">
-                <div class="sh-form-group">
-                  <label for="q-name" class="sh-label">Full Name *</label>
-                  <input type="text" id="q-name" name="name" class="sh-input" required autocomplete="name">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="sh-form-group">
-                  <label for="q-email" class="sh-label">Email *</label>
-                  <input type="email" id="q-email" name="email" class="sh-input" required autocomplete="email">
-                </div>
-              </div>
+              <div class="col-md-6"><div class="sh-form-group"><label for="q-name" class="sh-label">Full Name *</label><input type="text" id="q-name" name="name" class="sh-input" required autocomplete="name"></div></div>
+              <div class="col-md-6"><div class="sh-form-group"><label for="q-email" class="sh-label">Email *</label><input type="email" id="q-email" name="email" class="sh-input" required autocomplete="email"></div></div>
             </div>
             <div class="row">
-              <div class="col-md-6">
-                <div class="sh-form-group">
-                  <label for="q-phone" class="sh-label">Phone</label>
-                  <input type="tel" id="q-phone" name="phone" class="sh-input" autocomplete="tel">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="sh-form-group">
-                  <label for="q-company" class="sh-label">Company Name</label>
-                  <input type="text" id="q-company" name="company" class="sh-input">
-                </div>
-              </div>
+              <div class="col-md-6"><div class="sh-form-group"><label for="q-phone" class="sh-label">Phone</label><input type="tel" id="q-phone" name="phone" class="sh-input" autocomplete="tel"></div></div>
+              <div class="col-md-6"><div class="sh-form-group"><label for="q-company" class="sh-label">Company Name</label><input type="text" id="q-company" name="company" class="sh-input"></div></div>
             </div>
             <div class="sh-form-group">
               <label for="q-industry" class="sh-label">Industry *</label>
@@ -80,10 +58,7 @@
                 <option value="unsure">Not Sure — Need Advice</option>
               </select>
             </div>
-            <div class="sh-form-group">
-              <label for="q-quantity" class="sh-label">Estimated Quantity</label>
-              <input type="text" id="q-quantity" name="quantity" class="sh-input" placeholder="e.g., 50 units, prototype, one-off">
-            </div>
+            <div class="sh-form-group"><label for="q-quantity" class="sh-label">Estimated Quantity</label><input type="text" id="q-quantity" name="quantity" class="sh-input" placeholder="e.g., 50 units, prototype, one-off"></div>
             <div class="sh-form-group">
               <label for="q-timeline" class="sh-label">Desired Timeline</label>
               <select id="q-timeline" name="timeline" class="sh-select">
@@ -93,13 +68,8 @@
                 <option value="flexible">Flexible (1+ months)</option>
               </select>
             </div>
-            <div class="sh-form-group">
-              <label for="q-details" class="sh-label">Project Details *</label>
-              <textarea id="q-details" name="details" class="sh-textarea" placeholder="Describe your project: dimensions, materials, tolerances, intended use, any drawings or references..." required></textarea>
-            </div>
-            <div class="sh-form-group" style="margin-bottom:0;">
-              <button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Submit Quote Request</button>
-            </div>
+            <div class="sh-form-group"><label for="q-details" class="sh-label">Project Details *</label><textarea id="q-details" name="details" class="sh-textarea" placeholder="Describe your project: dimensions, materials, tolerances, intended use, any drawings or references..." required></textarea></div>
+            <div class="sh-form-group" style="margin-bottom:0;"><button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Submit Quote Request</button></div>
             <p class="sh-text-small sh-text-center sh-mt-4">We respect your privacy. Your information will only be used to respond to your inquiry.</p>
           </form>
         </div>
