@@ -1,12 +1,23 @@
-<nav class="sh-nav" aria-label="Main navigation">
-  <a href="/" class="sh-nav__link <%= path === '/' ? 'is-active' : '' %>" <%= path === '/' ? 'aria-current="page"' : '' %>>Home</a>
-  <a href="/about" class="sh-nav__link <%= path === '/about' ? 'is-active' : '' %>" <%= path === '/about' ? 'aria-current="page"' : '' %>>About</a>
-  <a href="/services" class="sh-nav__link <%= path === '/services' ? 'is-active' : '' %>" <%= path === '/services' ? 'aria-current="page"' : '' %>>Services</a>
-  <a href="/agriculture" class="sh-nav__link <%= path === '/agriculture' ? 'is-active' : '' %>" <%= path === '/agriculture' ? 'aria-current="page"' : '' %>>Agriculture</a>
-  <a href="/automobile" class="sh-nav__link <%= path === '/automobile' ? 'is-active' : '' %>" <%= path === '/automobile' ? 'aria-current="page"' : '' %>>Automobile</a>
-  <a href="/medicine" class="sh-nav__link <%= path === '/medicine' ? 'is-active' : '' %>" <%= path === '/medicine' ? 'aria-current="page"' : '' %>>Medical</a>
-  <a href="/oil-and-gas" class="sh-nav__link <%= path === '/oil-and-gas' ? 'is-active' : '' %>" <%= path === '/oil-and-gas' ? 'aria-current="page"' : '' %>>Oil & Gas</a>
-  <a href="/home-and-office" class="sh-nav__link <%= path === '/home-and-office' ? 'is-active' : '' %>" <%= path === '/home-and-office' ? 'aria-current="page"' : '' %>>Home & Office</a>
-  <a href="/contact" class="sh-nav__link <%= path === '/contact' ? 'is-active' : '' %>" <%= path === '/contact' ? 'aria-current="page"' : '' %>>Contact</a>
-  <a href="/faq" class="sh-nav__link <%= path === '/faq' ? 'is-active' : '' %>" <%= path === '/faq' ? 'aria-current="page"' : '' %>>FAQ</a>
-</nav>
+<% 
+  const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'Services', path: '/services' },
+    { label: 'Industries', path: '/industries' },
+    { label: 'About', path: '/about' },
+    { label: 'Contact', path: '/contact' },
+    { label: 'FAQ', path: '/faq' }
+  ];
+%>
+
+<ul class="sh-nav">
+  <% navItems.forEach(item => { 
+    const isActive = (typeof path !== 'undefined' && path === item.path) || 
+                     (typeof path !== 'undefined' && item.path !== '/' && path.startsWith(item.path));
+  %>
+    <li>
+      <a href="<%= item.path %>" class="sh-nav__link" <%= isActive ? 'aria-current="page"' : '' %>>
+        <%= item.label %>
+      </a>
+    </li>
+  <% }) %>
+</ul>

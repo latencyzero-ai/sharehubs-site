@@ -1,21 +1,25 @@
 <a href="#main-content" class="sh-skip-link">Skip to main content</a>
 
-<div class="sh-preloader" id="sh-preloader">
-  <img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" class="sh-preloader__logo" width="160" height="44">
-  <div class="sh-preloader__bar"></div>
+<div class="sh-preloader" id="preloader">
+  <img src="/img/logo-light.png" alt="Share Hubs" class="sh-preloader__logo logo-for-light">
+  <img src="/img/logo-dark.png" alt="Share Hubs" class="sh-preloader__logo logo-for-dark">
+  <div class="sh-preloader__bar"><span></span></div>
 </div>
 
 <header class="sh-header" id="sh-header">
   <div class="sh-container sh-header__inner">
-    <a href="/" class="sh-logo" aria-label="Share Hubs Engineering Home">
-      <img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" width="160" height="44">
-    </a>
+   <a href="/" class="sh-logo" aria-label="Share Hubs Engineering Home">
+  <!-- For LIGHT mode background: use logo-light.png (dark text) -->
+  <img src="/img/logo-light.png" alt="Share Hubs" class="logo-for-light" height="38">
+  <!-- For DARK mode background: use logo-dark.png (white text) -->
+  <img src="/img/logo-dark.png" alt="Share Hubs" class="logo-for-dark" height="38">
+</a>
 
     <%- include('navbar') %>
 
     <div class="sh-flex sh-items-center sh-gap-4">
       <a href="/login" class="sh-nav__link sh-hidden" style="display:inline-flex;" id="nav-login">Login</a>
-      <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--sm">Get a Quote</a>
+      <a href="/request-quote" class="sh-header__cta">Get a Quote</a>
       <button class="sh-theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
         <svg class="sh-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         <svg class="sh-icon-moon" viewBox="0 0 24 24" aria-hidden="true" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>

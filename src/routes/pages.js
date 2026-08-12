@@ -28,6 +28,12 @@ router.get('/services', (req, res) => renderPage(res, 'services', {
   path: '/services'
 }));
 
+router.get('/industries', (req, res) => renderPage(res, 'industries', {
+  title: 'Industries We Serve — Share Hubs Engineering',
+  description: 'Precision manufacturing solutions for agriculture, automotive, medical, oil & gas, and home & office sectors in Nigeria.',
+  path: '/industries'
+}));
+
 router.get('/contact', (req, res) => renderPage(res, 'contact', {
   title: 'Contact Us — Share Hubs Engineering',
   description: 'Get in touch with Share Hubs Engineering in Lagos, Nigeria. Request a quote, discuss your project, or schedule a consultation.',

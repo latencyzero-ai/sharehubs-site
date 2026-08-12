@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<%- include('partials/head') %>
+<title>Industries We Serve | Share Hubs Engineering</title>
+</head>
+<body>
+<%- include('partials/header') %>
+
+<main id="main-content">
+
+  <!-- Page Hero -->
+  <section class="sh-page-hero">
+    <div class="sh-container">
+      <nav class="sh-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span class="sh-breadcrumb__sep">/</span>
+        <span>Industries</span>
+      </nav>
+      <h1>Industries We Serve</h1>
+      <p>Precision manufacturing across five key sectors. Click any industry to explore our capabilities.</p>
+    </div>
+  </section>
+
+  <!-- Industry Grid -->
+  <section class="sh-section sh-section--alt">
+    <div class="sh-container">
+      <div class="sh-grid sh-grid--3">
+
+        <a href="/agriculture" class="sh-industry-card" data-animate>
+          <img src="/img/GEAR_1.png" alt="Agriculture" loading="lazy">
+          <h3>Agriculture</h3>
+          <p>Tractor components, irrigation systems, harvester parts</p>
+        </a>
+
+        <a href="/automobile" class="sh-industry-card" data-animate>
+          <img src="/img/GEAR_2.png" alt="Automobile" loading="lazy">
+          <h3>Automobile</h3>
+          <p>Custom brackets, gears, precision-machined components</p>
+        </a>
+
+        <a href="/medicine" class="sh-industry-card" data-animate>
+          <img src="/img/CUTTING.png" alt="Medical" loading="lazy">
+          <h3>Medical</h3>
+          <p>Surgical tools, device housings, sterilizable parts</p>
+        </a>
+
+        <a href="/oil-and-gas" class="sh-industry-card" data-animate>
+          <img src="/img/BENDING.png" alt="Oil and Gas" loading="lazy">
+          <h3>Oil & Gas</h3>
+          <p>Flanges, valves, pressure-rated fittings</p>
+        </a>
+
+        <a href="/home-and-office" class="sh-industry-card" data-animate>
+          <img src="/img/FABRICTING.png" alt="Home and Office" loading="lazy">
+          <h3>Home & Office</h3>
+          <p>Custom furniture hardware, enclosures, fixtures</p>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sh-cta">
+    <div class="sh-container">
+      <h2>Need something custom?</h2>
+      <p>We engineer solutions beyond these five industries. Tell us what you're building.</p>
+      <div class="sh-cta__actions">
+        <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Request a Quote</a>
+        <a href="/contact" class="sh-btn sh-btn--ghost sh-btn--lg">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/scripts') %>
+</body>
+</html>

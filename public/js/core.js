@@ -6,7 +6,7 @@
      ================================================================ */
   const Preloader = {
     init() {
-      this.el = document.getElementById('sh-preloader');
+      this.el = document.getElementById('preloader');
       if (!this.el) return;
       window.addEventListener('load', () => {
         setTimeout(() => this.el.classList.add('is-done'), 800);
