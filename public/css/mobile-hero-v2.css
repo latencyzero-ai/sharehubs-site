@@ -1,0 +1,170 @@
+/* ============================================================
+   MOBILE HERO & HEADER — v2 (Aggressive Override)
+   ============================================================ */
+
+/* ── MOBILE HERO (below 768px) ──────────────────────────────── */
+@media (max-width: 767px) {
+
+  /* Force center alignment on hero container */
+  .sh-hero {
+    text-align: center !important;
+  }
+
+  /* Content wrapper — dead center */
+  .sh-hero__content-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    padding: 0 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Remove forced line breaks in headline on mobile */
+  .sh-hero__title br {
+    display: none !important;
+  }
+
+  /* Headline — centered, balanced wrapping, no orphans */
+  .sh-hero__title {
+    text-align: center !important;
+    font-size: clamp(1.75rem, 7vw, 2.5rem) !important;
+    line-height: 1.2 !important;
+    margin: 0 auto 16px auto !important;
+    max-width: 90% !important;
+    text-wrap: pretty !important;
+    word-break: keep-all !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* Accent spans inside headline */
+  .sh-hero__title--accent,
+  .sh-hero__title span {
+    display: inline !important;
+    text-align: center !important;
+  }
+
+  /* Tag pill — centered */
+  .sh-hero__tag {
+    text-align: center !important;
+    margin: 0 auto 16px auto !important;
+    display: inline-block !important;
+    font-size: 0.65rem !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  /* Description — centered, no widows, controlled width */
+  .sh-hero__desc {
+    text-align: center !important;
+    margin: 0 auto 24px auto !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    max-width: 320px !important;
+    text-wrap: pretty !important;
+  }
+
+  /* Actions — stack, full width, centered */
+  .sh-hero__actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  .sh-hero__actions .sh-btn,
+  .sh-hero__actions a.sh-btn {
+    width: 100% !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  /* Dots — centered */
+  .sh-hero__dots {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    justify-content: center !important;
+  }
+
+  /* Individual content blocks */
+  .sh-hero__content {
+    align-items: center !important;
+    text-align: center !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 20px !important;
+  }
+
+  .sh-hero__content.is-active {
+    align-items: center !important;
+    text-align: center !important;
+  }
+}
+
+/* ── TABLET (768px–1023px) ─────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sh-hero__content-wrap {
+    margin-left: 24px !important;
+    margin-right: 24px !important;
+  }
+  .sh-hero__title {
+    font-size: clamp(2.25rem, 4.5vw, 3rem) !important;
+  }
+}
+
+/* ── DESKTOP (1024px+) — left aligned, keep <br> ───────────── */
+@media (min-width: 1024px) {
+  .sh-hero__content-wrap {
+    margin-left: 24px !important;
+    margin-right: auto !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+  }
+  .sh-hero__title {
+    text-align: left !important;
+    font-size: clamp(2.75rem, 4vw, 4rem) !important;
+  }
+  .sh-hero__title br {
+    display: block !important;
+  }
+  .sh-hero__desc {
+    text-align: left !important;
+  }
+  .sh-hero__actions {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+  }
+  .sh-hero__actions .sh-btn {
+    width: auto !important;
+  }
+}
+
+/* ── MOBILE HEADER ────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .sh-header__inner {
+    padding: 0 16px !important;
+  }
+  .sh-header__logo img {
+    height: 32px !important;
+    width: auto !important;
+  }
+  .sh-header-actions {
+    gap: 8px !important;
+  }
+  .sh-theme-toggle {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .sh-hamburger {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}

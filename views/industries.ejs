@@ -1,25 +1,19 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
 <%- include('partials/head') %>
-<title>Industries We Serve | Share Hubs Engineering</title>
-</head>
-<body>
 <%- include('partials/header') %>
 
 <main id="main-content">
-  <!-- Hero -->
-  <section class="page-hero" style="background-image: url('/img/engine.png');">
-    <div class="container">
-      <h1 class="page-title">Industries We Serve</h1>
-      <p class="page-subtitle">Precision manufacturing solutions across five key sectors.</p>
+  <!-- Page Hero -->
+  <section class="sh-page-hero">
+    <div class="sh-container">
+      <h1>Industries We Serve</h1>
+      <p>Precision manufacturing solutions across five key sectors.</p>
     </div>
   </section>
 
-  <!-- Industry Grid -->
-  <section class="section section-alt">
-    <div class="container">
-      <div class="industry-grid">
+  <!-- Industries Grid -->
+  <section class="sh-section">
+    <div class="sh-container">
+      <div class="sh-grid sh-grid--3">
         <% const industries = [
           { name: 'Agriculture', path: '/agriculture', img: '/img/GEAR_1.png', desc: 'Tractor components, irrigation systems, and harvester parts built for Nigerian farms.' },
           { name: 'Automobile', path: '/automobile', img: '/img/GEAR_2.png', desc: 'Custom brackets, gears, and precision-machined automotive components.' },
@@ -28,12 +22,10 @@
           { name: 'Home & Office', path: '/home-and-office', img: '/img/FABRICTING.png', desc: 'Custom furniture hardware, enclosures, and architectural metalwork.' }
         ]; %>
         <% industries.forEach(ind => { %>
-          <a href="<%= ind.path %>" class="industry-card" style="background-image: url('<%= ind.img %>');">
-            <div class="industry-card-overlay">
-              <h3><%= ind.name %></h3>
-              <p><%= ind.desc %></p>
-              <span class="btn btn-sm">Explore →</span>
-            </div>
+          <a href="<%= ind.path %>" class="sh-industry-card">
+            <img src="<%= ind.img %>" alt="<%= ind.name %>" loading="lazy">
+            <h3><%= ind.name %></h3>
+            <p><%= ind.desc %></p>
           </a>
         <% }) %>
       </div>
@@ -45,5 +37,3 @@
 
 <%- include('partials/footer') %>
 <%- include('partials/scripts') %>
-</body>
-</html>

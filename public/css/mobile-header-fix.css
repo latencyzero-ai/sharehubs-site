@@ -1,0 +1,263 @@
+/* ============================================================
+   MOBILE HEADER FIXES — Theme-aware + Hamburger position
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+  /* ── THEME-AWARE HEADER BACKGROUND ─────────────────────────── */
+  .sh-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    height: 60px !important;
+    background: var(--sh-surface, #ffffff) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid var(--sh-border, rgba(0,0,0,0.08)) !important;
+    transition: background 0.3s ease, box-shadow 0.3s ease !important;
+  }
+
+  /* Dark mode header */
+  [data-theme="dark"] .sh-header {
+    background: rgba(10, 10, 10, 0.9) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Body padding to clear fixed header */
+  body {
+    padding-top: 60px !important;
+  }
+
+  /* ── HAMBURGER — moved down slightly ─────────────────────── */
+  .sh-hamburger {
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    position: relative !important;
+    margin-top: 2px !important;  /* pushes hamburger down slightly */
+  }
+
+  .sh-hamburger span {
+    display: block !important;
+    width: 22px !important;
+    height: 2px !important;
+    background: var(--sh-text-primary, #111) !important;
+    border-radius: 2px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transform-origin: center !important;
+  }
+
+  /* Dark mode hamburger lines */
+  [data-theme="dark"] .sh-hamburger span {
+    background: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* Hamburger → X animation */
+  .sh-hamburger.is-active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg) !important;
+  }
+  .sh-hamburger.is-active span:nth-child(2) {
+    opacity: 0 !important;
+    transform: scaleX(0) !important;
+  }
+  .sh-hamburger.is-active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg) !important;
+  }
+
+  /* ── THEME TOGGLE — theme-aware colors ────────────────────── */
+  .sh-theme-toggle {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    border: 1.5px solid var(--sh-border-strong, rgba(0,0,0,0.15)) !important;
+    background: transparent !important;
+    color: var(--sh-text-secondary, #666) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    padding: 0 !important;
+    margin-top: 2px !important;  /* aligns with hamburger */
+  }
+
+  .sh-theme-toggle:hover {
+    border-color: var(--sh-brand, #8B0000) !important;
+    color: var(--sh-brand, #8B0000) !important;
+  }
+
+  [data-theme="dark"] .sh-theme-toggle {
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  [data-theme="dark"] .sh-theme-toggle:hover {
+    border-color: #8B0000 !important;
+    color: #8B0000 !important;
+  }
+
+  .sh-theme-toggle svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* ── MOBILE NAV OVERLAY — theme-aware ─────────────────────── */
+  .sh-mobile-nav {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: var(--sh-surface, #ffffff) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    z-index: 999 !important;
+    padding: 32px 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    transform: translateX(100%) !important;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow-y: auto !important;
+  }
+
+  [data-theme="dark"] .sh-mobile-nav {
+    background: rgba(8, 8, 8, 0.98) !important;
+  }
+
+  .sh-mobile-nav.is-open {
+    transform: translateX(0) !important;
+  }
+
+  /* Mobile nav links — theme-aware */
+  .sh-mobile-nav__link {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 16px 0 !important;
+    font-size: 1.25rem !important;
+    font-weight: 500 !important;
+    color: var(--sh-text-primary, #111) !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid var(--sh-border, rgba(0,0,0,0.06)) !important;
+    transition: color 0.2s ease !important;
+  }
+
+  [data-theme="dark"] .sh-mobile-nav__link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .sh-mobile-nav__link:hover,
+  .sh-mobile-nav__link.is-active {
+    color: var(--sh-brand, #8B0000) !important;
+  }
+
+  /* Mobile dropdown */
+  .sh-mobile-nav__dropdown-toggle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    padding: 16px 0 !important;
+    font-size: 1.25rem !important;
+    font-weight: 500 !important;
+    color: var(--sh-text-primary, #111) !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid var(--sh-border, rgba(0,0,0,0.06)) !important;
+    cursor: pointer !important;
+  }
+
+  [data-theme="dark"] .sh-mobile-nav__dropdown-toggle {
+    color: rgba(255, 255, 255, 0.9) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .sh-mobile-nav__dropdown-menu {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0 !important;
+    padding: 8px 0 !important;
+  }
+
+  .sh-mobile-nav__dropdown-item {
+    padding: 10px 0 !important;
+    font-size: 1rem !important;
+    color: var(--sh-text-secondary, #666) !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+  }
+
+  [data-theme="dark"] .sh-mobile-nav__dropdown-item {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .sh-mobile-nav__dropdown-item:hover {
+    color: var(--sh-brand, #8B0000) !important;
+  }
+
+  /* CTA button in mobile menu */
+  .sh-mobile-nav__cta {
+    margin-top: 24px !important;
+    width: 100% !important;
+    max-width: 280px !important;
+    padding: 14px 24px !important;
+    background: var(--sh-brand, #8B0000) !important;
+    color: #fff !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    border-radius: 6px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .sh-mobile-nav__cta:hover {
+    background: #600000 !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Login link */
+  .sh-mobile-nav__login {
+    margin-top: 16px !important;
+    padding: 12px 0 !important;
+    font-size: 0.9rem !important;
+    color: var(--sh-text-muted, #999) !important;
+    text-decoration: none !important;
+    text-align: center !important;
+  }
+
+  [data-theme="dark"] .sh-mobile-nav__login {
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  /* ── PRELOADER ADJUSTMENT ─────────────────────────────────── */
+  .sh-preloader {
+    padding-top: 60px !important;
+  }
+}
+
+/* ── TABLET (768px–1023px) ─────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sh-header__inner {
+    padding: 0 24px !important;
+  }
+}

@@ -15,7 +15,7 @@
   };
 
   /* ================================================================
-     THEME — Light default, dark optional
+     THEME
      ================================================================ */
   const ThemeManager = {
     init() {
@@ -59,11 +59,12 @@
   };
 
   /* ================================================================
-     HERO SLIDER — 3 slides with auto-rotation
+     HERO SLIDER
      ================================================================ */
   const HeroSlider = {
     init() {
       this.slides = document.querySelectorAll('.sh-hero__slide');
+      this.contents = document.querySelectorAll('.sh-hero__content');
       this.dots = document.querySelectorAll('.sh-hero__dot');
       if (!this.slides.length) return;
       this.current = 0;
@@ -74,6 +75,7 @@
     },
     goTo(index) {
       this.slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+      this.contents.forEach((c, i) => c.classList.toggle('is-active', i === index));
       this.dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
       this.current = index;
     },
@@ -109,11 +111,74 @@
       document.addEventListener('click', (e) => {
         if (this.isOpen() && !this.panel.contains(e.target) && !this.toggle.contains(e.target)) this.close();
       });
+      this.initMobileDropdown();
     },
     isOpen() { return this.panel.classList.contains('is-open'); },
     toggleMenu() { this.isOpen() ? this.close() : this.open(); },
     open() { this.panel.classList.add('is-open'); this.toggle.setAttribute('aria-expanded', 'true'); this.body.style.overflow = 'hidden'; },
-    close() { this.panel.classList.remove('is-open'); this.toggle.setAttribute('aria-expanded', 'false'); this.body.style.overflow = ''; }
+    close() { this.panel.classList.remove('is-open'); this.toggle.setAttribute('aria-expanded', 'false'); this.body.style.overflow = ''; },
+    initMobileDropdown() {
+      const btn = document.getElementById('mobile-industries-toggle');
+      const menu = document.getElementById('mobile-industries-menu');
+      if (!btn || !menu) return;
+      btn.addEventListener('click', () => {
+        const isOpen = menu.classList.contains('is-open');
+        menu.classList.toggle('is-open', !isOpen);
+        btn.setAttribute('aria-expanded', !isOpen);
+        menu.setAttribute('aria-hidden', isOpen);
+      });
+    }
+  };
+
+  /* ================================================================
+     DESKTOP DROPDOWN
+     ================================================================ */
+  const DesktopDropdown = {
+    init() {
+      document.querySelectorAll('.sh-nav__item--has-dropdown').forEach(item => {
+        const toggle = item.querySelector('.sh-nav__dropdown-toggle');
+        const dropdown = item.querySelector('.sh-nav__dropdown');
+        if (!toggle || !dropdown) return;
+
+        // Click to toggle
+        toggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = item.classList.contains('is-open');
+          this.closeAll();
+          if (!isOpen) {
+            item.classList.add('is-open');
+            toggle.setAttribute('aria-expanded', 'true');
+          }
+        });
+
+        // Hover support (desktop only)
+        item.addEventListener('mouseenter', () => {
+          if (window.innerWidth > 1100) {
+            item.classList.add('is-open');
+            toggle.setAttribute('aria-expanded', 'true');
+          }
+        });
+        item.addEventListener('mouseleave', () => {
+          if (window.innerWidth > 1100) {
+            item.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+
+      // Close all on outside click
+      document.addEventListener('click', () => this.closeAll());
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.closeAll();
+      });
+    },
+    closeAll() {
+      document.querySelectorAll('.sh-nav__item--has-dropdown.is-open').forEach(item => {
+        item.classList.remove('is-open');
+        const toggle = item.querySelector('.sh-nav__dropdown-toggle');
+        if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      });
+    }
   };
 
   /* ================================================================
@@ -155,7 +220,7 @@
   };
 
   /* ================================================================
-     SCROLL ANIMATIONS (IntersectionObserver)
+     SCROLL ANIMATIONS
      ================================================================ */
   const ScrollAnimations = {
     init() {
@@ -202,6 +267,7 @@
     ThemeManager.init();
     HeroSlider.init();
     MobileNav.init();
+    DesktopDropdown.init();
     HeaderScroll.init();
     SmoothScroll.init();
     ScrollAnimations.init();

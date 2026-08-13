@@ -1,231 +1,241 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
 <%- include('partials/head') %>
-
-</head>
-<body>
 <%- include('partials/header') %>
+
 <main id="main-content">
+  <!-- Hero Slider -->
+  <section class="sh-hero" aria-label="Hero slider">
+    <div class="sh-hero__slide is-active" style="background-image:url('/img/hero-1.png');" role="img" aria-label="Engineer reviewing precision manufacturing plans" data-slide="0"></div>
+    <div class="sh-hero__slide" style="background-image:url('/img/hero-2.jpg');" role="img" aria-label="CNC machine cutting metal component" data-slide="1"></div>
+    <div class="sh-hero__slide" style="background-image:url('/img/hero-3.jpg');" role="img" aria-label="Laser cutting precision parts" data-slide="2"></div>
 
-<!-- Hero Slider — 3 slides, left-aligned text -->
-<section class="sh-hero" aria-label="Hero">
-  <div class="sh-hero__slide is-active">
-    <img src="/assets/img/monochrome-scene-depicting-life-workers-construction-industry-site.jpg" alt="" loading="eager" width="1920" height="1080">
-  </div>
-  <div class="sh-hero__slide">
-    <img src="/assets/img/GEAR_1.png" alt="" loading="lazy" width="1920" height="1080">
-  </div>
-  <div class="sh-hero__slide">
-    <img src="/assets/img/black-white-scene-showcasing-life-construction-workers-site.jpg" alt="" loading="lazy" width="1920" height="1080">
-  </div>
-
-  <div class="sh-container sh-hero__content">
-    <span class="sh-hero__tag">Engineering & Manufacturing — Lagos, Nigeria</span>
-    <h1 class="sh-hero__title">Precision Manufacturing for <span class="accent">Agriculture, Automotive, Medical & More</span></h1>
-    <p class="sh-hero__desc">From concept to component — Share Hubs Engineering turns your ideas into physical reality using 3D printing, laser cutting, CNC punching, and plasma cutting.</p>
-    <div class="sh-hero__actions">
-      <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Discuss Your Project</a>
-      <a href="/services" class="sh-btn sh-btn--ghost sh-btn--lg">Explore Capabilities</a>
-    </div>
-  </div>
-
-  <div class="sh-hero__dots">
-    <button class="sh-hero__dot is-active" aria-label="Slide 1"></button>
-    <button class="sh-hero__dot" aria-label="Slide 2"></button>
-    <button class="sh-hero__dot" aria-label="Slide 3"></button>
-  </div>
-</section>
-
-<!-- Trust Bar -->
-<section class="sh-trust" aria-label="Company facts">
-  <div class="sh-container">
-    <div class="sh-trust__grid">
-      <div><div class="sh-trust__num">5+</div><p class="sh-trust__label">Industries Served</p></div>
-      <div><div class="sh-trust__num">4</div><p class="sh-trust__label">Manufacturing Technologies</p></div>
-      <div><div class="sh-trust__num">2022</div><p class="sh-trust__label">Founded in Lagos</p></div>
-      <div><div class="sh-trust__num">2–10</div><p class="sh-trust__label">Expert Engineers</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- Capabilities -->
-<section class="sh-section" aria-labelledby="caps-heading">
-  <div class="sh-container">
-    <div class="sh-section-title">
-      <h2 id="caps-heading">Manufacturing Capabilities</h2>
-      <p>Modern fabrication technologies that transform designs into precision-engineered components.</p>
-    </div>
-    <div class="sh-grid sh-grid--4">
-      <article class="sh-card sh-card--feature sh-animate">
-        <div class="sh-service__icon" style="margin-bottom:var(--sh-space-4);width:56px;height:56px;font-size:24px;"><i class="icofont-cube"></i></div>
-        <h3 style="font-size:var(--sh-text-xl);margin-bottom:var(--sh-space-3);">3D Printing</h3>
-        <p class="sh-text-small">Rapid prototyping and production of complex geometries in plastic, resin, and metal for custom parts and low-volume runs.</p>
-      </article>
-      <article class="sh-card sh-card--feature sh-animate">
-        <div class="sh-service__icon" style="margin-bottom:var(--sh-space-4);width:56px;height:56px;font-size:24px;"><i class="icofont-flash"></i></div>
-        <h3 style="font-size:var(--sh-text-xl);margin-bottom:var(--sh-space-3);">Laser Cutting</h3>
-        <p class="sh-text-small">High-precision cutting of sheet metal, acrylic, and wood with clean edges and tight tolerances for industrial applications.</p>
-      </article>
-      <article class="sh-card sh-card--feature sh-animate">
-        <div class="sh-service__icon" style="margin-bottom:var(--sh-space-4);width:56px;height:56px;font-size:24px;"><i class="icofont-settings"></i></div>
-        <h3 style="font-size:var(--sh-text-xl);margin-bottom:var(--sh-space-3);">CNC Punching</h3>
-        <p class="sh-text-small">Automated punching of holes, slots, and forms in sheet metal with high repeatability for mass-produced components.</p>
-      </article>
-      <article class="sh-card sh-card--feature sh-animate">
-        <div class="sh-service__icon" style="margin-bottom:var(--sh-space-4);width:56px;height:56px;font-size:24px;"><i class="icofont-fire-burn"></i></div>
-        <h3 style="font-size:var(--sh-text-xl);margin-bottom:var(--sh-space-3);">Plasma Cutting</h3>
-        <p class="sh-text-small">High-speed cutting of thick steel and aluminum plates for heavy-duty structural and industrial fabrication projects.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- Software -->
-<section class="sh-section" style="background:var(--sh-surface);" aria-labelledby="soft-heading">
-  <div class="sh-container">
-    <div class="sh-section-title">
-      <h2 id="soft-heading">Engineering Software Stack</h2>
-      <p>Industry-standard CAD, CAM, and simulation tools ensuring precision from design to production.</p>
-    </div>
-    <div class="sh-grid sh-grid--5" style="margin-top:var(--sh-space-10);">
-      <div class="sh-card sh-text-center sh-animate"><h4 style="color:var(--sh-brand);">SolidWorks</h4><p class="sh-text-small">3D CAD Design</p></div>
-      <div class="sh-card sh-text-center sh-animate"><h4 style="color:var(--sh-brand);">AutoCAD</h4><p class="sh-text-small">2D Drafting</p></div>
-      <div class="sh-card sh-text-center sh-animate"><h4 style="color:var(--sh-brand);">ANSYS</h4><p class="sh-text-small">FEA Simulation</p></div>
-      <div class="sh-card sh-text-center sh-animate"><h4 style="color:var(--sh-brand);">CNCKAD</h4><p class="sh-text-small">CNC Programming</p></div>
-      <div class="sh-card sh-text-center sh-animate"><h4 style="color:var(--sh-brand);">Bodor Laser</h4><p class="sh-text-small">Laser Control</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- Industries -->
-<section class="sh-section" aria-labelledby="ind-heading">
-  <div class="sh-container">
-    <div class="sh-section-title">
-      <h2 id="ind-heading">Industries We Serve</h2>
-      <p>Engineering components and solutions tailored to the demands of each sector.</p>
-    </div>
-    <div class="row">
-      <div class="col-lg-4 col-md-6 col-12 mb-4">
-        <a href="/agriculture" class="sh-industry-card sh-animate">
-          <img src="/img/agroback.jpeg" alt="Agricultural machinery" loading="lazy" width="400" height="300">
-          <h3>Agriculture</h3><p>Irrigation systems, mechanized equipment, precision farming tools.</p>
-        </a>
+    <div class="sh-hero__content-wrap">
+      <div class="sh-hero__content is-active" data-slide-content="0">
+        <span class="sh-hero__tag">Engineering & Manufacturing — Lagos, Nigeria</span>
+        <h1 class="sh-hero__title">Precision Manufacturing for <span class="accent">Agriculture, Automotive, Medical & More</span></h1>
+        <div class="sh-hero__actions">
+          <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Discuss Your Project</a>
+          <a href="/services" class="sh-btn sh-btn--ghost sh-btn--lg">Explore Capabilities</a>
+        </div>
       </div>
-      <div class="col-lg-4 col-md-6 col-12 mb-4">
-        <a href="/automobile" class="sh-industry-card sh-animate">
-          <img src="/img/automobile.jpg" alt="Automotive facility" loading="lazy" width="400" height="300">
-          <h3>Automobile</h3><p>Vehicle parts, maintenance components, performance enhancements.</p>
-        </a>
+      <div class="sh-hero__content" data-slide-content="1">
+        <span class="sh-hero__tag">Advanced CNC Machining</span>
+        <h1 class="sh-hero__title">High-Precision <span class="accent">CNC Fabrication</span> for Industry</h1>
+        <p class="sh-hero__desc">Computer-controlled machining delivers repeatable accuracy for complex parts, tooling, and production components at any scale.</p>
+        <div class="sh-hero__actions">
+          <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Start Your Project</a>
+          <a href="/services" class="sh-btn sh-btn--ghost sh-btn--lg">View Capabilities</a>
+        </div>
       </div>
-      <div class="col-lg-4 col-md-6 col-12 mb-4">
-        <a href="/medicine" class="sh-industry-card sh-animate">
-          <img src="/img/med.jpeg" alt="Medical equipment" loading="lazy" width="400" height="300">
-          <h3>Medical</h3><p>Custom devices, diagnostic equipment housings, healthcare infrastructure.</p>
-        </a>
-      </div>
-      <div class="col-lg-6 col-md-6 col-12 mb-4">
-        <a href="/oil-and-gas" class="sh-industry-card sh-animate">
-          <img src="/img/oilfield.jpeg" alt="Oil field operations" loading="lazy" width="600" height="300">
-          <h3>Oil & Gas</h3><p>Drilling components, pipeline fittings, field equipment fabrication.</p>
-        </a>
-      </div>
-      <div class="col-lg-6 col-md-6 col-12 mb-4">
-        <a href="/home-and-office" class="sh-industry-card sh-animate">
-          <img src="/img/home&office.jpg" alt="Home and office products" loading="lazy" width="600" height="300">
-          <h3>Home & Office</h3><p>Durable furniture, ergonomic appliances, custom fixtures.</p>
-        </a>
+      <div class="sh-hero__content" data-slide-content="2">
+        <span class="sh-hero__tag">Laser & Plasma Cutting</span>
+        <h1 class="sh-hero__title">Custom Metalwork <span class="accent">Cut to Perfection</span></h1>
+        <p class="sh-hero__desc">From thin sheet to thick plate — our laser and plasma cutting systems handle steel, aluminum, and alloys with speed and precision.</p>
+        <div class="sh-hero__actions">
+          <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Get a Quote</a>
+          <a href="/services" class="sh-btn sh-btn--ghost sh-btn--lg">See Our Work</a>
+        </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- Services -->
-<section class="sh-section" style="background:var(--sh-surface);" aria-labelledby="svc-heading">
-  <div class="sh-container">
-    <div class="sh-section-title">
-      <h2 id="svc-heading">What We Offer</h2>
-      <p>End-to-end engineering support from design consultation to finished product.</p>
+    <div class="sh-hero__dots" role="tablist" aria-label="Hero slides">
+      <button class="sh-hero__dot is-active" aria-label="Slide 1" role="tab" aria-selected="true" data-slide="0"></button>
+      <button class="sh-hero__dot" aria-label="Slide 2" role="tab" aria-selected="false" data-slide="1"></button>
+      <button class="sh-hero__dot" aria-label="Slide 3" role="tab" aria-selected="false" data-slide="2"></button>
     </div>
-    <div class="row">
-      <div class="col-lg-6 col-md-6 col-12 mb-4">
-        <article class="sh-service sh-animate">
-          <div class="sh-service__icon"><i class="icofont-gear"></i></div>
-          <div><h4>Manufacturing</h4><p>Precision fabrication of machine components, equipment parts, and tools using 3D printing, laser, punching, and plasma technologies.</p></div>
+  </section>
+
+  <!-- Trust Bar -->
+  <section class="sh-trust">
+    <div class="sh-container">
+      <div class="sh-trust__grid">
+        <div>
+          <div class="sh-trust__num">5+</div>
+          <p class="sh-trust__label">Industries Served</p>
+        </div>
+        <div>
+          <div class="sh-trust__num">4</div>
+          <p class="sh-trust__label">Manufacturing Technologies</p>
+        </div>
+        <div>
+          <div class="sh-trust__num">2022</div>
+          <p class="sh-trust__label">Founded in Lagos</p>
+        </div>
+        <div>
+          <div class="sh-trust__num">2–10</div>
+          <p class="sh-trust__label">Expert Engineers</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="sh-section" aria-labelledby="capabilities-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="capabilities-heading">Manufacturing Capabilities</h2>
+        <p>Modern fabrication technologies that transform designs into precision-engineered components.</p>
+      </div>
+      <div class="sh-grid sh-grid--4">
+        <article class="sh-card sh-card--feature sh-animate">
+          <div class="sh-service__icon" style="margin-bottom:var(--sh-space-4);"><i class="iconfont-cube"></i></div>
+          <h4>3D Printing</h4>
+          <p class="sh-text-small">Rapid prototyping and production of complex geometries in plastic, resin, and metal for custom parts and low-volume runs.</p>
         </article>
-      </div>
-      <div class="col-lg-6 col-md-6 col-12 mb-4">
-        <article class="sh-service sh-animate">
-          <div class="sh-service__icon"><i class="icofont-brainstorming"></i></div>
-          <div><h4>Engineering Consultancy</h4><p>Expert advice on design feasibility, material selection, manufacturing processes, and cost optimization for your projects.</p></div>
+        <article class="sh-card sh-card--feature sh-animate">
+          <div class="sh-service__icon" style="margin-bottom:var(--sh-space-4);"><i class="iconfont-flash"></i></div>
+          <h4>Laser Cutting</h4>
+          <p class="sh-text-small">High-precision cutting of sheet metal, acrylic, and wood with clean edges and tight tolerances for industrial applications.</p>
         </article>
-      </div>
-      <div class="col-lg-6 col-md-6 col-12 mb-4">
-        <article class="sh-service sh-animate">
-          <div class="sh-service__icon"><i class="icofont-read-book"></i></div>
-          <div><h4>Research & Development</h4><p>Collaborative product development, prototyping, and testing to bring innovative concepts from idea to physical reality.</p></div>
+        <article class="sh-card sh-card--feature sh-animate">
+          <div class="sh-service__icon" style="margin-bottom:var(--sh-space-4);"><i class="iconfont-settings"></i></div>
+          <h4>CNC Punching</h4>
+          <p class="sh-text-small">Automated punching of holes, slots, and forms in sheet metal with high repeatability for mass-produced components.</p>
         </article>
-      </div>
-      <div class="col-lg-6 col-md-6 col-12 mb-4">
-        <article class="sh-service sh-animate">
-          <div class="sh-service__icon"><i class="icofont-graduate"></i></div>
-          <div><h4>Training & Education</h4><p>Technical training for individuals and organizations in CAD/CAM, manufacturing processes, and engineering best practices.</p></div>
+        <article class="sh-card sh-card--feature sh-animate">
+          <div class="sh-service__icon" style="margin-bottom:var(--sh-space-4);"><i class="iconfont-fire-burn"></i></div>
+          <h4>Plasma Cutting</h4>
+          <p class="sh-text-small">High-speed cutting of thick steel and aluminum plates for heavy-duty structural and industrial fabrication projects.</p>
         </article>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Process -->
-<section class="sh-section" aria-labelledby="proc-heading">
-  <div class="sh-container">
-    <div class="sh-section-title">
-      <h2 id="proc-heading">Our Process</h2>
-      <p>A streamlined approach from first contact to final delivery.</p>
+  <!-- Software Stack -->
+  <section class="sh-section" style="background:var(--sh-surface-alt);" aria-labelledby="software-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="software-heading">Engineering Software Stack</h2>
+        <p>Industry-standard CAD, CAM, and simulation tools ensuring precision from design to production.</p>
+      </div>
+      <div class="sh-grid sh-grid--5" style="text-align:center;">
+        <div class="sh-animate"><div style="font-size:2.5rem;font-weight:700;color:var(--sh-brand);margin-bottom:var(--sh-space-2);">SW</div><h5 style="font-size:var(--sh-text-sm);">SolidWorks</h5><p class="sh-text-small" style="color:var(--sh-text-muted);">3D CAD Design</p></div>
+        <div class="sh-animate"><div style="font-size:2.5rem;font-weight:700;color:var(--sh-brand);margin-bottom:var(--sh-space-2);">AC</div><h5 style="font-size:var(--sh-text-sm);">AutoCAD</h5><p class="sh-text-small" style="color:var(--sh-text-muted);">2D Drafting</p></div>
+        <div class="sh-animate"><div style="font-size:2.5rem;font-weight:700;color:var(--sh-brand);margin-bottom:var(--sh-space-2);">AN</div><h5 style="font-size:var(--sh-text-sm);">ANSYS</h5><p class="sh-text-small" style="color:var(--sh-text-muted);">FEA Simulation</p></div>
+        <div class="sh-animate"><div style="font-size:2.5rem;font-weight:700;color:var(--sh-brand);margin-bottom:var(--sh-space-2);">CK</div><h5 style="font-size:var(--sh-text-sm);">CNCKAD</h5><p class="sh-text-small" style="color:var(--sh-text-muted);">CNC Programming</p></div>
+        <div class="sh-animate"><div style="font-size:2.5rem;font-weight:700;color:var(--sh-brand);margin-bottom:var(--sh-space-2);">BL</div><h5 style="font-size:var(--sh-text-sm);">Bodor Laser</h5><p class="sh-text-small" style="color:var(--sh-text-muted);">Laser Control</p></div>
+      </div>
     </div>
-    <div class="row">
-      <div class="col-lg-3 col-md-6 col-12 mb-4">
+  </section>
+
+  <!-- Industries -->
+  <section class="sh-section" aria-labelledby="industries-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="industries-heading">Industries We Serve</h2>
+        <p>Engineering components and solutions tailored to the demands of each sector.</p>
+      </div>
+      <div class="sh-grid sh-grid--3">
+        <a href="/agriculture" class="sh-industry-card">
+          <img src="/img/GEAR_1.png" alt="Agriculture" loading="lazy">
+          <h3>Agriculture</h3>
+          <p>Irrigation systems, mechanized equipment, precision farming tools.</p>
+        </a>
+        <a href="/automobile" class="sh-industry-card">
+          <img src="/img/GEAR_2.png" alt="Automobile" loading="lazy">
+          <h3>Automobile</h3>
+          <p>Vehicle parts, maintenance components, performance enhancements.</p>
+        </a>
+        <a href="/medicine" class="sh-industry-card">
+          <img src="/img/CUTTING.png" alt="Medical" loading="lazy">
+          <h3>Medical</h3>
+          <p>Custom devices, diagnostic equipment housings, healthcare infrastructure.</p>
+        </a>
+        <a href="/oil-and-gas" class="sh-industry-card">
+          <img src="/img/BENDING.png" alt="Oil & Gas" loading="lazy">
+          <h3>Oil & Gas</h3>
+          <p>Drilling components, pipeline fittings, field equipment fabrication.</p>
+        </a>
+        <a href="/home-and-office" class="sh-industry-card">
+          <img src="/img/FABRICTING.png" alt="Home & Office" loading="lazy">
+          <h3>Home & Office</h3>
+          <p>Durable furniture, ergonomic appliances, custom fixtures.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="sh-section" style="background:var(--sh-surface-alt);" aria-labelledby="services-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="services-heading">What We Offer</h2>
+        <p>End-to-end engineering support from design consultation to finished product.</p>
+      </div>
+      <div class="sh-grid sh-grid--2">
+        <article class="sh-service sh-animate">
+          <div class="sh-service__icon"><i class="iconfont-cube"></i></div>
+          <div>
+            <h4>Manufacturing</h4>
+            <p>Precision fabrication of machine components, equipment parts, and tools using 3D printing, laser, punching, and plasma technologies.</p>
+          </div>
+        </article>
+        <article class="sh-service sh-animate">
+          <div class="sh-service__icon"><i class="iconfont-settings"></i></div>
+          <div>
+            <h4>Engineering Consultancy</h4>
+            <p>Expert advice on design feasibility, material selection, manufacturing processes, and cost optimization for your projects.</p>
+          </div>
+        </article>
+        <article class="sh-service sh-animate">
+          <div class="sh-service__icon"><i class="iconfont-flash"></i></div>
+          <div>
+            <h4>Research & Development</h4>
+            <p>Collaborative product development, prototyping, and testing to bring innovative concepts from idea to physical reality.</p>
+          </div>
+        </article>
+        <article class="sh-service sh-animate">
+          <div class="sh-service__icon"><i class="iconfont-fire-burn"></i></div>
+          <div>
+            <h4>Training & Education</h4>
+            <p>Technical training for individuals and organizations in CAD/CAM, manufacturing processes, and engineering best practices.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="sh-section" aria-labelledby="process-heading">
+    <div class="sh-container">
+      <div class="sh-section-title">
+        <h2 id="process-heading">Our Process</h2>
+        <p>A streamlined approach from first contact to final delivery.</p>
+      </div>
+      <div class="sh-grid sh-grid--4">
         <div class="sh-step sh-animate">
           <div class="sh-step__num">1</div>
-          <div class="sh-step__content"><h4>Consultation</h4><p class="sh-text-small">Discuss your project requirements, timeline, and budget with our engineering team.</p></div>
+          <div class="sh-step__content">
+            <h4>Consultation</h4>
+            <p>Discuss your project requirements, timeline, and budget with our engineering team.</p>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-12 mb-4">
         <div class="sh-step sh-animate">
           <div class="sh-step__num">2</div>
-          <div class="sh-step__content"><h4>Design & Analysis</h4><p class="sh-text-small">We create detailed CAD models and run simulations to validate the design before production.</p></div>
+          <div class="sh-step__content">
+            <h4>Design & Analysis</h4>
+            <p>We create detailed CAD models and run simulations to validate the design before production.</p>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-12 mb-4">
         <div class="sh-step sh-animate">
           <div class="sh-step__num">3</div>
-          <div class="sh-step__content"><h4>Manufacturing</h4><p class="sh-text-small">Precision fabrication using the optimal technology for your component requirements.</p></div>
+          <div class="sh-step__content">
+            <h4>Manufacturing</h4>
+            <p>Precision fabrication using the optimal technology for your component requirements.</p>
+          </div>
         </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-12 mb-4">
         <div class="sh-step sh-animate">
           <div class="sh-step__num">4</div>
-          <div class="sh-step__content"><h4>Delivery</h4><p class="sh-text-small">Quality inspection, packaging, and delivery of your finished components.</p></div>
+          <div class="sh-step__content">
+            <h4>Delivery</h4>
+            <p>Quality inspection, packaging, and delivery of your finished components.</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section class="sh-cta" aria-labelledby="cta-heading">
-  <div class="sh-container">
-    <h2 id="cta-heading">Ready to Manufacture Your Next Component?</h2>
-    <p>Tell us what you need and our engineers will get back to you with a tailored quote. Built for agriculture, automotive, medical, oil & gas, and more.</p>
-    <div class="sh-cta__actions">
-      <a href="/request-quote" class="sh-btn sh-btn--primary sh-btn--lg">Request a Quote</a>
-      <a href="/contact" class="sh-btn sh-btn--ghost sh-btn--lg">Contact Us</a>
-    </div>
-  </div>
-</section>
-
+  <%- include('partials/cta-section') %>
 </main>
+
 <%- include('partials/footer') %>
 <%- include('partials/scripts') %>
-</body>
-</html>

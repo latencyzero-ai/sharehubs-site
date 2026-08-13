@@ -2,7 +2,17 @@
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'Services', path: '/services' },
-    { label: 'Industries', path: '/industries' },
+    { 
+      label: 'Industries', 
+      path: '/industries',
+      children: [
+        { label: 'Agriculture', path: '/agriculture' },
+        { label: 'Automobile', path: '/automobile' },
+        { label: 'Medical', path: '/medicine' },
+        { label: 'Oil & Gas', path: '/oil-and-gas' },
+        { label: 'Home & Office', path: '/home-and-office' }
+      ]
+    },
     { label: 'About', path: '/about' },
     { label: 'Contact', path: '/contact' },
     { label: 'FAQ', path: '/faq' }
@@ -13,11 +23,35 @@
   <% navItems.forEach(item => { 
     const isActive = (typeof path !== 'undefined' && path === item.path) || 
                      (typeof path !== 'undefined' && item.path !== '/' && path.startsWith(item.path));
+    const hasChildren = item.children && item.children.length;
   %>
-    <li>
-      <a href="<%= item.path %>" class="sh-nav__link" <%= isActive ? 'aria-current="page"' : '' %>>
-        <%= item.label %>
-      </a>
+    <li class="<%= hasChildren ? 'sh-nav__item--has-dropdown' : '' %>">
+      <% if (hasChildren) { %>
+        <button 
+          class="sh-nav__link sh-nav__dropdown-toggle" 
+          aria-expanded="false" 
+          aria-haspopup="true"
+          aria-controls="dropdown-<%= item.label.toLowerCase() %>"
+        >
+          <%= item.label %>
+          <svg class="sh-nav__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <ul class="sh-nav__dropdown" id="dropdown-<%= item.label.toLowerCase() %>" role="menu">
+          <% item.children.forEach(child => { 
+            const childActive = typeof path !== 'undefined' && path === child.path;
+          %>
+            <li role="none">
+              <a href="<%= child.path %>" class="sh-nav__dropdown-link" role="menuitem" <%= childActive ? 'aria-current="page"' : '' %>>
+                <%= child.label %>
+              </a>
+            </li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <a href="<%= item.path %>" class="sh-nav__link" <%= isActive ? 'aria-current="page"' : '' %>>
+          <%= item.label %>
+        </a>
+      <% } %>
     </li>
   <% }) %>
 </ul>
