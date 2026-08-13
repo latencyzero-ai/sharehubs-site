@@ -2,19 +2,6 @@
   'use strict';
 
   /* ================================================================
-     PRELOADER
-     ================================================================ */
-  const Preloader = {
-    init() {
-      this.el = document.getElementById('preloader');
-      if (!this.el) return;
-      window.addEventListener('load', () => {
-        setTimeout(() => this.el.classList.add('is-done'), 800);
-      });
-    }
-  };
-
-  /* ================================================================
      THEME
      ================================================================ */
   const ThemeManager = {
@@ -263,7 +250,6 @@
      INIT
      ================================================================ */
   document.addEventListener('DOMContentLoaded', () => {
-    Preloader.init();
     ThemeManager.init();
     HeroSlider.init();
     MobileNav.init();
