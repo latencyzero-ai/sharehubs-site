@@ -262,6 +262,23 @@ p { color: var(--sh-text-secondary); line-height: var(--sh-leading-relaxed); }
 .sh-card:hover { transform: translateY(-3px); box-shadow: var(--sh-shadow-lg); border-color: var(--sh-border-strong); }
 .sh-card--feature { border-top: 2px solid var(--sh-brand); }
 
+/* Card internal spacing — eliminate excessive whitespace from default margins */
+.sh-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sh-space-6);
+  gap: var(--sh-space-3);
+}
+.sh-card h4 {
+  margin: 0;
+}
+.sh-card p {
+  margin: 0;
+}
+.sh-card .sh-service__icon {
+  margin-bottom: 0 !important;  /* override inline style; spacing handled by flex gap */
+}
+
 /* ================================================================
    FORMS
    ================================================================ */
@@ -432,8 +449,37 @@ p { color: var(--sh-text-secondary); line-height: var(--sh-leading-relaxed); }
 [data-theme="dark"] .sh-icon-moon { display: block; }
 
 @media (max-width: 1100px) {
+  /* Header compact */
+  .sh-header { height: 60px; }
+  body { padding-top: 60px; }
+
+  /* Inner grid: logo | spacer | actions */
+  .sh-header__inner { grid-template-columns: auto 1fr auto; gap: var(--sh-space-2); }
+
+  /* Actions cluster — right aligned, ~8px gap */
+  .sh-header-actions { gap: 8px; }
+
+  /* Theme toggle — 44px touch target */
+  .sh-theme-toggle { width: 44px; height: 44px; }
+
+  /* Menu toggle — 44px touch target, VISIBLE, centered bars */
+  .sh-menu-toggle {
+    display: flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  /* Mobile nav panel — begins below 60px header */
+  .sh-mobile-nav {
+    top: 60px;
+    padding: var(--sh-space-6);
+  }
+
+  /* Existing visibility toggles */
   .sh-nav { display: none; }
-  .sh-menu-toggle { display: flex; }
   .sh-header__cta { display: none; }
 }
 
@@ -700,8 +746,8 @@ button, a, .sh-nav__link, .sh-btn { min-height: 44px; }
    HERO SLIDER
    ================================================================ */
 .sh-hero {
-  position: relative; min-height: 100vh; display: flex; align-items: center;
-  padding: calc(var(--sh-header-height) + var(--sh-space-16)) 0 var(--sh-space-16);
+  position: relative; min-height: 100vh; display: flex; align-items: flex-start;
+  padding: calc(var(--sh-header-height) + var(--sh-space-12)) 0 var(--sh-space-16);
   overflow: hidden; background: var(--sh-charcoal);
 }
 .sh-hero__slide {
@@ -722,8 +768,15 @@ button, a, .sh-nav__link, .sh-btn { min-height: 44px; }
   max-width: var(--sh-container);
   margin-left: var(--sh-space-6);
   margin-right: auto;
-  padding: 0 var(--sh-space-6);
+  padding: 0 var(--sh-space-6) 0 0;
   min-height: 400px;
+}
+
+@media (min-width: 768px) {
+  /* Shift hero content rightward on desktop for better visual balance */
+  .sh-hero__content-wrap {
+    padding-left: var(--sh-space-6);
+  }
 }
 @media (min-width: 1280px) {
   .sh-hero__content-wrap {
@@ -734,7 +787,7 @@ button, a, .sh-nav__link, .sh-btn { min-height: 44px; }
 .sh-hero__content {
   position: absolute;
   top: 0;
-  left: var(--sh-space-6);
+  left: 0;
   max-width: 680px;
   text-align: left;
   opacity: 0;
@@ -782,6 +835,23 @@ button, a, .sh-nav__link, .sh-btn { min-height: 44px; }
   background: rgba(255,255,255,0.3); border: none; cursor: pointer; transition: all var(--sh-transition-fast);
 }
 .sh-hero__dot.is-active { background: var(--sh-brand); width: 28px; border-radius: var(--sh-radius-full); }
+
+/* ================================================================
+   HERO — MOBILE POSITIONING
+   ================================================================ */
+@media (max-width: 767px) {
+  /* Move hero content upward by ~84px on mobile.
+     Background image composition is preserved: .sh-hero__slide uses
+     position:absolute;inset:0 with background-size:cover and is
+     completely independent of these content positioning changes. */
+  .sh-hero {
+    align-items: flex-start;                    /* anchor content to top instead of vertical center */
+    padding-top: calc(60px + var(--sh-space-10)); /* 60px fixed header + 24px breathing room = 84px */
+  }
+  .sh-hero__content-wrap {
+    min-height: auto;                           /* remove 400px constraint that forces vertical centering */
+  }
+}
 
 /* ================================================================
    TRUST BAR
@@ -943,8 +1013,6 @@ button, a, .sh-nav__link, .sh-btn { min-height: 44px; }
 /* ================================================================
    ACCESSIBILITY
    ================================================================ */
-.sh-skip-link { position: absolute; top: -40px; left: 0; background: var(--sh-brand); color: var(--sh-white); padding: var(--sh-space-2) var(--sh-space-4); z-index: 10000; font-weight: var(--sh-weight-semibold); border-radius: 0 0 var(--sh-radius-md) 0; transition: top var(--sh-transition-fast); }
-.sh-skip-link:focus { top: 0; }
 :focus-visible { outline: 2px solid var(--sh-brand); outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
