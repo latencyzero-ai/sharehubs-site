@@ -1,71 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<%- include('partials/head') %>
-
-</head>
+<head><%- include('partials/head') %></head>
 <body>
 <%- include('partials/header') %>
 <main id="main-content">
-
-<section class="sh-page-hero" aria-label="Consultation hero">
-  <div class="sh-container">
-    <h1>Request a Consultation</h1>
-    <p>Schedule a session with our engineering team to discuss your project feasibility, design, and manufacturing strategy.</p>
-  </div>
-</section>
-
-<section class="sh-section" aria-labelledby="cons-form-heading">
-  <div class="sh-container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="sh-card" style="padding:var(--sh-space-10);">
-          <div class="sh-section-title" style="margin-bottom:var(--sh-space-8);">
-            <h2 id="cons-form-heading">Consultation Request</h2>
-            <p>Fill in your details and we will contact you to schedule a convenient time.</p>
-          </div>
-          <form action="/request-consultation" method="POST">
-            <div class="row">
-              <div class="col-md-6"><div class="sh-form-group"><label for="c-name" class="sh-label">Full Name *</label><input type="text" id="c-name" name="name" class="sh-input" required autocomplete="name"></div></div>
-              <div class="col-md-6"><div class="sh-form-group"><label for="c-email" class="sh-label">Email *</label><input type="email" id="c-email" name="email" class="sh-input" required autocomplete="email"></div></div>
-            </div>
-            <div class="row">
-              <div class="col-md-6"><div class="sh-form-group"><label for="c-phone" class="sh-label">Phone *</label><input type="tel" id="c-phone" name="phone" class="sh-input" required autocomplete="tel"></div></div>
-              <div class="col-md-6"><div class="sh-form-group"><label for="c-company" class="sh-label">Company / Organization</label><input type="text" id="c-company" name="company" class="sh-input"></div></div>
-            </div>
-            <div class="sh-form-group">
-              <label for="c-topic" class="sh-label">Consultation Topic *</label>
-              <select id="c-topic" name="topic" class="sh-select" required>
-                <option value="">Select a topic</option>
-                <option value="design-review">Design Review & Feasibility</option>
-                <option value="material-selection">Material Selection Advice</option>
-                <option value="process-planning">Manufacturing Process Planning</option>
-                <option value="cost-optimization">Cost Optimization</option>
-                <option value="prototype">Prototype Development</option>
-                <option value="training">Training & Skills Development</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="sh-form-group">
-              <label for="c-pref" class="sh-label">Preferred Contact Method</label>
-              <select id="c-pref" name="preference" class="sh-select">
-                <option value="phone">Phone Call</option>
-                <option value="video">Video Call (Zoom/Teams)</option>
-                <option value="in-person">In-Person Meeting</option>
-                <option value="email">Email Exchange</option>
-              </select>
-            </div>
-            <div class="sh-form-group"><label for="c-message" class="sh-label">Tell Us About Your Project</label><textarea id="c-message" name="message" class="sh-textarea" placeholder="Brief overview of what you need help with..."></textarea></div>
-            <div class="sh-form-group" style="margin-bottom:0;"><button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Request Consultation</button></div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
+<section class="sh-page-hero" aria-label="Consultation hero"><div class="sh-container"><h1>Request a Consultation</h1><p>Schedule a session with our engineering team to discuss your project feasibility, design, and manufacturing strategy.</p></div></section>
+<section class="sh-section" aria-labelledby="cons-form-heading"><div class="sh-container"><div class="row justify-content-center"><div class="col-lg-8"><div class="sh-card" style="padding:var(--sh-space-10);">
+<div class="sh-section-title" style="margin-bottom:var(--sh-space-8);"><h2 id="cons-form-heading">Consultation Request</h2><p>Fill in your details and we will contact you to schedule a convenient time.</p></div>
+<form action="/api/communications/consultation" method="POST" data-communication-form>
+<input type="text" name="_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0;">
+<div class="row"><div class="col-md-6"><div class="sh-form-group"><label for="c-name" class="sh-label">Full Name *</label><input type="text" id="c-name" name="name" class="sh-input" required autocomplete="name"></div></div><div class="col-md-6"><div class="sh-form-group"><label for="c-email" class="sh-label">Email *</label><input type="email" id="c-email" name="email" class="sh-input" required autocomplete="email"></div></div></div>
+<div class="row"><div class="col-md-6"><div class="sh-form-group"><label for="c-phone" class="sh-label">Phone *</label><input type="tel" id="c-phone" name="phone" class="sh-input" required autocomplete="tel"></div></div><div class="col-md-6"><div class="sh-form-group"><label for="c-company" class="sh-label">Company / Organization</label><input type="text" id="c-company" name="company" class="sh-input"></div></div></div>
+<div class="sh-form-group"><label for="c-topic" class="sh-label">Consultation Topic *</label><select id="c-topic" name="topic" class="sh-select" required><option value="">Select a topic</option><option value="design-review">Design Review & Feasibility</option><option value="material-selection">Material Selection Advice</option><option value="process-planning">Manufacturing Process Planning</option><option value="cost-optimization">Cost Optimization</option><option value="prototype">Prototype Development</option><option value="training">Training & Skills Development</option><option value="other">Other</option></select></div>
+<div class="sh-form-group"><label for="c-pref" class="sh-label">Preferred Contact Method</label><select id="c-pref" name="preference" class="sh-select"><option value="phone">Phone Call</option><option value="video">Video Call (Zoom/Teams)</option><option value="in-person">In-Person Meeting</option><option value="email">Email Exchange</option></select></div>
+<div class="sh-form-group"><label for="c-message" class="sh-label">Tell Us About Your Project</label><textarea id="c-message" name="message" class="sh-textarea" placeholder="Brief overview of what you need help with..."></textarea></div>
+<div class="sh-form-group" style="margin-bottom:0;"><button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Request Consultation</button></div>
+</form></div></div></div></div></section>
 </main>
-<%- include('partials/footer') %>
-<%- include('partials/scripts') %>
-</body>
-</html>
+<%- include('partials/footer') %><%- include('partials/scripts') %>
+</body></html>
