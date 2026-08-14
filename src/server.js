@@ -10,6 +10,7 @@ const pageRoutes = require('./routes/pages');
 const communicationRoutes = require('./routes/communications');
 const { router: adminRoutes } = require('./routes/admin');
 const { ensureAdminSchema } = require('./config/admin-schema');
+const { startInboundMailSync } = require('./services/inbound-mail');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -45,7 +46,10 @@ app.use((req, res) => {
 (async () => {
   try {
     await ensureAdminSchema();
-    app.listen(config.port, () => console.log(`Share Hubs site running on http://localhost:${config.port} [${config.env}]`));
+    app.listen(config.port, () => {
+      console.log(`Share Hubs site running on http://localhost:${config.port} [${config.env}]`);
+      startInboundMailSync();
+    });
   } catch (error) {
     console.error('Failed to initialize application schema:', error.message);
     process.exit(1);
