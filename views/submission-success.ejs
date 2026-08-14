@@ -14,6 +14,12 @@
           <h1>Thank you. We've received your <%= type %>.</h1>
           <p>Our team will review your request and contact you as soon as possible.</p>
           <p><strong>Reference: <%= referenceId %></strong></p>
+          <% if (typeof notificationStatus !== 'undefined' && notificationStatus === 'FAILED') { %>
+            <div role="status" style="margin-top:1.25rem;padding:1rem;border-radius:12px;background:rgba(128,0,0,.08);text-align:left;">
+              <strong>Your request is safely recorded.</strong>
+              <p style="margin:.35rem 0 0;">We are experiencing a temporary email delivery issue. Your request remains in our system and our team can resend the notification.</p>
+            </div>
+          <% } %>
           <div style="margin-top:2rem;display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;">
             <a class="sh-btn sh-btn--primary" href="/">Back to Home</a>
             <a class="sh-btn" href="/contact">Contact Us</a>
