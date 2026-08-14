@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="sh-admin-body">
+  <main class="sh-admin-auth">
+    <section class="sh-admin-auth__card" aria-labelledby="admin-register-title">
+      <a class="sh-admin-auth__brand" href="/">
+        <img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" height="38">
+      </a>
+      <div class="sh-admin-auth__intro">
+        <span class="sh-admin-eyebrow">Staff Onboarding</span>
+        <h1 id="admin-register-title">Create your staff account</h1>
+        <p>This portal is for Share Hubs Engineering staff only. Your account must use an <strong>@sharehubsengineering.com</strong> email address.</p>
+      </div>
+
+      <% if (error) { %><div class="sh-admin-alert sh-admin-alert--error" role="alert"><%= error %></div><% } %>
+
+      <form action="/admin/register" method="POST" class="sh-admin-form">
+        <div class="sh-admin-field">
+          <label for="staff-name">Full name</label>
+          <input id="staff-name" name="name" type="text" placeholder="Your full name" autocomplete="name" required>
+        </div>
+        <div class="sh-admin-field">
+          <label for="staff-email">Company email</label>
+          <input id="staff-email" name="email" type="email" placeholder="name@sharehubsengineering.com" autocomplete="email" required>
+        </div>
+        <div class="sh-admin-field">
+          <label for="staff-password">Password</label>
+          <input id="staff-password" name="password" type="password" placeholder="At least 10 characters" autocomplete="new-password" minlength="10" required>
+        </div>
+        <div class="sh-admin-field">
+          <label for="staff-password-confirmation">Confirm password</label>
+          <input id="staff-password-confirmation" name="password_confirmation" type="password" placeholder="Repeat your password" autocomplete="new-password" minlength="10" required>
+        </div>
+        <button class="sh-btn sh-btn--primary sh-admin-submit" type="submit">Create staff account</button>
+      </form>
+
+      <p class="sh-admin-auth__footer">Already have an account? <a href="/admin/login">Sign in</a></p>
+      <a class="sh-admin-back" href="/">← Back to Share Hubs Engineering</a>
+    </section>
+  </main>
+</body>
+</html>
