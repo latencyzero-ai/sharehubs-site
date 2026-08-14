@@ -1,4 +1,6 @@
-/* Share Hubs Engineering admin — unified with Design System v4 */
+/* Share Hubs Engineering admin — unified with Design System v4.1.
+   This file is admin-specific composition only; all brand, theme,
+   typography, spacing and control tokens come from design-system-v4.css. */
 .admin-page,
 .admin-auth-page {
   font-family: var(--sh-font) !important;
@@ -21,7 +23,14 @@
   box-shadow: var(--sh-shadow-xl) !important;
   padding: var(--sh-space-10) !important;
 }
-.auth-card .brand-logo { width: min(260px, 78%); height: auto; margin: 0 0 var(--sh-space-8); }
+.auth-card .brand-logo {
+  display: block;
+  width: min(200px, 72%);
+  height: auto;
+  max-height: 64px;
+  object-fit: contain;
+  margin: 0 auto var(--sh-space-8);
+}
 .auth-card h1 { color: var(--sh-text) !important; font-family: var(--sh-font); }
 .auth-card .muted, .auth-foot { color: var(--sh-text-secondary) !important; }
 .auth-form label { color: var(--sh-text-secondary) !important; }
@@ -33,7 +42,12 @@
   border: 1px solid var(--sh-border-strong) !important;
   border-radius: var(--sh-radius-md) !important;
 }
-.auth-form input:focus { border-color: var(--sh-brand) !important; box-shadow: 0 0 0 3px rgba(128,0,0,.12) !important; }
+.auth-form input:focus,
+.auth-form select:focus,
+.auth-form textarea:focus {
+  border-color: var(--sh-brand) !important;
+  box-shadow: 0 0 0 3px rgba(128,0,0,.12) !important;
+}
 .auth-foot a { color: var(--sh-brand) !important; }
 .admin-topbar {
   background: var(--sh-header-bg) !important;
@@ -42,7 +56,12 @@
 }
 .admin-brand { color: var(--sh-text) !important; }
 .admin-brand small, .admin-user small, .muted, .stat-card span, .stat-card small, .panel-foot { color: var(--sh-text-muted) !important; }
-.brand-logo--header { width: 154px; height: auto; max-height: 38px; object-fit: contain; }
+.brand-logo--header {
+  width: 140px;
+  height: auto;
+  max-height: 38px;
+  object-fit: contain;
+}
 .admin-shell { max-width: var(--sh-container); }
 .stat-card, .panel {
   background: var(--sh-surface) !important;
@@ -67,12 +86,47 @@
 .details-dialog { background: var(--sh-surface) !important; color: var(--sh-text) !important; border: 1px solid var(--sh-border) !important; }
 .detail-item { background: var(--sh-surface-alt) !important; border-color: var(--sh-border) !important; }
 .details-dialog::backdrop { background: rgba(0,0,0,.55); }
+
+/* Canonical compact admin theme control: 44×24 pill, not a large square. */
 .theme-control {
-  width: 40px; height: 40px; border: 1px solid var(--sh-border); border-radius: var(--sh-radius-md);
-  display: grid; place-items: center; color: var(--sh-text-secondary); background: var(--sh-surface);
+  width: 44px !important;
+  height: 24px !important;
+  min-width: 44px;
+  padding: 2px !important;
+  border: 1px solid var(--sh-border-strong) !important;
+  border-radius: var(--sh-radius-full) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  color: var(--sh-text-secondary);
+  background: var(--sh-surface-alt) !important;
+  box-shadow: var(--sh-shadow-sm) !important;
+  cursor: pointer !important;
 }
-.theme-control:hover { color: var(--sh-brand); border-color: var(--sh-brand); }
+.theme-control::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  border-radius: 50%;
+  background: var(--sh-white);
+  box-shadow: 0 1px 3px rgba(0,0,0,.18);
+  transform: translateX(0);
+  transition: transform var(--sh-transition-fast), background var(--sh-transition-fast);
+}
+.theme-control span { display: none !important; }
+.theme-control:hover { border-color: var(--sh-brand) !important; }
+.theme-control:focus-visible { outline: 2px solid var(--sh-brand); outline-offset: 2px; }
+[data-theme="dark"] .theme-control { background: var(--sh-surface-alt) !important; }
+[data-theme="dark"] .theme-control::before { transform: translateX(18px); background: var(--sh-brand); }
+
 .logo-for-dark { display: none !important; }
 [data-theme="dark"] .logo-for-light { display: none !important; }
 [data-theme="dark"] .logo-for-dark { display: block !important; }
-@media (max-width: 640px) { .auth-card { padding: var(--sh-space-8) !important; } .brand-logo--header { width: 132px; } }
+
+@media (max-width: 640px) {
+  .auth-card { padding: var(--sh-space-8) !important; }
+  .auth-card .brand-logo { width: min(180px, 70%); }
+  .brand-logo--header { width: 132px; }
+}
