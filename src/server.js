@@ -9,7 +9,10 @@ const config = require('./config/env');
 const pageRoutes = require('./routes/pages');
 const communicationRoutes = require('./routes/communications');
 const { router: adminRoutes } = require('./routes/admin');
-const { router: communicationWorkflowRoutes } = require('./routes/communication-workflow');
+const {
+  router: communicationWorkflowRoutes,
+  startCommunicationStatusSync,
+} = require('./routes/communication-workflow');
 const { ensureAdminSchema } = require('./config/admin-schema');
 const { startInboundMailSync } = require('./services/inbound-mail');
 
@@ -48,6 +51,12 @@ app.use((req, res) => {
 (async () => {
   try {
     await ensureAdminSchema();
+
+    // Start background communication workers only after every Phase 6 table
+    // and compatibility column has been created. This prevents startup races
+    // where the sync worker queries the database before schema initialization.
+    startCommunicationStatusSync(config.imap.intervalMs);
+
     app.listen(config.port, () => {
       console.log(`Share Hubs site running on http://localhost:${config.port} [${config.env}]`);
       startInboundMailSync();
