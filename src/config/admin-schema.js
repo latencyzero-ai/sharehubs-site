@@ -52,6 +52,29 @@ const statements = [
     INDEX idx_admin_activity_created (created_at),
     CONSTRAINT fk_admin_activity_user FOREIGN KEY (actor_id) REFERENCES admin_users(id) ON DELETE SET NULL
   ) ENGINE=InnoDB`,
+  `CREATE TABLE IF NOT EXISTS communication_messages (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reference_id VARCHAR(64) NOT NULL,
+    direction ENUM('INBOUND', 'OUTBOUND') NOT NULL,
+    sender_type ENUM('CUSTOMER', 'STAFF', 'SYSTEM') NOT NULL,
+    sender_name VARCHAR(160) NULL,
+    sender_email VARCHAR(255) NULL,
+    recipient_email VARCHAR(255) NULL,
+    subject VARCHAR(500) NULL,
+    body_text LONGTEXT NOT NULL,
+    body_html LONGTEXT NULL,
+    message_id VARCHAR(500) NULL,
+    in_reply_to VARCHAR(500) NULL,
+    status ENUM('RECEIVED', 'QUEUED', 'SENT', 'FAILED') NOT NULL DEFAULT 'RECEIVED',
+    actor_id INT NULL,
+    sent_at DATETIME NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_communication_reference (reference_id, created_at),
+    INDEX idx_communication_message_id (message_id),
+    INDEX idx_communication_in_reply_to (in_reply_to),
+    INDEX idx_communication_sender (sender_email),
+    CONSTRAINT fk_communication_actor FOREIGN KEY (actor_id) REFERENCES admin_users(id) ON DELETE SET NULL
+  ) ENGINE=InnoDB`,
 ];
 
 async function ensureAdminSchema() {
