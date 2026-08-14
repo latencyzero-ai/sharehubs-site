@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-auth-page">
+  <main class="auth-card">
+    <div class="brand-mark">SH</div>
+    <p class="eyebrow">SHARE HUBS ENGINEERING</p>
+    <h1>Staff sign in</h1>
+    <p class="muted">Access the enquiries and communications dashboard.</p>
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <% if (verified === 'success') { %><div class="alert alert-success">Your company email has been verified. You can now sign in.</div><% } %>
+    <% if (verified === 'pending') { %><div class="alert alert-success">Check your company inbox for the verification link.</div><% } %>
+    <form method="post" action="/admin/login" class="auth-form">
+      <label>Email<input type="email" name="email" autocomplete="email" required placeholder="name@sharehubsengineering.com"></label>
+      <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+      <button class="btn btn-primary" type="submit">Sign in</button>
+    </form>
+    <p class="auth-foot">Need an account? <a href="/admin/register">Create staff account</a></p>
+  </main>
+</body>
+</html>
