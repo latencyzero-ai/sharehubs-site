@@ -1,7 +1,49 @@
-/** Admin dashboard schema. Uses MySQL-backed sessions; no third-party session store required. */
+/** Admin dashboard schema plus public enquiry storage. */
 const db = require('./db');
 
 const statements = [
+  `CREATE TABLE IF NOT EXISTS contacts (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reference_id VARCHAR(64) NOT NULL UNIQUE,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(60) NULL,
+    subject VARCHAR(500) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_contacts_created (created_at),
+    INDEX idx_contacts_email (email)
+  ) ENGINE=InnoDB`,
+  `CREATE TABLE IF NOT EXISTS quote_requests (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reference_id VARCHAR(64) NOT NULL UNIQUE,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(60) NULL,
+    company VARCHAR(255) NULL,
+    industry VARCHAR(80) NOT NULL,
+    service VARCHAR(120) NOT NULL,
+    quantity VARCHAR(255) NULL,
+    timeline VARCHAR(80) NULL,
+    details TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_quotes_created (created_at),
+    INDEX idx_quotes_email (email)
+  ) ENGINE=InnoDB`,
+  `CREATE TABLE IF NOT EXISTS consultation_requests (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reference_id VARCHAR(64) NOT NULL UNIQUE,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(60) NOT NULL,
+    company VARCHAR(255) NULL,
+    topic VARCHAR(120) NOT NULL,
+    preference VARCHAR(80) NULL,
+    message TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_consultations_created (created_at),
+    INDEX idx_consultations_email (email)
+  ) ENGINE=InnoDB`,
   `CREATE TABLE IF NOT EXISTS admin_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(120) NOT NULL,
@@ -88,11 +130,8 @@ async function ensureColumn(table, column, definition) {
 
 async function ensureAdminSchema() {
   for (const statement of statements) await db.query(statement);
-
-  // Safe migrations for installations created before Phase 6.5.
   await ensureColumn('admin_enquiry_status', 'communication_status', "VARCHAR(30) NOT NULL DEFAULT 'NEW'");
   await ensureColumn('communication_messages', 'is_read', 'TINYINT(1) NOT NULL DEFAULT 1');
-
   await db.query("UPDATE admin_enquiry_status SET communication_status = 'NEW' WHERE communication_status IS NULL OR communication_status = ''");
   await db.query('DELETE FROM admin_sessions WHERE expires_at < NOW()');
   console.log('Admin dashboard schema ready');
