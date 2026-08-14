@@ -10,6 +10,10 @@
 
   const escapeHtml = (value) => String(value ?? '').replace(/[&<>'\"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;' }[char]));
 
+  const observer = new MutationObserver(() => {
+    if (!decorating) decorateRows();
+  });
+
   const updateStatus = async (reference, select) => {
     const previous = select.dataset.previous || select.value;
     select.dataset.previous = select.value;
@@ -45,12 +49,15 @@
   const decorateRows = () => {
     if (decorating) return;
     decorating = true;
+    observer.disconnect();
+
     try {
       body.querySelectorAll('tr[data-reference]').forEach((row) => {
         const reference = row.dataset.reference;
         if (!reference) return;
         const current = state.get(reference) || { communication_status: 'NEW', unread_count: 0 };
         const cells = row.querySelectorAll('td');
+
         if (cells.length >= 8) {
           const cell = cells[5];
           let select = cell.querySelector('[data-communication-status-reference]');
@@ -58,7 +65,9 @@
             cell.querySelector('[data-communication-reference]')?.remove();
             select = buildSelect(reference, current.communication_status);
             cell.prepend(select);
-          } else if (document.activeElement !== select) select.value = current.communication_status;
+          } else if (document.activeElement !== select && select.value !== current.communication_status) {
+            select.value = current.communication_status;
+          }
 
           let unread = cell.querySelector('[data-unread-reference]');
           if (!unread) {
@@ -67,7 +76,8 @@
             unread.dataset.unreadReference = reference;
             cell.appendChild(unread);
           }
-          unread.textContent = current.unread_count;
+          const unreadValue = String(current.unread_count || 0);
+          if (unread.textContent !== unreadValue) unread.textContent = unreadValue;
           unread.hidden = !current.unread_count;
         } else if (cells.length >= 7) {
           const cell = document.createElement('td');
@@ -75,19 +85,29 @@
           const unread = document.createElement('span');
           unread.className = 'sh-admin-unread';
           unread.dataset.unreadReference = reference;
-          unread.textContent = current.unread_count;
+          unread.textContent = String(current.unread_count || 0);
           unread.hidden = !current.unread_count;
           cell.appendChild(unread);
           row.insertBefore(cell, cells[5]);
         }
-        row.classList.toggle('sh-admin-row-unread', Number(current.unread_count) > 0);
+
+        const shouldMarkUnread = Number(current.unread_count) > 0;
+        if (row.classList.contains('sh-admin-row-unread') !== shouldMarkUnread) {
+          row.classList.toggle('sh-admin-row-unread', shouldMarkUnread);
+        }
       });
+
       const empty = body.querySelector('.sh-admin-empty');
-      if (empty) empty.parentElement?.setAttribute('colspan', '8');
-    } finally { decorating = false; }
+      if (empty && empty.parentElement?.getAttribute('colspan') !== '8') {
+        empty.parentElement.setAttribute('colspan', '8');
+      }
+    } finally {
+      decorating = false;
+      observer.observe(body, { childList: true, subtree: true });
+    }
   };
 
-  const loadOverview = async () => {
+  async function loadOverview() {
     try {
       const response = await fetch('/admin/api/communication/overview', { headers: { Accept: 'application/json' } });
       const result = await response.json();
@@ -98,9 +118,9 @@
       if (unreadTotal) unreadTotal.textContent = Number(result.counts?.unread_messages || 0);
       decorateRows();
     } catch (error) { console.warn('Communication overview unavailable:', error.message); }
-  };
+  }
 
-  new MutationObserver(decorateRows).observe(body, { childList: true, subtree: true });
+  observer.observe(body, { childList: true, subtree: true });
   decorateRows();
   loadOverview();
   setInterval(loadOverview, 30000);
