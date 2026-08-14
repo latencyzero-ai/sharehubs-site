@@ -44,6 +44,25 @@ async function syncCommunicationStatuses() {
   }
 }
 
+let statusSyncTimer = null;
+let statusSyncStarted = false;
+
+function startCommunicationStatusSync(intervalMs = 30000) {
+  if (statusSyncStarted) return;
+  statusSyncStarted = true;
+  const interval = Math.max(Number(intervalMs) || 30000, 15000);
+  syncCommunicationStatuses();
+  statusSyncTimer = setInterval(syncCommunicationStatuses, interval);
+  statusSyncTimer.unref?.();
+  console.log(`Communication status sync enabled every ${interval / 1000}s`);
+}
+
+function stopCommunicationStatusSync() {
+  if (statusSyncTimer) clearInterval(statusSyncTimer);
+  statusSyncTimer = null;
+  statusSyncStarted = false;
+}
+
 router.get('/api/communication/overview', requireAdmin, async (_req, res) => {
   try {
     const [[counts]] = await db.query(`SELECT
@@ -84,7 +103,6 @@ router.get('/api/enquiries/:reference/messages', requireAdmin, async (req, res) 
   try {
     const [messages] = await db.query(`SELECT m.id, m.reference_id, m.direction, m.sender_type, m.sender_name, m.sender_email, m.recipient_email, m.subject, m.body_text, m.status, m.is_read, m.sent_at, m.created_at, u.name AS actor_name, u.email AS actor_email FROM communication_messages m LEFT JOIN admin_users u ON u.id = m.actor_id WHERE m.reference_id = ? ORDER BY m.created_at ASC, m.id ASC`, [referenceId]);
 
-    // Opening a conversation is the explicit read action.
     await db.query(`UPDATE communication_messages SET is_read = 1 WHERE reference_id = ? AND direction = 'INBOUND' AND is_read = 0`, [referenceId]);
 
     return res.json({ ok: true, reference: referenceId, messages });
@@ -120,7 +138,11 @@ router.post('/api/enquiries/:reference/read', requireAdmin, async (req, res) => 
   }
 });
 
-setInterval(syncCommunicationStatuses, 30000).unref?.();
-syncCommunicationStatuses();
-
-module.exports = { router, syncCommunicationStatuses, setCommunicationStatus, COMMUNICATION_STATUSES };
+module.exports = {
+  router,
+  syncCommunicationStatuses,
+  startCommunicationStatusSync,
+  stopCommunicationStatusSync,
+  setCommunicationStatus,
+  COMMUNICATION_STATUSES,
+};
