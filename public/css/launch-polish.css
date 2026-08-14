@@ -1,0 +1,30 @@
+/* ================================================================
+   SHARE HUBS — LAUNCH POLISH
+   Visual-only alignment corrections. No backend/runtime changes.
+   ================================================================ */
+
+@media (min-width: 1101px) {
+  .sh-header__inner {
+    max-width: 1544px;
+    padding-inline: var(--sh-space-6);
+  }
+}
+
+@media (max-width: 1100px) {
+  .sh-header__inner {
+    padding-inline: var(--sh-space-4);
+  }
+}
+
+/* Legacy template controls must never appear as stray UI on the public site. */
+.pro-features,
+.get-pro,
+.color-plate {
+  display: none !important;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
