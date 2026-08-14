@@ -36,7 +36,21 @@ const statements = [
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_admin_enquiry_status (status),
+    INDEX idx_admin_enquiry_assignee (assigned_to),
     CONSTRAINT fk_admin_enquiry_status_user FOREIGN KEY (updated_by) REFERENCES admin_users(id) ON DELETE SET NULL
+  ) ENGINE=InnoDB`,
+  `CREATE TABLE IF NOT EXISTS admin_enquiry_activity (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reference_id VARCHAR(64) NOT NULL,
+    actor_id INT NULL,
+    action VARCHAR(40) NOT NULL,
+    old_value VARCHAR(255) NULL,
+    new_value VARCHAR(255) NULL,
+    note TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_admin_activity_reference (reference_id),
+    INDEX idx_admin_activity_created (created_at),
+    CONSTRAINT fk_admin_activity_user FOREIGN KEY (actor_id) REFERENCES admin_users(id) ON DELETE SET NULL
   ) ENGINE=InnoDB`,
 ];
 
