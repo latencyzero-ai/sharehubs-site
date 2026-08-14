@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="sh-admin-body sh-admin-app">
+  <header class="sh-admin-topbar">
+    <div class="sh-admin-topbar__inner">
+      <a class="sh-admin-brand" href="/admin" aria-label="Share Hubs Engineering dashboard">
+        <img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" height="34">
+        <span>Operations</span>
+      </a>
+      <div class="sh-admin-user">
+        <div class="sh-admin-user__meta"><strong><%= admin.name %></strong><span><%= admin.email %></span></div>
+        <span class="sh-admin-role"><%= admin.role %></span>
+        <form action="/admin/logout" method="POST"><button class="sh-admin-logout" type="submit">Log out</button></form>
+      </div>
+    </div>
+  </header>
+
+  <main class="sh-admin-main">
+    <div class="sh-admin-shell">
+      <a class="sh-admin-detail-back" href="/admin">← Back to enquiries</a>
+      <div class="sh-admin-heading">
+        <div>
+          <span class="sh-admin-eyebrow"><%= enquiry.type %> enquiry</span>
+          <h1><%= enquiry.reference_id %></h1>
+          <p><%= enquiry.subject || enquiry.service || enquiry.topic || 'Website enquiry' %></p>
+        </div>
+        <div class="sh-admin-detail-actions">
+          <a class="sh-btn sh-btn--outline" href="mailto:<%= enquiry.email %>?subject=<%= encodeURIComponent('Re: ' + (enquiry.subject || enquiry.reference_id)) %>">Reply by email</a>
+        </div>
+      </div>
+
+      <% if (error) { %><div class="sh-admin-alert sh-admin-alert--error" role="alert"><%= error %></div><% } %>
+
+      <div class="sh-admin-detail">
+        <div class="sh-admin-detail__main">
+          <section class="sh-admin-detail-card">
+            <h2>Customer information</h2>
+            <div class="sh-admin-detail__facts">
+              <div class="sh-admin-detail__fact"><h3>Name</h3><strong><%= enquiry.name %></strong></div>
+              <div class="sh-admin-detail__fact"><h3>Email</h3><strong><a href="mailto:<%= enquiry.email %>"><%= enquiry.email %></a></strong></div>
+              <% if (enquiry.phone) { %><div class="sh-admin-detail__fact"><h3>Phone</h3><strong><a href="tel:<%= enquiry.phone %>"><%= enquiry.phone %></a></strong></div><% } %>
+              <% if (enquiry.company) { %><div class="sh-admin-detail__fact"><h3>Company</h3><strong><%= enquiry.company %></strong></div><% } %>
+              <% if (enquiry.industry) { %><div class="sh-admin-detail__fact"><h3>Industry</h3><strong><%= enquiry.industry %></strong></div><% } %>
+              <% if (enquiry.service) { %><div class="sh-admin-detail__fact"><h3>Service</h3><strong><%= enquiry.service %></strong></div><% } %>
+              <% if (enquiry.quantity) { %><div class="sh-admin-detail__fact"><h3>Quantity</h3><strong><%= enquiry.quantity %></strong></div><% } %>
+              <% if (enquiry.timeline) { %><div class="sh-admin-detail__fact"><h3>Timeline</h3><strong><%= enquiry.timeline %></strong></div><% } %>
+              <% if (enquiry.topic) { %><div class="sh-admin-detail__fact"><h3>Topic</h3><strong><%= enquiry.topic %></strong></div><% } %>
+              <% if (enquiry.preference) { %><div class="sh-admin-detail__fact"><h3>Preference</h3><strong><%= enquiry.preference %></strong></div><% } %>
+              <div class="sh-admin-detail__fact"><h3>Received</h3><strong><%= new Date(enquiry.created_at).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }) %></strong></div>
+            </div>
+          </section>
+
+          <section class="sh-admin-detail-card">
+            <h2>Request</h2>
+            <h3><%= enquiry.subject || enquiry.service || enquiry.topic || 'Message' %></h3>
+            <p><%= enquiry.details || enquiry.message || 'No message supplied.' %></p>
+          </section>
+
+          <section class="sh-admin-detail-card">
+            <h2>Internal activity</h2>
+            <div class="sh-admin-timeline">
+              <% if (!activity.length) { %><p>No internal activity yet.</p><% } %>
+              <% activity.forEach((item) => { %>
+                <article class="sh-admin-timeline__item">
+                  <strong><%= item.action.replaceAll('_', ' ') %></strong>
+                  <span><%= item.actor_name || 'System' %> · <%= new Date(item.created_at).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }) %></span>
+                  <% if (item.old_value || item.new_value) { %><p><%= item.old_value || 'None' %> → <%= item.new_value || 'None' %></p><% } %>
+                  <% if (item.note) { %><p><%= item.note %></p><% } %>
+                </article>
+              <% }) %>
+            </div>
+          </section>
+        </div>
+
+        <aside class="sh-admin-detail__side">
+          <section class="sh-admin-detail-card">
+            <h2>Workflow</h2>
+            <div class="sh-admin-form" data-enquiry-reference="<%= enquiry.reference_id %>">
+              <div class="sh-admin-field">
+                <label for="enquiry-status">Status</label>
+                <select id="enquiry-status">
+                  <% statuses.forEach((status) => { %><option value="<%= status %>" <%= state.status === status ? 'selected' : '' %>><%= status %></option><% }) %>
+                </select>
+              </div>
+              <div class="sh-admin-field">
+                <label for="enquiry-assignee">Assigned to</label>
+                <select id="enquiry-assignee">
+                  <option value="">Unassigned</option>
+                  <% staff.forEach((person) => { %><option value="<%= person.email %>" <%= state.assigned_to === person.email ? 'selected' : '' %>><%= person.name %> — <%= person.email %></option><% }) %>
+                </select>
+              </div>
+              <div class="sh-admin-field">
+                <label for="enquiry-note">Internal note</label>
+                <textarea id="enquiry-note" placeholder="Add a private note for the team..."></textarea>
+              </div>
+              <button id="save-note" class="sh-btn sh-btn--primary" type="button">Add internal note</button>
+              <div id="enquiry-state" class="sh-admin-alert" role="status" hidden></div>
+            </div>
+          </section>
+
+          <section class="sh-admin-detail-card">
+            <h2>Reference</h2>
+            <h3>Tracking number</h3>
+            <strong class="sh-admin-ref"><%= enquiry.reference_id %></strong>
+            <p style="margin-top:.7rem">Use this reference in internal discussions and customer follow-up.</p>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const root = document.querySelector('[data-enquiry-reference]');
+      if (!root) return;
+      const reference = root.dataset.enquiryReference;
+      const status = document.querySelector('#enquiry-status');
+      const assignee = document.querySelector('#enquiry-assignee');
+      const note = document.querySelector('#enquiry-note');
+      const saveNote = document.querySelector('#save-note');
+      const state = document.querySelector('#enquiry-state');
+
+      const show = (message, error = false) => {
+        state.hidden = false;
+        state.textContent = message;
+        state.className = `sh-admin-alert ${error ? 'sh-admin-alert--error' : 'sh-admin-alert--success'}`;
+      };
+      const request = async (url, method, body) => {
+        const response = await fetch(url, { method, headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) throw new Error(result.error || 'Unable to save the change.');
+        return result;
+      };
+
+      status.addEventListener('change', async () => {
+        status.disabled = true;
+        try { await request(`/admin/api/enquiries/${encodeURIComponent(reference)}/status`, 'PATCH', { status: status.value }); show('Status updated.'); }
+        catch (error) { show(error.message, true); }
+        finally { status.disabled = false; }
+      });
+
+      assignee.addEventListener('change', async () => {
+        assignee.disabled = true;
+        try { await request(`/admin/api/enquiries/${encodeURIComponent(reference)}/assignment`, 'PATCH', { assigned_to: assignee.value }); show(assignee.value ? 'Enquiry assigned.' : 'Enquiry unassigned.'); }
+        catch (error) { show(error.message, true); }
+        finally { assignee.disabled = false; }
+      });
+
+      saveNote.addEventListener('click', async () => {
+        if (!note.value.trim()) { show('Enter an internal note first.', true); return; }
+        saveNote.disabled = true;
+        try { await request(`/admin/api/enquiries/${encodeURIComponent(reference)}/note`, 'PATCH', { note: note.value }); note.value = ''; show('Internal note saved. Refresh to view it in the activity timeline.'); }
+        catch (error) { show(error.message, true); }
+        finally { saveNote.disabled = false; }
+      });
+    })();
+  </script>
+</body>
+</html>
