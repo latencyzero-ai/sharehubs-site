@@ -4,13 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#080a0d">
   <title><%= title %></title>
+  <link rel="icon" href="/img/favicon_io%20(1)/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon_io%20(1)/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/img/favicon_io%20(1)/apple-touch-icon.png">
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="stylesheet" href="/css/admin-features.css">
 </head>
 <body class="admin-page">
   <header class="admin-topbar">
-    <a class="admin-brand" href="/admin" aria-label="Share Hubs Engineering admin home"><span class="brand-mark small">SH</span><span><strong>Share Hubs</strong><small>Engineering · Admin</small></span></a>
+    <a class="admin-brand" href="/admin" aria-label="Share Hubs Engineering admin home">
+      <img class="admin-logo" src="/img/logo-light.png" alt="Share Hubs Engineering" width="150" height="63">
+      <span class="admin-brand-label"><strong>Admin Portal</strong><small>Engineering · Operations</small></span>
+    </a>
     <div class="topbar-actions"><span class="admin-user"><span class="avatar"><%= (admin.name || 'A').slice(0,1).toUpperCase() %></span><span class="user-copy"><strong><%= admin.name %></strong><small><%= admin.role %></small></span></span><form method="post" action="/admin/logout"><button class="btn btn-ghost" type="submit">Sign out</button></form></div>
   </header>
 
