@@ -3,6 +3,15 @@
 <head>
   <%- include('../partials/head') %>
   <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    .sh-admin-comm-status { display:inline-flex; align-items:center; gap:.45rem; padding:.28rem .6rem; border:1px solid var(--sh-border); border-radius:999px; font-size:.72rem; font-weight:700; white-space:nowrap; }
+    .sh-admin-comm-status::before { content:""; width:7px; height:7px; border-radius:50%; background:currentColor; opacity:.8; }
+    .sh-admin-comm-status[data-status="AWAITING_STAFF"] { color:#800000; background:rgba(128,0,0,.07); }
+    .sh-admin-comm-status[data-status="AWAITING_CUSTOMER"] { color:#4a4842; background:rgba(74,72,66,.07); }
+    .sh-admin-comm-status[data-status="RESOLVED"], .sh-admin-comm-status[data-status="CLOSED"] { color:#2f6b45; background:rgba(47,107,69,.08); }
+    .sh-admin-unread { display:inline-flex; min-width:22px; height:22px; align-items:center; justify-content:center; margin-left:.45rem; padding:0 .35rem; border-radius:999px; background:var(--sh-brand); color:#fff; font-size:.7rem; font-weight:700; }
+    .sh-admin-row-unread { background:rgba(128,0,0,.025); }
+  </style>
 </head>
 <body class="sh-admin-body sh-admin-app">
   <header class="sh-admin-topbar">
@@ -18,19 +27,20 @@
       <section class="sh-admin-stats" aria-label="Communication overview">
         <article class="sh-admin-stat"><span>Total enquiries</span><strong><%= counts.total || 0 %></strong><small>All contact, quote and consultation requests</small></article>
         <article class="sh-admin-stat"><span>Today</span><strong><%= counts.today || 0 %></strong><small>New website enquiries today</small></article>
-        <article class="sh-admin-stat"><span>New</span><strong><%= counts.tracked_new || 0 %></strong><small>Awaiting staff review</small></article>
-        <article class="sh-admin-stat"><span>Won</span><strong><%= counts.won || 0 %></strong><small>Marked as won</small></article>
+        <article class="sh-admin-stat"><span>Awaiting staff</span><strong id="communication-awaiting-staff">0</strong><small>Customer replies needing attention</small></article>
+        <article class="sh-admin-stat"><span>Unread replies</span><strong id="communication-unread">0</strong><small>Unread customer messages</small></article>
       </section>
       <section class="sh-admin-panel" aria-labelledby="enquiries-title">
         <div class="sh-admin-panel__header"><div><h2 id="enquiries-title">Recent enquiries</h2><p>The latest customer communication entering the system.</p></div><div class="sh-admin-filters"><label class="sh-admin-search"><span class="sh-sr-only">Search enquiries</span><input id="admin-search" type="search" placeholder="Search name, email or reference"></label><select id="admin-status-filter" aria-label="Filter by status"><option value="ALL">All statuses</option><% statuses.forEach((status) => { %><option value="<%= status %>"><%= status %></option><% }); %></select></div></div>
-        <div class="sh-admin-table-wrap"><table class="sh-admin-table"><thead><tr><th>Reference</th><th>Customer</th><th>Type</th><th>Subject / Service</th><th>Received</th><th>Status</th><th>Action</th></tr></thead><tbody id="admin-enquiries-body">
-          <% enquiries.forEach((item) => { %><tr data-reference="<%= item.reference_id %>"><td><strong class="sh-admin-ref"><%= item.reference_id %></strong></td><td><div class="sh-admin-customer"><strong><%= item.name %></strong><span><%= item.email %></span></div></td><td><span class="sh-admin-type"><%= item.type %></span></td><td><a class="sh-admin-subject sh-admin-link" href="/admin/enquiries/<%= encodeURIComponent(item.reference_id) %>"><%= item.subject || item.service || 'Website enquiry' %></a></td><td><%= new Date(item.created_at).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }) %></td><td><select class="sh-admin-status" data-status-reference="<%= item.reference_id %>"><% statuses.forEach((status) => { %><option value="<%= status %>" <%= item.status === status ? 'selected' : '' %>><%= status %></option><% }); %></select></td><td><a class="sh-admin-link" href="/admin/enquiries/<%= encodeURIComponent(item.reference_id) %>">Open</a></td></tr><% }) %>
-          <% if (!enquiries.length) { %><tr><td colspan="7" class="sh-admin-empty">No enquiries are available yet.</td></tr><% } %>
+        <div class="sh-admin-table-wrap"><table class="sh-admin-table"><thead><tr><th>Reference</th><th>Customer</th><th>Type</th><th>Subject / Service</th><th>Received</th><th>Communication</th><th>Status</th><th>Action</th></tr></thead><tbody id="admin-enquiries-body">
+          <% enquiries.forEach((item) => { %><tr data-reference="<%= item.reference_id %>"><td><strong class="sh-admin-ref"><%= item.reference_id %></strong></td><td><div class="sh-admin-customer"><strong><%= item.name %></strong><span><%= item.email %></span></div></td><td><span class="sh-admin-type"><%= item.type %></span></td><td><a class="sh-admin-subject sh-admin-link" href="/admin/enquiries/<%= encodeURIComponent(item.reference_id) %>"><%= item.subject || item.service || 'Website enquiry' %></a></td><td><%= new Date(item.created_at).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }) %></td><td><span class="sh-admin-comm-status" data-communication-reference="<%= item.reference_id %>" data-status="NEW">NEW</span><span class="sh-admin-unread" data-unread-reference="<%= item.reference_id %>" hidden>0</span></td><td><select class="sh-admin-status" data-status-reference="<%= item.reference_id %>"><% statuses.forEach((status) => { %><option value="<%= status %>" <%= item.status === status ? 'selected' : '' %>><%= status %></option><% }); %></select></td><td><a class="sh-admin-link" href="/admin/enquiries/<%= encodeURIComponent(item.reference_id) %>">Open</a></td></tr><% }) %>
+          <% if (!enquiries.length) { %><tr><td colspan="8" class="sh-admin-empty">No enquiries are available yet.</td></tr><% } %>
         </tbody></table></div>
       </section>
       <section class="sh-admin-note"><strong>Communication architecture</strong><p>Customer enquiries remain public and frictionless. Staff access this private workspace using individual verified <strong>@sharehubsengineering.com</strong> accounts. Customer passwords or accounts are not required.</p></section>
     </div>
   </main>
   <script src="/js/admin.js"></script>
+  <script src="/js/admin-communication.js"></script>
 </body>
 </html>
