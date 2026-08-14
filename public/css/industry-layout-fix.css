@@ -55,6 +55,13 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row 
   border-radius: var(--sh-radius-md);
 }
 
+/* Agriculture image: preserve the complete source image instead of cropping it into the shared frame. */
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child img.sh-industry-image--contain {
+  object-fit: contain;
+  object-position: center;
+  background: var(--sh-black, #000);
+}
+
 /* Legacy sh-grid-based industry pages: Automobile and Oil & Gas. */
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 {
   position: relative;
@@ -115,6 +122,11 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh
     max-width: 100%;
     height: auto;
     aspect-ratio: 3 / 2;
+  }
+
+  /* Preserve the full agriculture image on mobile too. */
+  main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child img.sh-industry-image--contain {
+    object-fit: contain;
   }
 
   /* Legacy pages: collapse to one column and place the image below all text. */
