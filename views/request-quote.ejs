@@ -2,84 +2,24 @@
 <html lang="en">
 <head>
 <%- include('partials/head') %>
-
 </head>
 <body>
 <%- include('partials/header') %>
 <main id="main-content">
-
-<section class="sh-page-hero" aria-label="Quote hero">
-  <div class="sh-container">
-    <h1>Request a Quote</h1>
-    <p>Tell us about your project and we will provide a detailed, no-obligation quote within 24 hours.</p>
-  </div>
-</section>
-
-<section class="sh-section" aria-labelledby="quote-form-heading">
-  <div class="sh-container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="sh-card" style="padding:var(--sh-space-10);">
-          <div class="sh-section-title" style="margin-bottom:var(--sh-space-8);">
-            <h2 id="quote-form-heading">Project Details</h2>
-            <p>The more detail you provide, the more accurate our quote will be.</p>
-          </div>
-          <form action="/request-quote" method="POST">
-            <div class="row">
-              <div class="col-md-6"><div class="sh-form-group"><label for="q-name" class="sh-label">Full Name *</label><input type="text" id="q-name" name="name" class="sh-input" required autocomplete="name"></div></div>
-              <div class="col-md-6"><div class="sh-form-group"><label for="q-email" class="sh-label">Email *</label><input type="email" id="q-email" name="email" class="sh-input" required autocomplete="email"></div></div>
-            </div>
-            <div class="row">
-              <div class="col-md-6"><div class="sh-form-group"><label for="q-phone" class="sh-label">Phone</label><input type="tel" id="q-phone" name="phone" class="sh-input" autocomplete="tel"></div></div>
-              <div class="col-md-6"><div class="sh-form-group"><label for="q-company" class="sh-label">Company Name</label><input type="text" id="q-company" name="company" class="sh-input"></div></div>
-            </div>
-            <div class="sh-form-group">
-              <label for="q-industry" class="sh-label">Industry *</label>
-              <select id="q-industry" name="industry" class="sh-select" required>
-                <option value="">Select an industry</option>
-                <option value="agriculture">Agriculture</option>
-                <option value="automobile">Automobile</option>
-                <option value="medical">Medical</option>
-                <option value="oil-gas">Oil & Gas</option>
-                <option value="home-office">Home & Office</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="sh-form-group">
-              <label for="q-service" class="sh-label">Service Required *</label>
-              <select id="q-service" name="service" class="sh-select" required>
-                <option value="">Select a service</option>
-                <option value="3d-printing">3D Printing</option>
-                <option value="laser-cutting">Laser Cutting</option>
-                <option value="cnc-punching">CNC Punching</option>
-                <option value="plasma-cutting">Plasma Cutting</option>
-                <option value="consultancy">Engineering Consultancy</option>
-                <option value="multiple">Multiple Services</option>
-                <option value="unsure">Not Sure — Need Advice</option>
-              </select>
-            </div>
-            <div class="sh-form-group"><label for="q-quantity" class="sh-label">Estimated Quantity</label><input type="text" id="q-quantity" name="quantity" class="sh-input" placeholder="e.g., 50 units, prototype, one-off"></div>
-            <div class="sh-form-group">
-              <label for="q-timeline" class="sh-label">Desired Timeline</label>
-              <select id="q-timeline" name="timeline" class="sh-select">
-                <option value="">Select timeline</option>
-                <option value="urgent">Urgent (within 1 week)</option>
-                <option value="standard">Standard (2–4 weeks)</option>
-                <option value="flexible">Flexible (1+ months)</option>
-              </select>
-            </div>
-            <div class="sh-form-group"><label for="q-details" class="sh-label">Project Details *</label><textarea id="q-details" name="details" class="sh-textarea" placeholder="Describe your project: dimensions, materials, tolerances, intended use, any drawings or references..." required></textarea></div>
-            <div class="sh-form-group" style="margin-bottom:0;"><button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Submit Quote Request</button></div>
-            <p class="sh-text-small sh-text-center sh-mt-4">We respect your privacy. Your information will only be used to respond to your inquiry.</p>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
+<section class="sh-page-hero" aria-label="Quote hero"><div class="sh-container"><h1>Request a Quote</h1><p>Tell us about your project and we will provide a detailed, no-obligation quote within 24 hours.</p></div></section>
+<section class="sh-section" aria-labelledby="quote-form-heading"><div class="sh-container"><div class="row justify-content-center"><div class="col-lg-8"><div class="sh-card" style="padding:var(--sh-space-10);"><div class="sh-section-title" style="margin-bottom:var(--sh-space-8);"><h2 id="quote-form-heading">Project Details</h2><p>The more detail you provide, the more accurate our quote will be.</p></div>
+<form action="/request-quote" method="POST">
+  <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;"><label for="q-website">Website</label><input type="text" id="q-website" name="website" tabindex="-1" autocomplete="off"></div>
+  <div class="row"><div class="col-md-6"><div class="sh-form-group"><label for="q-name" class="sh-label">Full Name *</label><input type="text" id="q-name" name="name" class="sh-input" required maxlength="120" autocomplete="name"></div></div><div class="col-md-6"><div class="sh-form-group"><label for="q-email" class="sh-label">Email *</label><input type="email" id="q-email" name="email" class="sh-input" required maxlength="254" autocomplete="email"></div></div></div>
+  <div class="row"><div class="col-md-6"><div class="sh-form-group"><label for="q-phone" class="sh-label">Phone</label><input type="tel" id="q-phone" name="phone" class="sh-input" maxlength="30" autocomplete="tel"></div></div><div class="col-md-6"><div class="sh-form-group"><label for="q-company" class="sh-label">Company Name</label><input type="text" id="q-company" name="company" class="sh-input" maxlength="255"></div></div></div>
+  <div class="sh-form-group"><label for="q-industry" class="sh-label">Industry *</label><select id="q-industry" name="industry" class="sh-select" required><option value="">Select an industry</option><option value="agriculture">Agriculture</option><option value="automobile">Automobile</option><option value="medical">Medical</option><option value="oil-gas">Oil & Gas</option><option value="home-office">Home & Office</option><option value="other">Other</option></select></div>
+  <div class="sh-form-group"><label for="q-service" class="sh-label">Service Required *</label><select id="q-service" name="service" class="sh-select" required><option value="">Select a service</option><option value="3d-printing">3D Printing</option><option value="laser-cutting">Laser Cutting</option><option value="cnc-punching">CNC Punching</option><option value="plasma-cutting">Plasma Cutting</option><option value="consultancy">Engineering Consultancy</option><option value="multiple">Multiple Services</option><option value="unsure">Not Sure — Need Advice</option></select></div>
+  <div class="sh-form-group"><label for="q-quantity" class="sh-label">Estimated Quantity</label><input type="text" id="q-quantity" name="quantity" class="sh-input" maxlength="255" placeholder="e.g., 50 units, prototype, one-off"></div>
+  <div class="sh-form-group"><label for="q-timeline" class="sh-label">Desired Timeline</label><select id="q-timeline" name="timeline" class="sh-select"><option value="">Select timeline</option><option value="urgent">Urgent (within 1 week)</option><option value="standard">Standard (2–4 weeks)</option><option value="flexible">Flexible (1+ months)</option></select></div>
+  <div class="sh-form-group"><label for="q-details" class="sh-label">Project Details *</label><textarea id="q-details" name="details" class="sh-textarea" maxlength="12000" placeholder="Describe your project: dimensions, materials, tolerances, intended use, any drawings or references..." required></textarea></div>
+  <div class="sh-form-group" style="margin-bottom:0;"><button type="submit" class="sh-btn sh-btn--primary sh-btn--lg sh-w-full">Submit Quote Request</button></div><p class="sh-text-small sh-text-center sh-mt-4">We respect your privacy. Your information will only be used to respond to your inquiry.</p>
+</form></div></div></div></div></section>
 </main>
-<%- include('partials/footer') %>
-<%- include('partials/scripts') %>
+<%- include('partials/footer') %><%- include('partials/scripts') %>
 </body>
 </html>
