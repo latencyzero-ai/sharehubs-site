@@ -17,12 +17,12 @@
   <header class="sh-admin-topbar">
     <div class="sh-admin-topbar__inner">
       <a class="sh-admin-brand" href="/admin" aria-label="Share Hubs Engineering dashboard"><img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" height="34"><span>Operations</span></a>
-      <div class="sh-admin-user"><div class="sh-admin-user__meta"><strong><%= admin.name %></strong><span><%= admin.email %></span></div><span class="sh-admin-role"><%= admin.role %></span><form action="/admin/logout" method="POST"><button class="sh-admin-logout" type="submit">Log out</button></form></div>
+      <div class="sh-admin-user"><div class="sh-admin-user__meta"><strong><%= admin.name %></strong><span><%= admin.email %></span></div><span class="sh-admin-role"><%= admin.role %></span><% if (['SUPER_ADMIN','ADMIN'].includes(admin.role)) { %><a class="sh-admin-logout" href="/admin/staff">Staff</a><% } %><form action="/admin/logout" method="POST"><button class="sh-admin-logout" type="submit">Log out</button></form></div>
     </div>
   </header>
   <main class="sh-admin-main">
     <div class="sh-admin-shell">
-      <div class="sh-admin-heading"><div><span class="sh-admin-eyebrow">Internal communication</span><h1>Dashboard</h1><p>Monitor and manage enquiries received through the Share Hubs Engineering website.</p></div><a class="sh-btn sh-btn--outline" href="/" target="_blank" rel="noopener">View website</a></div>
+      <div class="sh-admin-heading"><div><span class="sh-admin-eyebrow">Internal communication</span><h1>Dashboard</h1><p>Monitor and manage enquiries received through the Share Hubs Engineering website.</p></div><div style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:flex-end"><% if (['SUPER_ADMIN','ADMIN'].includes(admin.role)) { %><a class="sh-btn sh-btn--outline" href="/admin/staff">Manage staff</a><% } %><a class="sh-btn sh-btn--outline" href="/" target="_blank" rel="noopener">View website</a></div></div>
       <% if (dashboardError) { %><div class="sh-admin-alert sh-admin-alert--error" role="alert"><%= dashboardError %></div><% } %>
       <section class="sh-admin-stats" aria-label="Communication overview">
         <article class="sh-admin-stat"><span>Total enquiries</span><strong><%= counts.total || 0 %></strong><small>All contact, quote and consultation requests</small></article>
