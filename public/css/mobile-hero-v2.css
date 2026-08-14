@@ -109,43 +109,6 @@
   }
 }
 
-/* ── TABLET (768px–1023px) ─────────────────────────────────── */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .sh-hero__content-wrap {
-    margin-left: 24px !important;
-    margin-right: 24px !important;
-  }
-  .sh-hero__title {
-    font-size: clamp(2.25rem, 4.5vw, 3rem) !important;
-  }
-}
-
-/* ── DESKTOP (1024px+) — left aligned, keep <br> ───────────── */
-@media (min-width: 1024px) {
-  .sh-hero__content-wrap {
-    margin-left: 24px !important;
-    margin-right: auto !important;
-    text-align: left !important;
-    align-items: flex-start !important;
-  }
-  .sh-hero__title {
-    text-align: left !important;
-    font-size: clamp(2.75rem, 4vw, 4rem) !important;
-  }
-  .sh-hero__title br {
-    display: block !important;
-  }
-  .sh-hero__desc {
-    text-align: left !important;
-  }
-  .sh-hero__actions {
-    flex-direction: row !important;
-    justify-content: flex-start !important;
-  }
-  .sh-hero__actions .sh-btn {
-    width: auto !important;
-  }
-}
 
 /* ── MOBILE HEADER ────────────────────────────────────────── */
 @media (max-width: 767px) {

@@ -6,7 +6,58 @@
 </head>
 <body>
 <%- include('partials/header') %>
-<main>
+<main id="main-content">
+
+<%
+  const submissionSuccess = typeof success !== 'undefined' && success === true;
+  const submissionReference = typeof reference !== 'undefined' ? reference : null;
+%>
+
+<% if (submissionSuccess) { %>
+<section class="sh-section" aria-labelledby="contact-success-heading">
+  <div class="sh-container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="sh-card sh-contact-success" style="padding:var(--sh-space-10); text-align:center;">
+
+          <div class="sh-contact-success__icon" aria-hidden="true">
+            <i class="fa fa-check"></i>
+          </div>
+
+          <h1 id="contact-success-heading">Message Received</h1>
+
+          <p>
+            Thank you for contacting Share Hubs Engineering.
+            Your message has been successfully received and our team will review it shortly.
+          </p>
+
+          <% if (submissionReference) { %>
+            <div class="sh-contact-success__reference">
+              <span>Reference ID</span>
+              <strong><%= submissionReference %></strong>
+            </div>
+          <% } %>
+
+          <p class="sh-text-small">
+            Please keep your reference ID for future correspondence regarding this inquiry.
+          </p>
+
+          <div style="margin-top:var(--sh-space-8);">
+            <a href="/contact" class="sh-btn sh-btn--primary">
+              Send Another Message
+            </a>
+
+            <a href="/" class="sh-btn sh-btn--outline" style="margin-left:var(--sh-space-3);">
+              Return Home
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<% } else { %>
 
 <section class="sh-page-hero" aria-label="Contact hero">
   <div class="sh-container">
@@ -95,8 +146,13 @@
   </div>
 </section>
 
+<% } %>
+
 </main>
 <%- include('partials/footer') %>
 <%- include('partials/scripts') %>
+
+<script src="/js/contact-form.js"></script>
+
 </body>
 </html>

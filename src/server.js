@@ -2,17 +2,15 @@
  * Share Hubs Engineering — site server (EJS + shared partials)
  */
 const express = require('express');
-const session = require('express-session');
 const helmet = require('helmet');
 const compression = require('compression');
-const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 
 const config = require('./config/env');
-const authRoutes = require('./routes/auth');
-const pageRoutes = require('./routes/pages');
 
+const pageRoutes = require('./routes/pages');
+const communicationRoutes = require('./routes/communications');
 const app = express();
 app.set('trust proxy', 1);
 
@@ -25,24 +23,9 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
-app.use(
-  session({
-    secret: config.sessionSecret,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: config.env === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 3600 * 1000,
-    },
-  })
-);
 
-const { loginFlag } = require('./middleware/loginflag');
-app.use(loginFlag);
+
 
 // --- Static assets (long cache) -----------------------------------
 const staticOpts = { maxAge: config.env === 'production' ? '7d' : 0, etag: true };
@@ -56,17 +39,12 @@ app.use('/assets/img', express.static(path.join(PUB, 'img'), staticOpts));
 app.use('/assets/fonts', express.static(path.join(PUB, 'fonts'), staticOpts));
 app.use('/assets', express.static(path.join(PUB, 'assets'), staticOpts));
 
-// --- Rate limiting on auth ----------------------------------------
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, max: 20, standardHeaders: true, legacyHeaders: false,
-  message: { error: 'Too many attempts. Please try again in a few minutes.' },
-});
-app.use('/auth/login', authLimiter);
-app.use('/auth/register', authLimiter);
+
 
 // --- Routes -------------------------------------------------------
 app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'sharehubs-site', time: new Date().toISOString() }));
-app.use('/auth', authRoutes);
+
+app.use('/', communicationRoutes);
 app.use('/', pageRoutes);
 
 // --- 404 ----------------------------------------------------------

@@ -37,7 +37,9 @@ router.get('/industries', (req, res) => renderPage(res, 'industries', {
 router.get('/contact', (req, res) => renderPage(res, 'contact', {
   title: 'Contact Us — Share Hubs Engineering',
   description: 'Get in touch with Share Hubs Engineering in Lagos, Nigeria. Request a quote, discuss your project, or schedule a consultation.',
-  path: '/contact'
+  path: '/contact',
+  success: req.query.success === '1',
+  reference: req.query.reference || null
 }));
 
 router.get('/agriculture', (req, res) => renderPage(res, 'agriculture', {
@@ -73,21 +75,23 @@ router.get('/home-and-office', (req, res) => renderPage(res, 'home-and-office', 
 router.get('/request-quote', (req, res) => renderPage(res, 'request-quote', {
   title: 'Request a Quote — Share Hubs Engineering',
   description: 'Request a tailored manufacturing quote from Share Hubs Engineering. Tell us about your project and we will respond within 24 hours.',
-  path: '/request-quote'
+  path: '/request-quote',
+  success: req.query.success === '1',
+  reference: req.query.reference || null
 }));
 
 router.get('/request-consultation', (req, res) => renderPage(res, 'request-consultation', {
   title: 'Request a Consultation — Share Hubs Engineering',
   description: 'Schedule an engineering consultation with our experts. Discuss your project feasibility, design, and manufacturing strategy.',
-  path: '/request-consultation'
+  path: '/request-consultation',
+  success: req.query.success === '1',
+  reference: req.query.reference || null
 }));
 
 router.get('/faq', (req, res) => renderPage(res, 'faq', { path: '/faq' }));
 router.get('/coming-soon', (req, res) => renderPage(res, 'coming_soon', { path: '/coming-soon' }));
 router.get('/404', (req, res) => renderPage(res, '404', { title: 'Page Not Found', path: '/404' }));
 
-router.get('/login', (req, res) => renderPage(res, 'login', { path: '/login' }));
-router.get('/profile', (req, res) => renderPage(res, 'profile', { path: '/profile' }));
 router.get('/portfolio-details', (req, res) => renderPage(res, 'portfolio-details', { path: '/portfolio-details' }));
 router.get('/supplier', (req, res) => renderPage(res, 'supplier', { path: '/supplier' }));
 

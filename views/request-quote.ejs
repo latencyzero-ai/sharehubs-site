@@ -21,6 +21,25 @@
       <div class="col-lg-8">
         <div class="sh-card" style="padding:var(--sh-space-10);">
           <div class="sh-section-title" style="margin-bottom:var(--sh-space-8);">
+            <% if (success) { %>
+  <div class="sh-form-response" role="status" style="margin-bottom:var(--sh-space-8);">
+    <strong>Quote Request Received</strong>
+    <p>
+      Thank you for submitting your project details.
+      Our engineering team will review your request and get back to you within 24 hours.
+    </p>
+
+    <% if (reference) { %>
+      <p>
+        <strong>Reference:</strong> <%= reference %>
+      </p>
+    <% } %>
+
+    <p style="margin-bottom:0;">
+      Please keep this reference for future correspondence.
+    </p>
+  </div>
+<% } %>
             <h2 id="quote-form-heading">Project Details</h2>
             <p>The more detail you provide, the more accurate our quote will be.</p>
           </div>
