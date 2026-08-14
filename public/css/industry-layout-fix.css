@@ -1,15 +1,26 @@
-/* Industry overview image alignment fix */
+/* Industry overview layout: text left, image raised to the top-right on desktop. */
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row {
+  position: relative;
+}
+
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
   align-self: flex-start !important;
   display: flex;
   justify-content: flex-end;
   margin-top: 0 !important;
+  padding-left: var(--bs-gutter-x, 1.5rem);
 }
 
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card {
   width: 100%;
-  max-width: 500px;
+  max-width: 520px;
   margin: 0 !important;
+  padding: var(--sh-space-2);
+  overflow: hidden;
 }
 
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child img {
@@ -18,12 +29,16 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row 
   height: auto;
   max-height: none;
   object-fit: contain;
+  border-radius: var(--sh-radius-md);
 }
 
 @media (max-width: 991.98px) {
   main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child {
+    position: static;
+    width: 100%;
     justify-content: stretch;
     margin-top: var(--sh-space-6) !important;
+    padding-left: calc(var(--bs-gutter-x, 1.5rem) * .5);
   }
 
   main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card {
