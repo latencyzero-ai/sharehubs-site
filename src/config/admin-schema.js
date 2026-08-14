@@ -1,4 +1,10 @@
-/** Admin dashboard schema. Uses MySQL-backed sessions; no third-party session store required. */
+/**
+ * Share Hubs Engineering — admin + Phase 6 communication schema.
+ *
+ * This module is intentionally additive: the site must be able to boot against
+ * an existing production/development database without destroying or recreating
+ * customer enquiries, staff accounts, or communication history.
+ */
 const db = require('./db');
 
 const statements = [
@@ -30,12 +36,14 @@ const statements = [
   `CREATE TABLE IF NOT EXISTS admin_enquiry_status (
     reference_id VARCHAR(64) PRIMARY KEY,
     status VARCHAR(30) NOT NULL DEFAULT 'NEW',
+    communication_status VARCHAR(30) NOT NULL DEFAULT 'NEW',
     assigned_to VARCHAR(255) NULL,
     internal_note TEXT NULL,
     updated_by INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_admin_enquiry_status (status),
+    INDEX idx_admin_enquiry_communication_status (communication_status),
     INDEX idx_admin_enquiry_assignee (assigned_to),
     CONSTRAINT fk_admin_enquiry_status_user FOREIGN KEY (updated_by) REFERENCES admin_users(id) ON DELETE SET NULL
   ) ENGINE=InnoDB`,
@@ -66,6 +74,7 @@ const statements = [
     message_id VARCHAR(500) NULL,
     in_reply_to VARCHAR(500) NULL,
     status ENUM('RECEIVED', 'QUEUED', 'SENT', 'FAILED') NOT NULL DEFAULT 'RECEIVED',
+    is_read TINYINT(1) NOT NULL DEFAULT 0,
     actor_id INT NULL,
     sent_at DATETIME NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -73,14 +82,56 @@ const statements = [
     INDEX idx_communication_message_id (message_id),
     INDEX idx_communication_in_reply_to (in_reply_to),
     INDEX idx_communication_sender (sender_email),
+    INDEX idx_communication_unread (direction, is_read),
     CONSTRAINT fk_communication_actor FOREIGN KEY (actor_id) REFERENCES admin_users(id) ON DELETE SET NULL
   ) ENGINE=InnoDB`,
 ];
 
+/**
+ * Add a column only when it is missing. This is what makes Phase 6 safe to
+ * roll onto databases created before the communication system existed.
+ */
+async function ensureColumn(tableName, columnName, definition) {
+  const [rows] = await db.query(
+    `SELECT COUNT(*) AS count
+       FROM information_schema.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = ?
+        AND COLUMN_NAME = ?`,
+    [tableName, columnName]
+  );
+
+  if (Number(rows[0]?.count || 0) > 0) return;
+
+  try {
+    await db.query(`ALTER TABLE \`${tableName}\` ADD COLUMN \`${columnName}\` ${definition}`);
+    console.log(`Phase 6 schema: added ${tableName}.${columnName}`);
+  } catch (error) {
+    // Existing installations may not contain one of the legacy intake tables.
+    // Do not prevent the whole application from starting because of that.
+    if (!/doesn't exist|does not exist/i.test(error.message)) throw error;
+  }
+}
+
+async function ensurePhase6Compatibility() {
+  // Tables created by earlier versions of the site.
+  await ensureColumn('admin_enquiry_status', 'communication_status', "VARCHAR(30) NOT NULL DEFAULT 'NEW'");
+  await ensureColumn('communication_messages', 'is_read', 'TINYINT(1) NOT NULL DEFAULT 0');
+
+  // Existing enquiry tables may be present under different deployment stages.
+  // These fields are optional metadata and are deliberately added only when
+  // the corresponding table already exists.
+  for (const table of ['contacts', 'quote_requests', 'consultation_requests']) {
+    await ensureColumn(table, 'communication_status', "VARCHAR(30) NULL DEFAULT NULL");
+    await ensureColumn(table, 'communication_error', 'TEXT NULL');
+  }
+}
+
 async function ensureAdminSchema() {
   for (const statement of statements) await db.query(statement);
+  await ensurePhase6Compatibility();
   await db.query('DELETE FROM admin_sessions WHERE expires_at < NOW()');
   console.log('Admin dashboard schema ready');
 }
 
-module.exports = { ensureAdminSchema };
+module.exports = { ensureAdminSchema, ensurePhase6Compatibility };
