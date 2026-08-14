@@ -4,7 +4,7 @@ require('dotenv').config();
 const required = ['DB_HOST', 'DB_USER', 'DB_NAME', 'SESSION_SECRET', 'SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'MAIL_FROM'];
 const missing = required.filter((k) => !process.env[k]);
 if (missing.length) {
-  console.error(`\u274C Missing env vars: ${missing.join(', ')}\nCopy .env.example to .env and fill them in.`);
+  console.error(`❌ Missing env vars: ${missing.join(', ')}\nCopy .env.example to .env and fill them in.`);
   process.exit(1);
 }
 
@@ -27,5 +27,15 @@ module.exports = {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
     from: process.env.MAIL_FROM,
+  },
+  imap: {
+    enabled: process.env.IMAP_ENABLED === 'true',
+    host: process.env.IMAP_HOST || process.env.SMTP_HOST,
+    port: parseInt(process.env.IMAP_PORT, 10) || 993,
+    secure: process.env.IMAP_SECURE !== 'false',
+    user: process.env.IMAP_USER || process.env.SMTP_USER,
+    pass: process.env.IMAP_PASS || process.env.SMTP_PASS,
+    mailbox: process.env.IMAP_MAILBOX || 'INBOX',
+    intervalMs: parseInt(process.env.IMAP_POLL_INTERVAL_MS, 10) || 30000,
   },
 };
