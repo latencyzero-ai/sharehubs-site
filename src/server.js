@@ -23,8 +23,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..', 'views'));
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+app.use(express.json({ limit: '128kb' }));
+app.use(express.urlencoded({ extended: true, limit: '128kb' }));
 app.use(cookieParser());
 app.use(session({
   secret: config.sessionSecret,
@@ -49,6 +49,16 @@ app.use('/assets', express.static(path.join(PUB, 'assets'), staticOpts));
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20, standardHeaders: true, legacyHeaders: false, message: { error: 'Too many attempts. Please try again in a few minutes.' } });
 app.use('/auth/login', authLimiter);
 app.use('/auth/register', authLimiter);
+
+const publicEnquiryLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 8,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: 'Too many submissions from this address. Please try again later.',
+});
+app.use(['/contact', '/request-quote', '/request-consultation'], publicEnquiryLimiter);
+
 app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'sharehubs-site', time: new Date().toISOString() }));
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes.router);
