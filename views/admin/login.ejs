@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="sh-admin-body">
+  <main class="sh-admin-auth">
+    <section class="sh-admin-auth__card" aria-labelledby="admin-login-title">
+      <a class="sh-admin-auth__brand" href="/">
+        <img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" height="38">
+      </a>
+      <div class="sh-admin-auth__intro">
+        <span class="sh-admin-eyebrow">Staff Portal</span>
+        <h1 id="admin-login-title">Sign in to the dashboard</h1>
+        <p>Use your official Share Hubs Engineering company email to access internal enquiries and communication tools.</p>
+      </div>
+
+      <% if (error) { %><div class="sh-admin-alert sh-admin-alert--error" role="alert"><%= error %></div><% } %>
+      <% if (verified === 'success') { %><div class="sh-admin-alert sh-admin-alert--success" role="status">Your company email has been verified. You can sign in now.</div><% } %>
+      <% if (verified === 'pending') { %><div class="sh-admin-alert sh-admin-alert--success" role="status">Account created. Check your company email for the verification link.</div><% } %>
+
+      <form action="/admin/login" method="POST" class="sh-admin-form">
+        <div class="sh-admin-field">
+          <label for="admin-email">Company email</label>
+          <input id="admin-email" name="email" type="email" placeholder="name@sharehubsengineering.com" autocomplete="email" required>
+        </div>
+        <div class="sh-admin-field">
+          <label for="admin-password">Password</label>
+          <input id="admin-password" name="password" type="password" placeholder="Your password" autocomplete="current-password" required>
+        </div>
+        <button class="sh-btn sh-btn--primary sh-admin-submit" type="submit">Sign in</button>
+      </form>
+
+      <p class="sh-admin-auth__footer">Staff account not created yet? <a href="/admin/register">Create your staff account</a></p>
+      <a class="sh-admin-back" href="/">← Back to Share Hubs Engineering</a>
+    </section>
+  </main>
+</body>
+</html>
