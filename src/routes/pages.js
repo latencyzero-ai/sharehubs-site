@@ -8,6 +8,7 @@ const renderPage = (res, view, opts = {}) => {
     keywords: 'engineering manufacturing, 3D printing Nigeria, laser cutting Lagos, CNC fabrication, precision manufacturing',
     ogImage: 'https://sharehubseng.com/img/share-hubs-engineering.png',
     path: res.req.path,
+    newsletterStatus: res.req.query.newsletter || '',
   };
   res.render(view, { ...defaults, ...opts });
 };
