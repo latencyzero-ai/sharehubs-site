@@ -17,7 +17,7 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row 
 
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child {
   position: absolute;
-  top: 0;
+  top: 50%;
   right: 0;
   width: 50%;
   align-self: flex-start !important;
@@ -26,6 +26,7 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row 
   margin-top: 0 !important;
   padding-left: var(--bs-gutter-x, 1.5rem);
   z-index: 2;
+  transform: translateY(-50%);
 }
 
 /* Keep all application items inside the left content column. */
@@ -73,6 +74,9 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 > :last-child {
   width: 100%;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 > :last-child .sh-industry-overview__media {
@@ -101,6 +105,7 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh
     justify-content: stretch;
     margin-top: var(--sh-space-6) !important;
     padding-left: calc(var(--bs-gutter-x, 1.5rem) * .5);
+    transform: none;
   }
 
   main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card,
