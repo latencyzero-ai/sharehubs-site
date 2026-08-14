@@ -2,64 +2,9 @@
 <%- include('partials/header') %>
 
 <main id="main-content">
-  <section class="sh-page-hero" aria-label="Industries we serve">
-    <div class="sh-container">
-      <span class="sh-hero__tag">Sectors</span>
-      <h1>Engineering for the Industries That Keep Things Moving</h1>
-      <p>Precision manufacturing adapted to the operating conditions, materials, tolerances, and production realities of each sector.</p>
-    </div>
-  </section>
-
-  <section class="sh-section" aria-labelledby="industries-heading">
-    <div class="sh-container">
-      <div class="sh-section-title sh-section-title--left" style="max-width:760px;">
-        <span style="display:inline-block;color:var(--sh-brand);font-size:var(--sh-text-xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--sh-space-3);">Industry Focus</span>
-        <h2 id="industries-heading">One engineering capability. Different applications.</h2>
-        <p>Explore the sectors where our fabrication and engineering services can be applied to practical production challenges.</p>
-      </div>
-      <% const industries = [
-        { name:'Agriculture', path:'/agriculture', img:'/img/GEAR_1.png', eyebrow:'01 / Agriculture', desc:'Tractor components, irrigation systems, processing equipment, and field-ready parts built for demanding agricultural environments.' },
-        { name:'Automobile', path:'/automobile', img:'/img/GEAR_2.png', eyebrow:'02 / Automobile', desc:'Maintenance parts, brackets, tooling, fittings, and performance components for automotive applications.' },
-        { name:'Medical', path:'/medicine', img:'/img/CUTTING.png', eyebrow:'03 / Medical', desc:'Equipment housings, custom device components, fixtures, and precision parts for healthcare environments.' },
-        { name:'Oil & Gas', path:'/oil-and-gas', img:'/img/BENDING.png', eyebrow:'04 / Oil & Gas', desc:'Pipeline fittings, drilling components, field tools, and fabrication for demanding energy operations.' },
-        { name:'Home & Office', path:'/home-and-office', img:'/img/FABRICTING.png', eyebrow:'05 / Home & Office', desc:'Furniture hardware, enclosures, fixtures, architectural metalwork, and practical product components.' }
-      ]; %>
-      <div class="sh-grid sh-grid--3">
-        <% industries.forEach((ind,index) => { %>
-          <a href="<%= ind.path %>" class="sh-industry-card sh-animate" style="<%= index === 0 ? 'grid-column:span 2;' : '' %>">
-            <img src="<%= ind.img %>" alt="<%= ind.name %> engineering applications" loading="lazy" style="object-position:center;">
-            <div style="position:relative;z-index:2;">
-              <span style="display:block;color:rgba(255,255,255,.78);font-size:var(--sh-text-xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:var(--sh-space-2);"><%= ind.eyebrow %></span>
-              <h3><%= ind.name %></h3>
-              <p><%= ind.desc %></p>
-            </div>
-          </a>
-        <% }) %>
-      </div>
-    </div>
-  </section>
-
-  <section class="sh-section" style="background:var(--sh-surface-alt);" aria-labelledby="fit-heading">
-    <div class="sh-container">
-      <div class="sh-section-title">
-        <span style="display:inline-block;color:var(--sh-brand);font-size:var(--sh-text-xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--sh-space-3);">Where We Add Value</span>
-        <h2 id="fit-heading">The same questions guide every project.</h2>
-      </div>
-      <div class="sh-grid sh-grid--4">
-        <% const factors = [['01','Material','What material and operating environment must the component survive?'],['02','Tolerance','What level of dimensional accuracy and repeatability is required?'],['03','Volume','Is this a one-off prototype, small batch, or repeat production?'],['04','Outcome','What performance, finish, or cost target defines success?']]; %>
-        <% factors.forEach(item => { %>
-          <article class="sh-card sh-animate" style="height:100%;">
-            <div style="font-size:var(--sh-text-3xl);font-weight:800;color:var(--sh-brand);margin-bottom:var(--sh-space-4);"><%= item[0] %></div>
-            <h4 style="font-size:var(--sh-text-lg);margin-bottom:var(--sh-space-2);"><%= item[1] %></h4>
-            <p class="sh-text-small" style="margin:0;"><%= item[2] %></p>
-          </article>
-        <% }) %>
-      </div>
-    </div>
-  </section>
-
+  <section class="sh-page-hero" aria-label="Industries we serve"><div class="sh-container"><span class="sh-hero__tag">Sectors</span><h1>Engineering for the Industries That Keep Things Moving</h1><p>Precision manufacturing adapted to the operating conditions, materials, tolerances, and production realities of each sector.</p></div></section>
+  <section class="sh-section" aria-labelledby="industries-heading"><div class="sh-container"><div class="sh-section-title sh-section-title--left" style="max-width:760px;"><span style="display:inline-block;color:var(--sh-brand);font-size:var(--sh-text-xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--sh-space-3);">Industry Focus</span><h2 id="industries-heading">One engineering capability. Different applications.</h2><p>Explore the sectors where our fabrication and engineering services can be applied to practical production challenges.</p></div><% const industries=[{name:'Agriculture',path:'/agriculture',img:'/img/GEAR_1.png',eyebrow:'01 / Agriculture',desc:'Tractor components, irrigation systems, processing equipment, and field-ready parts built for demanding agricultural environments.'},{name:'Automobile',path:'/automobile',img:'/img/GEAR_2.png',eyebrow:'02 / Automobile',desc:'Maintenance parts, brackets, tooling, fittings, and performance components for automotive applications.'},{name:'Medical',path:'/medicine',img:'/img/CUTTING.png',eyebrow:'03 / Medical',desc:'Equipment housings, custom device components, fixtures, and precision parts for healthcare environments.'},{name:'Oil & Gas',path:'/oil-and-gas',img:'/img/BENDING.png',eyebrow:'04 / Oil & Gas',desc:'Pipeline fittings, drilling components, field tools, and fabrication for demanding energy operations.'},{name:'Home & Office',path:'/home-and-office',img:'/img/FABRICTING.png',eyebrow:'05 / Home & Office',desc:'Furniture hardware, enclosures, fixtures, architectural metalwork, and practical product components.'}]; %><div class="sh-grid sh-grid--3"><% industries.forEach(ind=>{ %><a href="<%= ind.path %>" class="sh-industry-card sh-animate"><img src="<%= ind.img %>" alt="<%= ind.name %> engineering applications" loading="lazy" style="object-position:center;"><div style="position:relative;z-index:2;"><span style="display:block;color:rgba(255,255,255,.78);font-size:var(--sh-text-xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:var(--sh-space-2);"><%= ind.eyebrow %></span><h3><%= ind.name %></h3><p><%= ind.desc %></p></div></a><% }) %></div></div></section>
+  <section class="sh-section" style="background:var(--sh-surface-alt);" aria-labelledby="fit-heading"><div class="sh-container"><div class="sh-section-title"><span style="display:inline-block;color:var(--sh-brand);font-size:var(--sh-text-xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--sh-space-3);">Where We Add Value</span><h2 id="fit-heading">The same questions guide every project.</h2></div><div class="sh-grid sh-grid--4"><% const factors=[['01','Material','What material and operating environment must the component survive?'],['02','Tolerance','What level of dimensional accuracy and repeatability is required?'],['03','Volume','Is this a one-off prototype, small batch, or repeat production?'],['04','Outcome','What performance, finish, or cost target defines success?']]; %><% factors.forEach(item=>{ %><article class="sh-card sh-animate" style="height:100%;"><div style="font-size:var(--sh-text-3xl);font-weight:800;color:var(--sh-brand);margin-bottom:var(--sh-space-4);"><%= item[0] %></div><h4 style="font-size:var(--sh-text-lg);margin-bottom:var(--sh-space-2);"><%= item[1] %></h4><p class="sh-text-small" style="margin:0;"><%= item[2] %></p></article><% }) %></div></div></section>
   <%- include('partials/cta-section') %>
 </main>
-
-<%- include('partials/footer') %>
-<%- include('partials/scripts') %>
+<%- include('partials/footer') %><%- include('partials/scripts') %>
