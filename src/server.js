@@ -9,11 +9,13 @@ const config = require('./config/env');
 const pageRoutes = require('./routes/pages');
 const communicationRoutes = require('./routes/communications');
 const { router: adminRoutes } = require('./routes/admin');
+const { router: staffManagementRoutes } = require('./routes/staff-management');
 const {
   router: communicationWorkflowRoutes,
   startCommunicationStatusSync,
 } = require('./routes/communication-workflow');
 const { ensureAdminSchema } = require('./config/admin-schema');
+const { ensureStaffManagementSchema } = require('./config/staff-schema');
 const { startInboundMailSync } = require('./services/inbound-mail');
 
 const app = express();
@@ -40,6 +42,7 @@ app.use('/assets', express.static(path.join(PUB, 'assets'), staticOpts));
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'sharehubs-site', time: new Date().toISOString() }));
 app.use('/admin', communicationWorkflowRoutes);
+app.use('/admin', staffManagementRoutes);
 app.use('/admin', adminRoutes);
 app.use('/', communicationRoutes);
 app.use('/', pageRoutes);
@@ -51,6 +54,7 @@ app.use((req, res) => {
 (async () => {
   try {
     await ensureAdminSchema();
+    await ensureStaffManagementSchema();
 
     // Start background communication workers only after every Phase 6 table
     // and compatibility column has been created. This prevents startup races
