@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    .sh-staff-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
+    .sh-staff-card{background:var(--sh-surface);border:1px solid var(--sh-border);border-radius:8px;overflow:hidden}
+    .sh-staff-table{width:100%;border-collapse:collapse;min-width:900px}
+    .sh-staff-table th{padding:.8rem 1rem;text-align:left;background:var(--sh-surface-alt);color:var(--sh-text-muted);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+    .sh-staff-table td{padding:.9rem 1rem;border-top:1px solid var(--sh-border);vertical-align:middle;font-size:.82rem}
+    .sh-staff-name{display:grid;gap:.15rem}.sh-staff-name span{font-size:.72rem;color:var(--sh-text-muted)}
+    .sh-staff-role{min-height:36px;padding:.35rem .55rem;border:1px solid var(--sh-border);border-radius:6px;background:var(--sh-surface);color:var(--sh-text);font-size:.72rem;font-weight:700}
+    .sh-staff-role:focus{outline:none;border-color:var(--sh-brand);box-shadow:0 0 0 3px rgba(128,0,0,.08)}
+    .sh-staff-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .55rem;border-radius:999px;font-size:.68rem;font-weight:700}
+    .sh-staff-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+    .sh-staff-badge--active{color:#2f6b45;background:rgba(47,107,69,.08)}
+    .sh-staff-badge--inactive{color:#8a877c;background:rgba(138,135,124,.10)}
+    .sh-staff-badge--pending{color:#8a5a00;background:rgba(138,90,0,.08)}
+    .sh-staff-action{min-height:36px;padding:.45rem .7rem;border:1px solid var(--sh-border-strong);border-radius:6px;background:transparent;color:var(--sh-text);font-size:.72rem;font-weight:600}
+    .sh-staff-action:hover{border-color:var(--sh-brand);color:var(--sh-brand)}
+    .sh-staff-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+    .sh-staff-summary article{padding:1.1rem;background:var(--sh-surface);border:1px solid var(--sh-border);border-radius:8px}.sh-staff-summary span{display:block;color:var(--sh-text-muted);font-size:.75rem}.sh-staff-summary strong{display:block;margin-top:.25rem;color:var(--sh-brand);font-size:1.6rem}
+    .sh-staff-activity{display:grid;gap:0}.sh-staff-activity article{padding:1rem;border-bottom:1px solid var(--sh-border)}.sh-staff-activity article:last-child{border-bottom:0}.sh-staff-activity strong{font-size:.8rem}.sh-staff-activity span{display:block;margin-top:.2rem;color:var(--sh-text-muted);font-size:.72rem}
+    @media(max-width:900px){.sh-staff-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:640px){.sh-staff-summary{grid-template-columns:1fr 1fr}.sh-admin-main{padding-top:1.5rem}}
+  </style>
+</head>
+<body class="sh-admin-body sh-admin-app">
+  <header class="sh-admin-topbar">
+    <div class="sh-admin-topbar__inner">
+      <a class="sh-admin-brand" href="/admin" aria-label="Share Hubs Engineering dashboard"><img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" height="34"><span>Operations</span></a>
+      <div class="sh-admin-user"><div class="sh-admin-user__meta"><strong><%= admin.name %></strong><span><%= admin.email %></span></div><span class="sh-admin-role"><%= admin.role %></span><form action="/admin/logout" method="POST"><button class="sh-admin-logout" type="submit">Log out</button></form></div>
+    </div>
+  </header>
+
+  <main class="sh-admin-main">
+    <div class="sh-admin-shell">
+      <a class="sh-admin-detail-back" href="/admin">← Back to dashboard</a>
+      <div class="sh-admin-heading">
+        <div><span class="sh-admin-eyebrow">Internal access control</span><h1>Staff Management</h1><p>Manage verified Share Hubs Engineering staff accounts and operational roles.</p></div>
+      </div>
+
+      <section class="sh-staff-summary" aria-label="Staff overview">
+        <article><span>Total staff</span><strong><%= staff.length %></strong></article>
+        <article><span>Active</span><strong><%= staff.filter((person) => person.active).length %></strong></article>
+        <article><span>Verified</span><strong><%= staff.filter((person) => person.verified).length %></strong></article>
+        <article><span>Super Admins</span><strong><%= staff.filter((person) => person.role === 'SUPER_ADMIN' && person.active && person.verified).length %></strong></article>
+      </section>
+
+      <div style="height:1rem"></div>
+
+      <section class="sh-staff-card" aria-labelledby="staff-list-heading">
+        <div class="sh-admin-panel__header">
+          <div><h2 id="staff-list-heading">Staff directory</h2><p>Every account must belong to the @sharehubsengineering.com domain.</p></div>
+        </div>
+        <div class="sh-admin-table-wrap">
+          <table class="sh-staff-table">
+            <thead><tr><th>Staff member</th><th>Role</th><th>Account</th><th>Last login</th><th>Assigned</th><th>Access</th><th>Action</th></tr></thead>
+            <tbody>
+              <% staff.forEach((person) => { %>
+                <tr data-staff-id="<%= person.id %>">
+                  <td><div class="sh-staff-name"><strong><%= person.name %></strong><span><%= person.email %></span></div></td>
+                  <td>
+                    <% if (admin.role === 'SUPER_ADMIN') { %>
+                      <select class="sh-staff-role" data-role-select aria-label="Role for <%= person.name %>" <%= person.id === admin.id ? 'disabled' : '' %>>
+                        <% roles.forEach((role) => { %><option value="<%= role %>" <%= person.role === role ? 'selected' : '' %>><%= role.replaceAll('_',' ') %></option><% }) %>
+                      </select>
+                    <% } else { %><span class="sh-admin-role"><%= person.role.replaceAll('_',' ') %></span><% } %>
+                  </td>
+                  <td>
+                    <% if (!person.verified) { %><span class="sh-staff-badge sh-staff-badge--pending">Pending verification</span>
+                    <% } else if (person.active) { %><span class="sh-staff-badge sh-staff-badge--active">Active</span>
+                    <% } else { %><span class="sh-staff-badge sh-staff-badge--inactive">Inactive</span><% } %>
+                  </td>
+                  <td><%= person.last_login ? new Date(person.last_login).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }) : 'Never' %></td>
+                  <td><strong><%= person.assigned_count || 0 %></strong></td>
+                  <td>
+                    <button class="sh-staff-action" type="button" data-status-toggle <%= person.id === admin.id ? 'disabled' : '' %>><%= person.active ? 'Deactivate' : 'Activate' %></button>
+                  </td>
+                  <td><button class="sh-staff-action" type="button" data-activity>Activity</button></td>
+                </tr>
+              <% }) %>
+              <% if (!staff.length) { %><tr><td colspan="7" class="sh-admin-empty">No staff accounts exist yet.</td></tr><% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div style="height:1rem"></div>
+
+      <section class="sh-staff-card" aria-labelledby="staff-activity-heading">
+        <div class="sh-admin-panel__header"><div><h2 id="staff-activity-heading">Recent access-control activity</h2><p>Role and account-state changes are recorded for accountability.</p></div></div>
+        <div class="sh-staff-activity">
+          <% if (!activity.length) { %><p style="padding:1.25rem;color:var(--sh-text-muted)">No staff-management activity yet.</p><% } %>
+          <% activity.forEach((item) => { %><article><strong><%= item.action.replaceAll('_',' ') %></strong><span><%= item.actor_name || 'System' %> · <%= new Date(item.created_at).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }) %> · staff ID <%= item.staff_user_id %></span><% if (item.old_value || item.new_value) { %><span><%= item.old_value || 'None' %> → <%= item.new_value || 'None' %></span><% } %></article><% }) %>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const adminRole = '<%= admin.role %>';
+      const request = async (url, method, body) => {
+        const response = await fetch(url, { method, headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: body ? JSON.stringify(body) : undefined });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) throw new Error(result.error || 'Unable to complete the action.');
+        return result;
+      };
+
+      document.querySelectorAll('[data-role-select]').forEach((select) => {
+        select.addEventListener('change', async () => {
+          const row = select.closest('[data-staff-id]');
+          const id = row?.dataset.staffId;
+          const previous = select.dataset.previous || [...select.options].find((option) => option.defaultSelected)?.value || select.value;
+          select.disabled = true;
+          try {
+            await request(`/admin/api/staff/${id}/role`, 'PATCH', { role: select.value });
+            select.dataset.previous = select.value;
+          } catch (error) {
+            select.value = previous;
+            alert(error.message);
+          } finally {
+            select.disabled = false;
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-status-toggle]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const row = button.closest('[data-staff-id]');
+          const id = row?.dataset.staffId;
+          const active = button.textContent.trim().toLowerCase() === 'activate';
+          button.disabled = true;
+          try {
+            await request(`/admin/api/staff/${id}/status`, 'PATCH', { active });
+            location.reload();
+          } catch (error) {
+            alert(error.message);
+            button.disabled = false;
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-activity]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const row = button.closest('[data-staff-id]');
+          const id = row?.dataset.staffId;
+          try {
+            const result = await request(`/admin/api/staff/${id}/activity`, 'GET');
+            const items = result.activity || [];
+            if (!items.length) return alert('No activity recorded for this staff account.');
+            alert(items.map((item) => `${item.action.replaceAll('_',' ')} — ${item.actor_name || 'System'} — ${new Date(item.created_at).toLocaleString('en-NG')}`).join('\n'));
+          } catch (error) { alert(error.message); }
+        });
+      });
+
+      if (!['SUPER_ADMIN', 'ADMIN'].includes(adminRole)) location.href = '/admin';
+    })();
+  </script>
+</body>
+</html>
