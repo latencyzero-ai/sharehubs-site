@@ -13,24 +13,15 @@ const COMPANY_DOMAIN = '@sharehubsengineering.com';
 const SESSION_TTL_DAYS = 7;
 const VERIFICATION_TTL_HOURS = 24;
 const ALLOWED_STATUSES = ['NEW', 'REVIEWING', 'CONTACTED', 'QUALIFIED', 'QUOTED', 'WON', 'LOST'];
+const ENQUIRY_TYPES = ['CONTACT', 'QUOTE', 'CONSULTATION'];
 
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many attempts. Please try again later.' },
-});
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, standardHeaders: true, legacyHeaders: false, message: { error: 'Too many attempts. Please try again later.' } });
 
 function hashToken(token) { return crypto.createHash('sha256').update(token).digest('hex'); }
 function isCompanyEmail(email) { return String(email || '').trim().toLowerCase().endsWith(COMPANY_DOMAIN); }
 function safe(value, max = 4000) { return String(value ?? '').trim().slice(0, max); }
 function escapeHtml(value) { return safe(value).replace(/[&<>'\"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;' }[char])); }
-
-function setSessionCookie(res, token) {
-  const maxAge = SESSION_TTL_DAYS * 24 * 60 * 60 * 1000;
-  res.cookie('sh_admin_session', token, { httpOnly: true, secure: config.env === 'production', sameSite: 'lax', maxAge, path: '/admin' });
-}
+function setSessionCookie(res, token) { res.cookie('sh_admin_session', token, { httpOnly: true, secure: config.env === 'production', sameSite: 'lax', maxAge: SESSION_TTL_DAYS * 24 * 60 * 60 * 1000, path: '/admin' }); }
 function clearSessionCookie(res) { res.clearCookie('sh_admin_session', { httpOnly: true, secure: config.env === 'production', sameSite: 'lax', path: '/admin' }); }
 
 async function sendVerification(to, name, token) {
@@ -40,8 +31,7 @@ async function sendVerification(to, name, token) {
 
 async function createSession(userId) {
   const rawToken = crypto.randomBytes(32).toString('hex');
-  const tokenHash = hashToken(rawToken);
-  await db.query('INSERT INTO admin_sessions (token_hash, user_id, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? DAY))', [tokenHash, userId, SESSION_TTL_DAYS]);
+  await db.query('INSERT INTO admin_sessions (token_hash, user_id, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? DAY))', [hashToken(rawToken), userId, SESSION_TTL_DAYS]);
   return rawToken;
 }
 
@@ -54,7 +44,27 @@ async function requireAdmin(req, res, next) {
     req.admin = rows[0];
     await db.query('UPDATE admin_sessions SET last_seen_at = CURRENT_TIMESTAMP WHERE token_hash = ?', [hashToken(rawToken)]);
     return next();
-  } catch (error) { console.error('Admin authentication error:', error.message); return res.status(500).send('Unable to authenticate this request.'); }
+  } catch (error) {
+    console.error('Admin authentication error:', error.message);
+    return res.status(500).send('Unable to authenticate this request.');
+  }
+}
+
+async function findEnquiry(referenceId) {
+  const ref = safe(referenceId, 64);
+  for (const table of ['contacts', 'quote_requests', 'consultation_requests']) {
+    const [rows] = await db.query(`SELECT * FROM ${table} WHERE reference_id = ? LIMIT 1`, [ref]);
+    if (rows.length) {
+      const type = table === 'contacts' ? 'CONTACT' : table === 'quote_requests' ? 'QUOTE' : 'CONSULTATION';
+      return { ...rows[0], type };
+    }
+  }
+  return null;
+}
+
+async function getEnquiryState(referenceId) {
+  const [rows] = await db.query('SELECT reference_id, status, assigned_to, internal_note, updated_by, created_at, updated_at FROM admin_enquiry_status WHERE reference_id = ? LIMIT 1', [referenceId]);
+  return rows[0] || { reference_id: referenceId, status: 'NEW', assigned_to: null, internal_note: null };
 }
 
 router.get('/login', (req, res) => {
@@ -88,7 +98,10 @@ router.post('/register', authLimiter, [
     }
     await sendVerification(email, name, token);
     return res.redirect('/admin/login?verified=pending');
-  } catch (error) { console.error('Staff registration error:', error.message); return res.redirect(`/admin/register?error=${encodeURIComponent('We could not create the account right now. Please try again.')}`); }
+  } catch (error) {
+    console.error('Staff registration error:', error.message);
+    return res.redirect(`/admin/register?error=${encodeURIComponent('We could not create the account right now. Please try again.')}`);
+  }
 });
 
 router.get('/verify/:token', async (req, res) => {
@@ -96,7 +109,10 @@ router.get('/verify/:token', async (req, res) => {
     const [result] = await db.query('UPDATE admin_users SET verified = 1, verification_token_hash = NULL, verification_expires_at = NULL WHERE verification_token_hash = ? AND verification_expires_at > NOW()', [hashToken(req.params.token)]);
     if (!result.affectedRows) return res.redirect(`/admin/login?error=${encodeURIComponent('This verification link is invalid or has expired.')}`);
     return res.redirect('/admin/login?verified=success');
-  } catch (error) { console.error('Staff verification error:', error.message); return res.redirect(`/admin/login?error=${encodeURIComponent('Verification could not be completed.')}`); }
+  } catch (error) {
+    console.error('Staff verification error:', error.message);
+    return res.redirect(`/admin/login?error=${encodeURIComponent('Verification could not be completed.')}`);
+  }
 });
 
 router.post('/login', authLimiter, [body('email').trim().isEmail().normalizeEmail().withMessage('Enter a valid email address.'), body('password').notEmpty().withMessage('Password is required.')], async (req, res) => {
@@ -111,16 +127,21 @@ router.post('/login', authLimiter, [body('email').trim().isEmail().normalizeEmai
     const user = rows[0];
     if (!user.active) return res.redirect(`/admin/login?error=${encodeURIComponent('This staff account has been disabled.')}`);
     if (!user.verified) return res.redirect(`/admin/login?error=${encodeURIComponent('Please verify your company email before signing in.')}`);
-    const matches = await bcrypt.compare(password, user.password_hash);
-    if (!matches) return res.redirect(`/admin/login?error=${encodeURIComponent('Invalid company email or password.')}`);
+    if (!await bcrypt.compare(password, user.password_hash)) return res.redirect(`/admin/login?error=${encodeURIComponent('Invalid company email or password.')}`);
     const token = await createSession(user.id);
     setSessionCookie(res, token);
     return res.redirect('/admin');
-  } catch (error) { console.error('Admin login error:', error.message); return res.redirect(`/admin/login?error=${encodeURIComponent('We could not sign you in right now.')}`); }
+  } catch (error) {
+    console.error('Admin login error:', error.message);
+    return res.redirect(`/admin/login?error=${encodeURIComponent('We could not sign you in right now.')}`);
+  }
 });
 
 router.post('/logout', requireAdmin, async (req, res) => {
-  try { const rawToken = req.cookies?.sh_admin_session; if (rawToken) await db.query('DELETE FROM admin_sessions WHERE token_hash = ?', [hashToken(rawToken)]); } catch (error) { console.error('Admin logout error:', error.message); }
+  try {
+    const rawToken = req.cookies?.sh_admin_session;
+    if (rawToken) await db.query('DELETE FROM admin_sessions WHERE token_hash = ?', [hashToken(rawToken)]);
+  } catch (error) { console.error('Admin logout error:', error.message); }
   clearSessionCookie(res);
   return res.redirect('/admin/login');
 });
@@ -135,7 +156,24 @@ router.get('/', requireAdmin, async (req, res) => {
     const statusMap = new Map(statuses.map((item) => [item.reference_id, item]));
     const rows = enquiries.map((item) => ({ ...item, ...(statusMap.get(item.reference_id) || { status: 'NEW', assigned_to: null, internal_note: null }) }));
     return res.render('admin/dashboard', { title: 'Admin Dashboard — Share Hubs Engineering', admin: req.admin, counts: counts || {}, enquiries: rows, statuses: ALLOWED_STATUSES, dashboardError: null });
-  } catch (error) { console.error('Admin dashboard load error:', error.message); return res.status(500).render('admin/dashboard', { title: 'Admin Dashboard — Share Hubs Engineering', admin: req.admin, counts: {}, enquiries: [], statuses: ALLOWED_STATUSES, dashboardError: 'The dashboard could not load the enquiry data.' }); }
+  } catch (error) {
+    console.error('Admin dashboard load error:', error.message);
+    return res.status(500).render('admin/dashboard', { title: 'Admin Dashboard — Share Hubs Engineering', admin: req.admin, counts: {}, enquiries: [], statuses: ALLOWED_STATUSES, dashboardError: 'The dashboard could not load the enquiry data.' });
+  }
+});
+
+router.get('/enquiries/:reference', requireAdmin, async (req, res) => {
+  try {
+    const enquiry = await findEnquiry(req.params.reference);
+    if (!enquiry) return res.status(404).render('404', { title: 'Enquiry Not Found', path: '/admin/enquiries' });
+    const state = await getEnquiryState(enquiry.reference_id);
+    const [staff] = await db.query('SELECT id, name, email, role FROM admin_users WHERE active = 1 AND verified = 1 ORDER BY name ASC');
+    const [activity] = await db.query(`SELECT a.*, u.name AS actor_name, u.email AS actor_email FROM admin_enquiry_activity a LEFT JOIN admin_users u ON u.id = a.actor_id WHERE a.reference_id = ? ORDER BY a.created_at DESC LIMIT 100`, [enquiry.reference_id]);
+    return res.render('admin/enquiry', { title: `${enquiry.reference_id} — Admin`, admin: req.admin, enquiry, state, staff, statuses: ALLOWED_STATUSES, activity, error: null });
+  } catch (error) {
+    console.error('Admin enquiry detail error:', error.message);
+    return res.status(500).send('Unable to load this enquiry.');
+  }
 });
 
 router.get('/api/enquiries', requireAdmin, async (req, res) => {
@@ -151,9 +189,16 @@ router.get('/api/enquiries', requireAdmin, async (req, res) => {
     if (references.length) { const placeholders = references.map(() => '?').join(','); [statusRows] = await db.query(`SELECT reference_id, status, assigned_to FROM admin_enquiry_status WHERE reference_id IN (${placeholders})`, references); }
     const statusMap = new Map(statusRows.map((item) => [item.reference_id, item]));
     const merged = all.map((item) => ({ ...item, status: statusMap.get(item.reference_id)?.status || 'NEW', assigned_to: statusMap.get(item.reference_id)?.assigned_to || null }));
-    const filtered = merged.filter((item) => { const matchesStatus = !status || status === 'ALL' || item.status === status; const haystack = `${item.reference_id} ${item.name} ${item.email} ${item.subject} ${item.service || ''} ${item.company || ''}`.toLowerCase(); return matchesStatus && (!search || haystack.includes(search)); });
+    const filtered = merged.filter((item) => {
+      const matchesStatus = !status || status === 'ALL' || item.status === status;
+      const haystack = `${item.reference_id} ${item.name} ${item.email} ${item.subject} ${item.service || ''} ${item.company || ''}`.toLowerCase();
+      return matchesStatus && (!search || haystack.includes(search));
+    });
     return res.json({ ok: true, page, limit, total: filtered.length, enquiries: filtered.slice(offset, offset + limit) });
-  } catch (error) { console.error('Admin enquiry API error:', error.message); return res.status(500).json({ ok: false, error: 'Unable to load enquiries.' }); }
+  } catch (error) {
+    console.error('Admin enquiry API error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to load enquiries.' });
+  }
 });
 
 router.patch('/api/enquiries/:reference/status', requireAdmin, async (req, res) => {
@@ -161,16 +206,72 @@ router.patch('/api/enquiries/:reference/status', requireAdmin, async (req, res) 
   const status = safe(req.body.status, 30).toUpperCase();
   if (!referenceId || !ALLOWED_STATUSES.includes(status)) return res.status(422).json({ ok: false, error: 'Invalid enquiry status.' });
   try {
+    const previous = await getEnquiryState(referenceId);
     await db.query(`INSERT INTO admin_enquiry_status (reference_id, status, updated_by) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE status = VALUES(status), updated_by = VALUES(updated_by), updated_at = CURRENT_TIMESTAMP`, [referenceId, status, req.admin.id]);
+    if (previous.status !== status) await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, old_value, new_value) VALUES (?, ?, ?, ?, ?)', [referenceId, req.admin.id, 'STATUS_CHANGED', previous.status, status]);
     return res.json({ ok: true, reference: referenceId, status });
-  } catch (error) { console.error('Admin status update error:', error.message); return res.status(500).json({ ok: false, error: 'Unable to update enquiry status.' }); }
+  } catch (error) {
+    console.error('Admin status update error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to update enquiry status.' });
+  }
+});
+
+router.patch('/api/enquiries/:reference/assignment', requireAdmin, async (req, res) => {
+  const referenceId = safe(req.params.reference, 64);
+  const assignedTo = safe(req.body.assigned_to, 255).toLowerCase();
+  if (!referenceId) return res.status(422).json({ ok: false, error: 'Invalid enquiry reference.' });
+  try {
+    const previous = await getEnquiryState(referenceId);
+    if (assignedTo) {
+      const [staff] = await db.query('SELECT id, email FROM admin_users WHERE email = ? AND active = 1 AND verified = 1 LIMIT 1', [assignedTo]);
+      if (!staff.length || !isCompanyEmail(assignedTo)) return res.status(422).json({ ok: false, error: 'Select a verified Share Hubs staff account.' });
+    }
+    await db.query(`INSERT INTO admin_enquiry_status (reference_id, status, assigned_to, updated_by) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE assigned_to = VALUES(assigned_to), updated_by = VALUES(updated_by), updated_at = CURRENT_TIMESTAMP`, [referenceId, previous.status || 'NEW', assignedTo || null, req.admin.id]);
+    if ((previous.assigned_to || '') !== assignedTo) await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, old_value, new_value) VALUES (?, ?, ?, ?, ?)', [referenceId, req.admin.id, 'ASSIGNED', previous.assigned_to || 'Unassigned', assignedTo || 'Unassigned']);
+    return res.json({ ok: true, reference: referenceId, assigned_to: assignedTo || null });
+  } catch (error) {
+    console.error('Admin assignment error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to assign this enquiry.' });
+  }
+});
+
+router.patch('/api/enquiries/:reference/note', requireAdmin, async (req, res) => {
+  const referenceId = safe(req.params.reference, 64);
+  const note = safe(req.body.note, 4000);
+  if (!referenceId) return res.status(422).json({ ok: false, error: 'Invalid enquiry reference.' });
+  if (!note) return res.status(422).json({ ok: false, error: 'Enter an internal note.' });
+  try {
+    const previous = await getEnquiryState(referenceId);
+    await db.query(`INSERT INTO admin_enquiry_status (reference_id, status, internal_note, updated_by) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE internal_note = VALUES(internal_note), updated_by = VALUES(updated_by), updated_at = CURRENT_TIMESTAMP`, [referenceId, previous.status || 'NEW', note, req.admin.id]);
+    await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, note) VALUES (?, ?, ?, ?)', [referenceId, req.admin.id, 'NOTE_ADDED', note]);
+    return res.json({ ok: true, reference: referenceId, note });
+  } catch (error) {
+    console.error('Admin note error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to save the internal note.' });
+  }
+});
+
+router.get('/api/enquiries/:reference', requireAdmin, async (req, res) => {
+  try {
+    const enquiry = await findEnquiry(req.params.reference);
+    if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' });
+    const state = await getEnquiryState(enquiry.reference_id);
+    const [activity] = await db.query(`SELECT a.id, a.action, a.old_value, a.new_value, a.note, a.created_at, u.name AS actor_name, u.email AS actor_email FROM admin_enquiry_activity a LEFT JOIN admin_users u ON u.id = a.actor_id WHERE a.reference_id = ? ORDER BY a.created_at DESC LIMIT 100`, [enquiry.reference_id]);
+    return res.json({ ok: true, enquiry, state, activity });
+  } catch (error) {
+    console.error('Admin enquiry detail API error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to load enquiry details.' });
+  }
 });
 
 router.get('/api/overview', requireAdmin, async (req, res) => {
   try {
     const [[stats]] = await db.query(`SELECT (SELECT COUNT(*) FROM contacts) + (SELECT COUNT(*) FROM quote_requests) + (SELECT COUNT(*) FROM consultation_requests) AS total, (SELECT COUNT(*) FROM contacts WHERE created_at >= CURDATE()) + (SELECT COUNT(*) FROM quote_requests WHERE created_at >= CURDATE()) + (SELECT COUNT(*) FROM consultation_requests WHERE created_at >= CURDATE()) AS today, (SELECT COUNT(*) FROM admin_enquiry_status WHERE status = 'NEW') AS new_count, (SELECT COUNT(*) FROM admin_enquiry_status WHERE status = 'CONTACTED') AS contacted, (SELECT COUNT(*) FROM admin_enquiry_status WHERE status = 'WON') AS won`);
     return res.json({ ok: true, stats });
-  } catch (error) { console.error('Admin overview error:', error.message); return res.status(500).json({ ok: false, error: 'Unable to load dashboard metrics.' }); }
+  } catch (error) {
+    console.error('Admin overview error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to load dashboard metrics.' });
+  }
 });
 
 module.exports = { router, requireAdmin };
