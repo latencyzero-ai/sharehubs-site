@@ -26,18 +26,71 @@ async function setCommunicationStatus(referenceId, nextStatus, actorId = null) {
 
 async function syncCommunicationStatuses() {
   try {
-    const [references] = await db.query(`SELECT reference_id FROM admin_enquiry_status UNION SELECT reference_id FROM communication_messages`);
-    for (const row of references) {
-      const referenceId = row.reference_id;
-      const [last] = await db.query(`SELECT direction, status FROM communication_messages WHERE reference_id = ? ORDER BY created_at DESC, id DESC LIMIT 1`, [referenceId]);
-      if (!last.length) continue;
+    // Avoid the previous N+1 query pattern. We now fetch the latest message
+    // for every conversation in one query and update only conversations whose
+    // derived communication status actually needs to change.
+    const [rows] = await db.query(`
+      SELECT
+        refs.reference_id,
+        COALESCE(s.communication_status, 'NEW') AS communication_status,
+        lm.direction AS last_direction,
+        lm.status AS last_message_status
+      FROM (
+        SELECT reference_id FROM admin_enquiry_status
+        UNION
+        SELECT reference_id FROM communication_messages
+      ) refs
+      LEFT JOIN admin_enquiry_status s
+        ON s.reference_id = refs.reference_id
+      LEFT JOIN communication_messages lm
+        ON lm.id = (
+          SELECT m2.id
+          FROM communication_messages m2
+          WHERE m2.reference_id = refs.reference_id
+          ORDER BY m2.created_at DESC, m2.id DESC
+          LIMIT 1
+        )
+    `);
 
-      const [state] = await db.query('SELECT communication_status FROM admin_enquiry_status WHERE reference_id = ? LIMIT 1', [referenceId]);
-      const current = state[0]?.communication_status || 'NEW';
+    const transitions = [];
+
+    for (const row of rows) {
+      const current = row.communication_status || 'NEW';
       if (current === 'RESOLVED' || current === 'CLOSED') continue;
+      if (!row.last_direction) continue;
 
-      const next = last[0].direction === 'INBOUND' ? 'AWAITING_STAFF' : last[0].status === 'SENT' ? 'AWAITING_CUSTOMER' : current;
-      if (next !== current) await setCommunicationStatus(referenceId, next);
+      const next = row.last_direction === 'INBOUND'
+        ? 'AWAITING_STAFF'
+        : row.last_message_status === 'SENT'
+          ? 'AWAITING_CUSTOMER'
+          : current;
+
+      if (next !== current) {
+        transitions.push({
+          referenceId: row.reference_id,
+          previous: current,
+          next,
+        });
+      }
+    }
+
+    // Apply changes sequentially so activity history remains deterministic,
+    // while keeping the expensive read side to a single database query.
+    for (const transition of transitions) {
+      await db.query(
+        `UPDATE admin_enquiry_status
+         SET communication_status = ?, updated_by = NULL, updated_at = CURRENT_TIMESTAMP
+         WHERE reference_id = ?
+           AND communication_status = ?`,
+        [transition.next, transition.referenceId, transition.previous]
+      );
+
+      await db.query(
+        `INSERT INTO admin_enquiry_activity
+          (reference_id, actor_id, action, old_value, new_value)
+         VALUES (?, NULL, 'COMMUNICATION_STATUS_CHANGED', ?, ?)`,
+        [transition.referenceId, transition.previous, transition.next]
+      );
     }
   } catch (error) {
     console.error('Communication status sync failed:', error.message);
