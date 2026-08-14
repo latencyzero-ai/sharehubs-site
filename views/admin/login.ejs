@@ -3,13 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080a0d">
   <title><%= title %></title>
+  <link rel="icon" href="/img/favicon_io%20(1)/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon_io%20(1)/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/img/favicon_io%20(1)/apple-touch-icon.png">
   <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body class="admin-auth-page">
   <main class="auth-card">
-    <div class="brand-mark">SH</div>
-    <p class="eyebrow">SHARE HUBS ENGINEERING</p>
+    <a class="auth-logo" href="/" aria-label="Share Hubs Engineering home">
+      <img src="/img/logo-light.png" alt="Share Hubs Engineering" width="220" height="92">
+    </a>
+    <p class="eyebrow">STAFF PORTAL</p>
     <h1>Staff sign in</h1>
     <p class="muted">Access the enquiries and communications dashboard.</p>
     <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
