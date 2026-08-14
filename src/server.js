@@ -10,6 +10,7 @@ const pageRoutes = require('./routes/pages');
 const communicationRoutes = require('./routes/communications');
 const { router: adminRoutes } = require('./routes/admin');
 const { router: staffManagementRoutes } = require('./routes/staff-management');
+const { adminRbacGate } = require('./middleware/admin-rbac');
 const {
   router: communicationWorkflowRoutes,
   startCommunicationStatusSync,
@@ -41,6 +42,7 @@ app.use('/assets/fonts', express.static(path.join(PUB, 'fonts'), staticOpts));
 app.use('/assets', express.static(path.join(PUB, 'assets'), staticOpts));
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'sharehubs-site', time: new Date().toISOString() }));
+app.use('/admin', adminRbacGate);
 app.use('/admin', communicationWorkflowRoutes);
 app.use('/admin', staffManagementRoutes);
 app.use('/admin', adminRoutes);
