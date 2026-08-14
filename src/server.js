@@ -9,6 +9,7 @@ const config = require('./config/env');
 const pageRoutes = require('./routes/pages');
 const communicationRoutes = require('./routes/communications');
 const { router: adminRoutes } = require('./routes/admin');
+const { router: communicationWorkflowRoutes } = require('./routes/communication-workflow');
 const { ensureAdminSchema } = require('./config/admin-schema');
 const { startInboundMailSync } = require('./services/inbound-mail');
 
@@ -35,6 +36,7 @@ app.use('/assets/fonts', express.static(path.join(PUB, 'fonts'), staticOpts));
 app.use('/assets', express.static(path.join(PUB, 'assets'), staticOpts));
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'sharehubs-site', time: new Date().toISOString() }));
+app.use('/admin', communicationWorkflowRoutes);
 app.use('/admin', adminRoutes);
 app.use('/', communicationRoutes);
 app.use('/', pageRoutes);
