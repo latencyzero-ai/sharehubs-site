@@ -8,19 +8,38 @@
 /* ── MOBILE HERO (below 768px) ──────────────────────────────── */
 @media (max-width: 767px) {
   .sh-hero {
+    min-height: 100svh !important;
+    min-height: 100dvh !important;
+    padding-top: calc(var(--sh-header-height) + var(--sh-space-6)) !important;
+    padding-bottom: var(--sh-space-8) !important;
     text-align: center !important;
   }
 
   .sh-hero__content-wrap {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
+    display: block !important;
+    position: relative !important;
+    min-height: clamp(480px, calc(100svh - var(--sh-header-height) - 48px), 680px) !important;
     margin: 0 auto !important;
     padding: 0 20px !important;
     width: 100% !important;
     max-width: 100% !important;
+  }
+
+  .sh-hero__content {
+    top: 50% !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 0 20px !important;
+    text-align: center !important;
+    align-items: center !important;
+    transform: translateY(calc(-50% + 20px)) !important;
+  }
+
+  .sh-hero__content.is-active {
+    transform: translateY(-50%) !important;
   }
 
   .sh-hero__title br {
@@ -31,14 +50,14 @@
     text-align: center !important;
     font-size: clamp(1.75rem, 7vw, 2.5rem) !important;
     line-height: 1.2 !important;
-    margin: 0 auto 16px auto !important;
+    margin: 0 auto 16px !important;
     max-width: 90% !important;
     text-wrap: pretty !important;
     word-break: keep-all !important;
     overflow-wrap: break-word !important;
   }
 
-  .sh-hero__title--accent,
+  .sh-hero__title .accent,
   .sh-hero__title span {
     display: inline !important;
     text-align: center !important;
@@ -46,15 +65,17 @@
 
   .sh-hero__tag {
     text-align: center !important;
-    margin: 0 auto 16px auto !important;
+    margin: 0 auto 16px !important;
     display: inline-block !important;
+    max-width: 92% !important;
     font-size: 0.65rem !important;
     letter-spacing: 0.08em !important;
+    white-space: normal !important;
   }
 
   .sh-hero__desc {
     text-align: center !important;
-    margin: 0 auto 24px auto !important;
+    margin: 0 auto 24px !important;
     font-size: 0.95rem !important;
     line-height: 1.6 !important;
     max-width: 320px !important;
@@ -82,30 +103,25 @@
 
   .sh-hero__dots {
     left: 50% !important;
+    bottom: max(24px, env(safe-area-inset-bottom)) !important;
     transform: translateX(-50%) !important;
     justify-content: center !important;
-  }
-
-  .sh-hero__content {
-    align-items: center !important;
-    text-align: center !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin: 0 auto !important;
-    padding: 0 20px !important;
-  }
-
-  .sh-hero__content.is-active {
-    align-items: center !important;
-    text-align: center !important;
   }
 }
 
 /* ── TABLET (768px–1023px) ─────────────────────────────────── */
 @media (min-width: 768px) and (max-width: 1023px) {
+  /* The v4 container owns horizontal alignment. Do not add a second gutter. */
   .sh-hero__content-wrap {
-    margin-left: 24px !important;
-    margin-right: 24px !important;
+    width: 100% !important;
+    max-width: var(--sh-container) !important;
+    margin-inline: auto !important;
+    padding-inline: var(--sh-space-6) !important;
+  }
+
+  .sh-hero__content {
+    left: 0 !important;
+    max-width: min(680px, 100%) !important;
   }
 
   .sh-hero__title {
@@ -113,5 +129,29 @@
   }
 }
 
-/* Desktop deliberately inherits the canonical v4.1 layout.
-   Do not introduce a second container/alignment system here. */
+/* ── SMALL PHONES ───────────────────────────────────────────── */
+@media (max-width: 380px) {
+  .sh-hero__content-wrap {
+    min-height: clamp(500px, calc(100svh - var(--sh-header-height) - 40px), 640px) !important;
+  }
+
+  .sh-hero__content {
+    padding-inline: 14px !important;
+  }
+
+  .sh-hero__title {
+    font-size: clamp(1.65rem, 7.4vw, 2.1rem) !important;
+    max-width: 94% !important;
+  }
+
+  .sh-hero__desc {
+    max-width: 300px !important;
+  }
+
+  .sh-hero__actions .sh-btn,
+  .sh-hero__actions a.sh-btn {
+    max-width: 270px !important;
+  }
+}
+
+/* Desktop deliberately inherits the canonical v4.1 container/alignment. */
