@@ -30,7 +30,9 @@ router.post('/login', authLimiter, [body('email').trim().isEmail().normalizeEmai
 router.post('/logout', requireAdmin, async (req, res) => { try { const rawToken = req.cookies?.sh_admin_session; if (rawToken) await db.query('DELETE FROM admin_sessions WHERE token_hash = ?', [hashToken(rawToken)]); } catch (error) { console.error('Admin logout error:', error.message); } clearSessionCookie(res); return res.redirect('/admin/login'); });
 
 const ENQUIRY_SQL = `(SELECT 'CONTACT' AS type, reference_id, name, email, phone, subject, NULL AS service, NULL AS company, created_at FROM contacts UNION ALL SELECT 'QUOTE' AS type, reference_id, name, email, phone, CONCAT('Quote request — ', service) AS subject, service, company, created_at FROM quote_requests UNION ALL SELECT 'CONSULTATION' AS type, reference_id, name, email, phone, CONCAT('Consultation — ', topic) AS subject, NULL AS service, company, created_at FROM consultation_requests)`;
-const normalizeEnquiry = (item, statusMap) => ({ ...item, status: statusMap.get(item.reference_id)?.status || 'NEW', assigned_to: statusMap.get(item.reference_id)?.assigned_to || null, internal_note: statusMap.get(item.reference_id)?.internal_note || null });
+// reference_id values predate the admin tables and may have different MySQL collations.
+// BINARY comparison is intentional here: references are opaque identifiers and must match exactly.
+const ENQUIRY_STATUS_JOIN = 'BINARY aes.reference_id = BINARY enquiries.reference_id';
 
 // Keep the initial document request lightweight. The browser loads overview and enquiries independently.
 router.get('/', requireAdmin, (req, res) => res.render('admin/dashboard', { title: 'Admin Dashboard — Share Hubs Engineering', admin: req.admin, counts: {}, enquiries: [], statuses: ALLOWED_STATUSES, dashboardError: null }));
@@ -51,8 +53,8 @@ router.get('/api/enquiries', requireAdmin, async (req, res) => {
     }
     if (status && status !== 'ALL') { where.push(`COALESCE(aes.status, 'NEW') = ?`); params.push(status); }
     const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
-    const [[countRow]] = await db.query(`SELECT COUNT(*) AS total FROM ${ENQUIRY_SQL} enquiries LEFT JOIN admin_enquiry_status aes ON aes.reference_id = enquiries.reference_id ${whereSql}`, params);
-    const [items] = await db.query(`SELECT enquiries.*, COALESCE(aes.status, 'NEW') AS status, aes.assigned_to, aes.internal_note FROM ${ENQUIRY_SQL} enquiries LEFT JOIN admin_enquiry_status aes ON aes.reference_id = enquiries.reference_id ${whereSql} ORDER BY enquiries.created_at DESC LIMIT ? OFFSET ?`, [...params, limit, offset]);
+    const [[countRow]] = await db.query(`SELECT COUNT(*) AS total FROM ${ENQUIRY_SQL} enquiries LEFT JOIN admin_enquiry_status aes ON ${ENQUIRY_STATUS_JOIN} ${whereSql}`, params);
+    const [items] = await db.query(`SELECT enquiries.*, COALESCE(aes.status, 'NEW') AS status, aes.assigned_to, aes.internal_note FROM ${ENQUIRY_SQL} enquiries LEFT JOIN admin_enquiry_status aes ON ${ENQUIRY_STATUS_JOIN} ${whereSql} ORDER BY enquiries.created_at DESC LIMIT ? OFFSET ?`, [...params, limit, offset]);
     const total = Number(countRow?.total || 0);
     return res.json({ ok: true, page, limit, total, pages: Math.max(Math.ceil(total / limit), 1), enquiries: items });
   } catch (error) { console.error('Admin enquiry API error:', error.message); return res.status(500).json({ ok: false, error: 'Unable to load enquiries.' }); }
