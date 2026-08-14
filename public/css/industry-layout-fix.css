@@ -1,6 +1,18 @@
-/* Industry overview layout: text left, image raised to the top-right on desktop. */
+/* Shared industry overview layout: text left, consistent image top-right on desktop, stacked image on mobile. */
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] {
+  overflow: visible;
+}
+
+/* Bootstrap-based industry pages: Agriculture, Medical, Home & Office. */
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row {
   position: relative;
+  align-items: flex-start;
+}
+
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:first-child {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
 }
 
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child {
@@ -13,26 +25,76 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row 
   justify-content: flex-end;
   margin-top: 0 !important;
   padding-left: var(--bs-gutter-x, 1.5rem);
+  z-index: 2;
 }
 
-main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card {
+/* Keep all application items inside the left content column. */
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:first-child > .sh-grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100%;
+}
+
+/* Consistent desktop image frame across every industry page. */
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card,
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-industry-overview__media {
   width: 100%;
   max-width: 520px;
+  height: 350px;
   margin: 0 !important;
   padding: var(--sh-space-2);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child img {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: none;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--sh-radius-md);
+}
+
+/* Legacy sh-grid-based industry pages: Automobile and Oil & Gas. */
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+  align-items: start;
+}
+
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 > :first-child {
+  min-width: 0;
+}
+
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 > :first-child > .sh-grid.sh-grid--2 {
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100%;
+}
+
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 > :last-child {
+  width: 100%;
+  min-width: 0;
+}
+
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 > :last-child .sh-industry-overview__media {
+  width: 100%;
+  max-width: 520px;
+  height: 350px;
+  margin: 0 0 0 auto;
+  padding: var(--sh-space-2);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 > :last-child img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: var(--sh-radius-md);
 }
 
 @media (max-width: 991.98px) {
+  /* Bootstrap pages: restore normal document flow so the image comes after the text. */
   main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child {
     position: static;
     width: 100%;
@@ -41,7 +103,23 @@ main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row 
     padding-left: calc(var(--bs-gutter-x, 1.5rem) * .5);
   }
 
-  main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card {
+  main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card,
+  main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-industry-overview__media {
+    width: 100%;
     max-width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+  }
+
+  /* Legacy pages: collapse to one column and place the image below all text. */
+  main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  main#main-content > section.sh-section[aria-labelledby="overview-heading"] > .sh-container > .sh-grid.sh-grid--2 > :last-child .sh-industry-overview__media {
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    margin-top: var(--sh-space-6);
   }
 }
