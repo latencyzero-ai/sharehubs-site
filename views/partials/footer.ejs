@@ -2,7 +2,7 @@
   <div class="sh-container">
     <div class="sh-footer__grid">
       <div class="sh-footer__brand">
-        <a href="/" class="sh-logo"><img src="/img/share-hubs-engineering.png" alt="" width="140" height="38" style="height:38px;"></a>
+        <a href="/" class="sh-logo"><img src="/img/share-hubs-engineering.png" alt="Share Hubs Engineering" width="140" height="38" style="height:38px;"></a>
         <p>Precision manufacturing and engineering solutions for industries across Nigeria and beyond. From concept to component, we deliver.</p>
         <div class="sh-footer__social">
           <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
@@ -14,37 +14,35 @@
       <div>
         <h4 class="sh-footer__title">Company</h4>
         <ul class="sh-footer__links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/about">About Us</a></li>
-          <li><a href="/services">Services</a></li>
-          <li><a href="/contact">Contact</a></li>
-          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/">Home</a></li><li><a href="/about">About Us</a></li><li><a href="/services">Services</a></li><li><a href="/contact">Contact</a></li><li><a href="/faq">FAQ</a></li>
         </ul>
       </div>
       <div>
         <h4 class="sh-footer__title">Industries</h4>
         <ul class="sh-footer__links">
-          <li><a href="/agriculture">Agriculture</a></li>
-          <li><a href="/automobile">Automobile</a></li>
-          <li><a href="/medicine">Medical</a></li>
-          <li><a href="/oil-and-gas">Oil & Gas</a></li>
-          <li><a href="/home-and-office">Home & Office</a></li>
+          <li><a href="/agriculture">Agriculture</a></li><li><a href="/automobile">Automobile</a></li><li><a href="/medicine">Medical</a></li><li><a href="/oil-and-gas">Oil & Gas</a></li><li><a href="/home-and-office">Home & Office</a></li>
         </ul>
       </div>
       <div>
         <h4 class="sh-footer__title">Stay Updated</h4>
         <p class="sh-text-small">Get the latest on our projects, capabilities, and industry insights.</p>
-        <form class="sh-footer__newsletter" action="mailto:info@sharehubseng.com" method="get" target="_blank">
+        <form class="sh-footer__newsletter" action="/newsletter/subscribe" method="post">
           <label for="footer-email" class="sh-sr-only">Email address</label>
-          <input type="email" id="footer-email" name="EMAIL" placeholder="your@email.com" required autocomplete="email">
+          <input type="email" id="footer-email" name="email" placeholder="your@email.com" required maxlength="254" autocomplete="email" aria-describedby="newsletter-feedback">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0;">
           <button type="submit" aria-label="Subscribe"><i class="fa fa-paper-plane"></i></button>
         </form>
+        <% if (typeof newsletterStatus !== 'undefined' && newsletterStatus === 'success') { %>
+          <p id="newsletter-feedback" class="sh-text-small sh-mt-2" role="status">You're subscribed. Thanks for staying updated.</p>
+        <% } else if (typeof newsletterStatus !== 'undefined' && newsletterStatus === 'invalid') { %>
+          <p id="newsletter-feedback" class="sh-text-small sh-mt-2" role="alert">Please enter a valid email address.</p>
+        <% } else if (typeof newsletterStatus !== 'undefined' && newsletterStatus === 'error') { %>
+          <p id="newsletter-feedback" class="sh-text-small sh-mt-2" role="alert">We couldn't save your subscription. Please try again.</p>
+        <% } %>
         <p class="sh-text-small sh-mt-4"><i class="fa fa-phone" style="margin-right:6px;color:var(--sh-brand);"></i><a href="tel:+2349135116716">+234 913 511 6716</a></p>
-        <p class="sh-text-small sh-mt-2"><i class="fa fa-envelope" style="margin-right:6px;color:var(--sh-brand);"></i><a href="mailto:info@sharehubseng.com">info@sharehubseng.com</a></p>
+        <p class="sh-text-small sh-mt-2"><i class="fa fa-envelope" style="margin-right:6px;color:var(--sh-brand);"></i><a href="mailto:info@sharehubsengineering.com">info@sharehubsengineering.com</a></p>
       </div>
     </div>
-    <div class="sh-footer__bottom">
-      <p>© <span data-current-year></span> Share Hubs Engineering. All rights reserved. Built with precision in Lagos, Nigeria.</p>
-    </div>
+    <div class="sh-footer__bottom"><p>© <span data-current-year></span> Share Hubs Engineering. All rights reserved. Built with precision in Lagos, Nigeria.</p></div>
   </div>
 </footer>
