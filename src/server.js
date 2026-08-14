@@ -13,6 +13,7 @@ const config = require('./config/env');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const adminCommunicationRoutes = require('./routes/admin-communications');
+const publicEnquiryRoutes = require('./routes/public-enquiries');
 const pageRoutes = require('./routes/pages');
 const { ensureAdminSchema } = require('./config/admin-schema');
 
@@ -52,6 +53,7 @@ app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'sharehubs-s
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes.router);
 app.use('/admin/api', adminCommunicationRoutes.router);
+app.use('/', publicEnquiryRoutes.router);
 app.use('/', pageRoutes);
 app.use((req, res) => res.status(404).render('404', { title: 'Page Not Found', path: '/404' }));
 
