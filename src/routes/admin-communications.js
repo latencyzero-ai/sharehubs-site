@@ -4,15 +4,139 @@ const config = require('../config/env');
 const { transporter } = require('../config/mailer');
 const { requireAdmin, requireCsrf } = require('./admin');
 const { MAIL_ROUTING, getMailboxForType } = require('../config/mail-routing');
+
 const router = express.Router();
 const ALLOWED_COMMUNICATION_STATUSES = ['NEW', 'IN_PROGRESS', 'WAITING_CUSTOMER', 'RESOLVED'];
 const ENQUIRY_SQL = `(SELECT 'CONTACT' AS type, reference_id, name, email, phone, subject, NULL AS service, NULL AS company, created_at FROM contacts UNION ALL SELECT 'QUOTE' AS type, reference_id, name, email, phone, CONCAT('Quote request — ', service) AS subject, service, company, created_at FROM quote_requests UNION ALL SELECT 'CONSULTATION' AS type, reference_id, name, email, phone, CONCAT('Consultation — ', topic) AS subject, NULL AS service, company, created_at FROM consultation_requests)`;
 const esc = (value, max = 4000) => String(value ?? '').trim().slice(0, max);
 const ASSIGNMENT_OPTIONS = Object.values(MAIL_ROUTING).map(({ task, email }) => ({ task, email }));
-async function ensureDefaultAssignment(enquiry, existing) { if (existing?.assigned_to) return existing.assigned_to; const routing = getMailboxForType(enquiry?.type); if (!routing) return null; try { await db.query(`INSERT INTO admin_enquiry_status (reference_id, assigned_to, communication_status) VALUES (?, ?, 'NEW') ON DUPLICATE KEY UPDATE assigned_to = COALESCE(NULLIF(assigned_to, ''), VALUES(assigned_to))`, [enquiry.reference_id, routing.email]); return routing.email; } catch (error) { console.error('Default enquiry assignment error:', error.message); return routing.email; } }
-router.get('/enquiries/:reference/details', requireAdmin, async (req, res) => { const reference = esc(req.params.reference, 64); if (!reference) return res.status(422).json({ ok: false, error: 'Reference is required.' }); try { const [[enquiry]] = await db.query(`SELECT enquiries.*, COALESCE(aes.status, 'NEW') AS status, aes.communication_status, aes.assigned_to, aes.internal_note FROM ${ENQUIRY_SQL} enquiries LEFT JOIN admin_enquiry_status aes ON BINARY aes.reference_id = BINARY enquiries.reference_id WHERE BINARY enquiries.reference_id = BINARY ? LIMIT 1`, [reference]); if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' }); const [[existingAssignment]] = await db.query('SELECT assigned_to, internal_note, communication_status FROM admin_enquiry_status WHERE BINARY reference_id = BINARY ?', [reference]); const defaultAssignedTo = await ensureDefaultAssignment(enquiry, existingAssignment); enquiry.assigned_to = existingAssignment?.assigned_to || defaultAssignedTo || null; const [activities] = await db.query(`SELECT a.id, a.action, a.old_value, a.new_value, a.note, a.created_at, u.name AS actor_name FROM admin_enquiry_activity a LEFT JOIN admin_users u ON u.id = a.actor_id WHERE BINARY a.reference_id = BINARY ? ORDER BY a.created_at DESC LIMIT 50`, [reference]); const [messages] = await db.query(`SELECT id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, status, is_read, sent_at, created_at FROM communication_messages WHERE BINARY reference_id = BINARY ? ORDER BY created_at ASC LIMIT 100`, [reference]); return res.json({ ok: true, enquiry, activities, messages, assignment_options: ASSIGNMENT_OPTIONS }); } catch (error) { console.error('Admin enquiry details error:', error.message); return res.status(500).json({ ok: false, error: 'Unable to load enquiry details.' }); } });
-router.patch('/enquiries/:reference/meta', requireAdmin, requireCsrf, async (req, res) => { const reference = esc(req.params.reference, 64); const assignedTo = esc(req.body.assigned_to, 255) || null; const internalNote = esc(req.body.internal_note, 8000) || null; const communicationStatus = esc(req.body.communication_status, 30).toUpperCase() || 'NEW'; if (!reference) return res.status(422).json({ ok: false, error: 'Reference is required.' }); if (!ALLOWED_COMMUNICATION_STATUSES.includes(communicationStatus)) return res.status(422).json({ ok: false, error: 'Invalid communication status.' }); if (assignedTo && !ASSIGNMENT_OPTIONS.some(({ email }) => email === assignedTo)) return res.status(422).json({ ok: false, error: 'Invalid operational mailbox.' }); try { const [[existing]] = await db.query('SELECT assigned_to, internal_note, communication_status FROM admin_enquiry_status WHERE BINARY reference_id = BINARY ?', [reference]); await db.query(`INSERT INTO admin_enquiry_status (reference_id, assigned_to, internal_note, communication_status, updated_by) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE assigned_to = VALUES(assigned_to), internal_note = VALUES(internal_note), communication_status = VALUES(communication_status), updated_by = VALUES(updated_by), updated_at = CURRENT_TIMESTAMP`, [reference, assignedTo, internalNote, communicationStatus, req.admin.id]); for (const [action, oldValue, newValue] of [['ASSIGNMENT', existing?.assigned_to || null, assignedTo], ['NOTE', existing?.internal_note || null, internalNote], ['COMMUNICATION_STATUS', existing?.communication_status || 'NEW', communicationStatus]]) if (String(oldValue ?? '') !== String(newValue ?? '')) await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, old_value, new_value) VALUES (?, ?, ?, ?, ?)', [reference, req.admin.id, action, oldValue, newValue]); return res.json({ ok: true, assigned_to: assignedTo, internal_note: internalNote, communication_status: communicationStatus }); } catch (error) { console.error('Admin enquiry metadata error:', error.message); return res.status(500).json({ ok: false, error: 'Unable to save enquiry details.' }); } });
-router.post('/enquiries/:reference/messages', requireAdmin, requireCsrf, async (req, res) => { const reference = esc(req.params.reference, 64); const subject = esc(req.body.subject, 500); const bodyText = esc(req.body.body_text, 12000); if (!reference || !bodyText) return res.status(422).json({ ok: false, error: 'Reference and message are required.' }); try { const [[enquiry]] = await db.query(`SELECT * FROM ${ENQUIRY_SQL} enquiries WHERE BINARY reference_id = BINARY ? LIMIT 1`, [reference]); if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' }); if (!enquiry.email) return res.status(422).json({ ok: false, error: 'This enquiry has no customer email address.' }); const finalSubject = subject || `Re: ${enquiry.subject || `Share Hubs Engineering enquiry ${reference}`}`; const result = await transporter.sendMail({ from: config.smtp.from, to: enquiry.email, subject: finalSubject, text: bodyText }); await db.query(`INSERT INTO communication_messages (reference_id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, message_id, status, is_read, actor_id, sent_at) VALUES (?, 'OUTBOUND', 'STAFF', ?, ?, ?, ?, ?, ?, 'SENT', 1, ?, NOW())`, [reference, req.admin.name, req.admin.email, enquiry.email, finalSubject, bodyText, result.messageId || null, req.admin.id]); await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, new_value, note) VALUES (?, ?, ?, ?, ?)', [reference, req.admin.id, 'MESSAGE_SENT', enquiry.email, finalSubject]); await db.query(`INSERT INTO admin_enquiry_status (reference_id, status, communication_status, updated_by) VALUES (?, 'CONTACTED', 'IN_PROGRESS', ?) ON DUPLICATE KEY UPDATE status = IF(status = 'NEW', 'CONTACTED', status), communication_status = 'IN_PROGRESS', updated_by = VALUES(updated_by), updated_at = CURRENT_TIMESTAMP`, [reference, req.admin.id]); return res.json({ ok: true, message_id: result.messageId || null, status: 'SENT' }); } catch (error) { console.error('Admin outbound communication error:', error.message); try { await db.query(`INSERT INTO communication_messages (reference_id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, status, is_read, actor_id) SELECT ?, 'OUTBOUND', 'STAFF', ?, ?, email, ?, ?, 'FAILED', 1, ? FROM ${ENQUIRY_SQL} enquiries WHERE BINARY reference_id = BINARY ? LIMIT 1`, [reference, req.admin.name, req.admin.email, subject || null, bodyText, req.admin.id, reference]); } catch (_) {} return res.status(500).json({ ok: false, error: 'The message could not be sent.' }); } });
-router.post('/enquiries/:reference/notify/retry', requireAdmin, requireCsrf, async (req, res) => { const reference = esc(req.params.reference, 64); if (!reference) return res.status(422).json({ ok: false, error: 'Reference is required.' }); try { const [[enquiry]] = await db.query(`SELECT * FROM ${ENQUIRY_SQL} enquiries WHERE BINARY reference_id = BINARY ? LIMIT 1`, [reference]); if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' }); const routing = getMailboxForType(enquiry.type); if (!routing) return res.status(422).json({ ok: false, error: 'No operational mailbox is configured for this enquiry.' }); const [failedRows] = await db.query("SELECT id FROM communication_messages WHERE BINARY reference_id = BINARY ? AND direction = 'OUTBOUND' AND sender_type = 'SYSTEM' AND status = 'FAILED' ORDER BY created_at DESC LIMIT 1", [reference]); const subject = `[${routing.task}] ${reference}`; const text = [`New ${routing.task.toLowerCase()}.`,`Reference: ${reference}`,`Name: ${enquiry.name}`,`Email: ${enquiry.email}`,enquiry.phone ? `Phone: ${enquiry.phone}` : null,enquiry.company ? `Company: ${enquiry.company}` : null,enquiry.subject ? `Subject: ${enquiry.subject}` : null,enquiry.service ? `Service: ${enquiry.service}` : null].filter(Boolean).join('\n'); const [inserted] = await db.query(`INSERT INTO communication_messages (reference_id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, status, is_read, actor_id) VALUES (?, 'OUTBOUND', 'SYSTEM', 'Admin retry', ?, ?, ?, ?, 'QUEUED', 1, ?)`, [reference, config.smtp.from, routing.email, subject, text, req.admin.id]); try { const sent = await transporter.sendMail({ from: config.smtp.from, to: routing.email, replyTo: enquiry.email, subject, text }); await db.query("UPDATE communication_messages SET status = 'SENT', message_id = ?, sent_at = NOW() WHERE id = ?", [sent.messageId || null, inserted.insertId]); await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, new_value, note) VALUES (?, ?, ?, ?, ?)', [reference, req.admin.id, 'MAILBOX_NOTIFICATION_RETRIED', routing.email, 'Operational notification resent successfully.']); return res.json({ ok: true, status: 'SENT', mailbox: routing.email }); } catch (error) { await db.query("UPDATE communication_messages SET status = 'FAILED' WHERE id = ?", [inserted.insertId]); return res.status(502).json({ ok: false, error: `Retry failed for ${routing.email}.` }); } });
-router.patch('/enquiries/:reference/read', requireAdmin, requireCsrf, async (req, res) => { const reference = esc(req.params.reference, 64); try { await db.query("UPDATE communication_messages SET is_read = 1 WHERE BINARY reference_id = BINARY ? AND direction = 'INBOUND'", [reference]); return res.json({ ok: true }); } catch (error) { console.error('Admin communication read error:', error.message); return res.status(500).json({ ok: false, error: 'Unable to update message state.' }); } });
+
+async function ensureDefaultAssignment(enquiry, existing) {
+  if (existing?.assigned_to) return existing.assigned_to;
+  const routing = getMailboxForType(enquiry?.type);
+  if (!routing) return null;
+  try {
+    await db.query(`INSERT INTO admin_enquiry_status (reference_id, assigned_to, communication_status) VALUES (?, ?, 'NEW') ON DUPLICATE KEY UPDATE assigned_to = COALESCE(NULLIF(assigned_to, ''), VALUES(assigned_to))`, [enquiry.reference_id, routing.email]);
+    return routing.email;
+  } catch (error) {
+    console.error('Default enquiry assignment error:', error.message);
+    return routing.email;
+  }
+}
+
+router.get('/enquiries/:reference/details', requireAdmin, async (req, res) => {
+  const reference = esc(req.params.reference, 64);
+  if (!reference) return res.status(422).json({ ok: false, error: 'Reference is required.' });
+  try {
+    const [[enquiry]] = await db.query(`SELECT enquiries.*, COALESCE(aes.status, 'NEW') AS status, aes.communication_status, aes.assigned_to, aes.internal_note FROM ${ENQUIRY_SQL} enquiries LEFT JOIN admin_enquiry_status aes ON BINARY aes.reference_id = BINARY enquiries.reference_id WHERE BINARY enquiries.reference_id = BINARY ? LIMIT 1`, [reference]);
+    if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' });
+    const [[existingAssignment]] = await db.query('SELECT assigned_to, internal_note, communication_status FROM admin_enquiry_status WHERE BINARY reference_id = BINARY ?', [reference]);
+    const defaultAssignedTo = await ensureDefaultAssignment(enquiry, existingAssignment);
+    enquiry.assigned_to = existingAssignment?.assigned_to || defaultAssignedTo || null;
+    const [activities] = await db.query(`SELECT a.id, a.action, a.old_value, a.new_value, a.note, a.created_at, u.name AS actor_name FROM admin_enquiry_activity a LEFT JOIN admin_users u ON u.id = a.actor_id WHERE BINARY a.reference_id = BINARY ? ORDER BY a.created_at DESC LIMIT 50`, [reference]);
+    const [messages] = await db.query(`SELECT id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, status, is_read, sent_at, created_at FROM communication_messages WHERE BINARY reference_id = BINARY ? ORDER BY created_at ASC LIMIT 100`, [reference]);
+    return res.json({ ok: true, enquiry, activities, messages, assignment_options: ASSIGNMENT_OPTIONS });
+  } catch (error) {
+    console.error('Admin enquiry details error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to load enquiry details.' });
+  }
+});
+
+router.patch('/enquiries/:reference/meta', requireAdmin, requireCsrf, async (req, res) => {
+  const reference = esc(req.params.reference, 64);
+  const assignedTo = esc(req.body.assigned_to, 255) || null;
+  const internalNote = esc(req.body.internal_note, 8000) || null;
+  const communicationStatus = esc(req.body.communication_status, 30).toUpperCase() || 'NEW';
+  if (!reference) return res.status(422).json({ ok: false, error: 'Reference is required.' });
+  if (!ALLOWED_COMMUNICATION_STATUSES.includes(communicationStatus)) return res.status(422).json({ ok: false, error: 'Invalid communication status.' });
+  if (assignedTo && !ASSIGNMENT_OPTIONS.some(({ email }) => email === assignedTo)) return res.status(422).json({ ok: false, error: 'Invalid operational mailbox.' });
+  try {
+    const [[existing]] = await db.query('SELECT assigned_to, internal_note, communication_status FROM admin_enquiry_status WHERE BINARY reference_id = BINARY ?', [reference]);
+    await db.query(`INSERT INTO admin_enquiry_status (reference_id, assigned_to, internal_note, communication_status, updated_by) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE assigned_to = VALUES(assigned_to), internal_note = VALUES(internal_note), communication_status = VALUES(communication_status), updated_by = VALUES(updated_by), updated_at = CURRENT_TIMESTAMP`, [reference, assignedTo, internalNote, communicationStatus, req.admin.id]);
+    for (const [action, oldValue, newValue] of [['ASSIGNMENT', existing?.assigned_to || null, assignedTo], ['NOTE', existing?.internal_note || null, internalNote], ['COMMUNICATION_STATUS', existing?.communication_status || 'NEW', communicationStatus]]) {
+      if (String(oldValue ?? '') !== String(newValue ?? '')) await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, old_value, new_value) VALUES (?, ?, ?, ?, ?)', [reference, req.admin.id, action, oldValue, newValue]);
+    }
+    return res.json({ ok: true, assigned_to: assignedTo, internal_note: internalNote, communication_status: communicationStatus });
+  } catch (error) {
+    console.error('Admin enquiry metadata error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to save enquiry details.' });
+  }
+});
+
+router.post('/enquiries/:reference/messages', requireAdmin, requireCsrf, async (req, res) => {
+  const reference = esc(req.params.reference, 64);
+  const subject = esc(req.body.subject, 500);
+  const bodyText = esc(req.body.body_text, 12000);
+  if (!reference || !bodyText) return res.status(422).json({ ok: false, error: 'Reference and message are required.' });
+  try {
+    const [[enquiry]] = await db.query(`SELECT * FROM ${ENQUIRY_SQL} enquiries WHERE BINARY reference_id = BINARY ? LIMIT 1`, [reference]);
+    if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' });
+    if (!enquiry.email) return res.status(422).json({ ok: false, error: 'This enquiry has no customer email address.' });
+    const finalSubject = subject || `Re: ${enquiry.subject || `Share Hubs Engineering enquiry ${reference}`}`;
+    const result = await transporter.sendMail({ from: config.smtp.from, to: enquiry.email, subject: finalSubject, text: bodyText });
+    await db.query(`INSERT INTO communication_messages (reference_id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, message_id, status, is_read, actor_id, sent_at) VALUES (?, 'OUTBOUND', 'STAFF', ?, ?, ?, ?, ?, ?, 'SENT', 1, ?, NOW())`, [reference, req.admin.name, req.admin.email, enquiry.email, finalSubject, bodyText, result.messageId || null, req.admin.id]);
+    await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, new_value, note) VALUES (?, ?, ?, ?, ?)', [reference, req.admin.id, 'MESSAGE_SENT', enquiry.email, finalSubject]);
+    await db.query(`INSERT INTO admin_enquiry_status (reference_id, status, communication_status, updated_by) VALUES (?, 'CONTACTED', 'IN_PROGRESS', ?) ON DUPLICATE KEY UPDATE status = IF(status = 'NEW', 'CONTACTED', status), communication_status = 'IN_PROGRESS', updated_by = VALUES(updated_by), updated_at = CURRENT_TIMESTAMP`, [reference, req.admin.id]);
+    return res.json({ ok: true, message_id: result.messageId || null, status: 'SENT' });
+  } catch (error) {
+    console.error('Admin outbound communication error:', error.message);
+    try {
+      await db.query(`INSERT INTO communication_messages (reference_id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, status, is_read, actor_id) SELECT ?, 'OUTBOUND', 'STAFF', ?, ?, email, ?, ?, 'FAILED', 1, ? FROM ${ENQUIRY_SQL} enquiries WHERE BINARY reference_id = BINARY ? LIMIT 1`, [reference, req.admin.name, req.admin.email, subject || null, bodyText, req.admin.id, reference]);
+    } catch (_) {}
+    return res.status(500).json({ ok: false, error: 'The message could not be sent.' });
+  }
+});
+
+router.post('/enquiries/:reference/notify/retry', requireAdmin, requireCsrf, async (req, res) => {
+  const reference = esc(req.params.reference, 64);
+  if (!reference) return res.status(422).json({ ok: false, error: 'Reference is required.' });
+
+  try {
+    const [[enquiry]] = await db.query(`SELECT * FROM ${ENQUIRY_SQL} enquiries WHERE BINARY reference_id = BINARY ? LIMIT 1`, [reference]);
+    if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' });
+
+    const routing = getMailboxForType(enquiry.type);
+    if (!routing) return res.status(422).json({ ok: false, error: 'No operational mailbox is configured for this enquiry.' });
+
+    const subject = `[${routing.task}] ${reference}`;
+    const text = [
+      `New ${routing.task.toLowerCase()}.`,
+      `Reference: ${reference}`,
+      `Name: ${enquiry.name}`,
+      `Email: ${enquiry.email}`,
+      enquiry.phone ? `Phone: ${enquiry.phone}` : null,
+      enquiry.company ? `Company: ${enquiry.company}` : null,
+      enquiry.subject ? `Subject: ${enquiry.subject}` : null,
+      enquiry.service ? `Service: ${enquiry.service}` : null,
+    ].filter(Boolean).join('\n');
+
+    const [inserted] = await db.query(`INSERT INTO communication_messages (reference_id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, status, is_read, actor_id) VALUES (?, 'OUTBOUND', 'SYSTEM', 'Admin retry', ?, ?, ?, ?, 'QUEUED', 1, ?)`, [reference, config.smtp.from, routing.email, subject, text, req.admin.id]);
+
+    try {
+      const sent = await transporter.sendMail({ from: config.smtp.from, to: routing.email, replyTo: enquiry.email, subject, text });
+      await db.query("UPDATE communication_messages SET status = 'SENT', message_id = ?, sent_at = NOW() WHERE id = ?", [sent.messageId || null, inserted.insertId]);
+      await db.query('INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, new_value, note) VALUES (?, ?, ?, ?, ?)', [reference, req.admin.id, 'MAILBOX_NOTIFICATION_RETRIED', routing.email, 'Operational notification resent successfully.']);
+      return res.json({ ok: true, status: 'SENT', mailbox: routing.email });
+    } catch (sendError) {
+      await db.query("UPDATE communication_messages SET status = 'FAILED' WHERE id = ?", [inserted.insertId]);
+      console.error('Admin mailbox notification retry error:', sendError.message);
+      return res.status(502).json({ ok: false, error: `Retry failed for ${routing.email}.` });
+    }
+  } catch (error) {
+    console.error('Admin notification retry error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to retry the mailbox notification.' });
+  }
+});
+
+router.patch('/enquiries/:reference/read', requireAdmin, requireCsrf, async (req, res) => {
+  const reference = esc(req.params.reference, 64);
+  try {
+    await db.query("UPDATE communication_messages SET is_read = 1 WHERE BINARY reference_id = BINARY ? AND direction = 'INBOUND'", [reference]);
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error('Admin communication read error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to update message state.' });
+  }
+});
+
 module.exports = { router };
