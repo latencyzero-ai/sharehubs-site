@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="light dark">
   <title><%= title %></title>
   <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/admin-features.css">
 </head>
 <body class="admin-page">
   <header class="admin-topbar">
@@ -18,9 +19,7 @@
       <div><p class="eyebrow">OPERATIONS</p><h1>Dashboard</h1><p class="muted">Monitor enquiries, follow-ups and customer communication.</p></div>
       <button class="btn btn-primary" id="refresh-dashboard" type="button">Refresh data</button>
     </section>
-
     <div class="alert alert-error" id="dashboard-error" hidden></div>
-
     <section class="stats-grid" aria-label="Overview">
       <article class="stat-card"><span>Total enquiries</span><strong id="stat-total">—</strong><small>All channels</small></article>
       <article class="stat-card"><span>Today</span><strong id="stat-today">—</strong><small>Received today</small></article>
@@ -30,25 +29,22 @@
 
     <section class="panel">
       <div class="panel-head">
-        <div><h2>Recent enquiries</h2><p class="muted">The latest customer requests across contact, quote and consultation forms.</p></div>
-        <div class="toolbar">
-          <label class="search-box"><span class="sr-only">Search enquiries</span><input id="enquiry-search" type="search" placeholder="Search name, email or reference" autocomplete="off"></label>
-          <select id="status-filter" aria-label="Filter by status"><option value="ALL">All statuses</option><% statuses.forEach((status) => { %><option value="<%= status %>"><%= status %></option><% }) %></select>
-        </div>
+        <div><h2>Recent enquiries</h2><p class="muted">Open an enquiry to manage ownership, notes and customer communication.</p></div>
+        <div class="toolbar"><label class="search-box"><span class="sr-only">Search enquiries</span><input id="enquiry-search" type="search" placeholder="Search name, email or reference" autocomplete="off"></label><select id="status-filter" aria-label="Filter by status"><option value="ALL">All statuses</option><% statuses.forEach((status) => { %><option value="<%= status %>"><%= status %></option><% }) %></select></div>
       </div>
-
-      <div class="table-wrap">
-        <table class="enquiry-table">
-          <thead><tr><th>Reference</th><th>Customer</th><th>Type</th><th>Subject</th><th>Date</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead>
-          <tbody id="enquiry-body"><tr><td colspan="7" class="loading-cell"><span class="loading-spinner" aria-hidden="true"></span><span>Loading enquiries…</span></td></tr></tbody>
-        </table>
-      </div>
+      <div class="table-wrap"><table class="enquiry-table"><thead><tr><th>Reference</th><th>Customer</th><th>Type</th><th>Subject</th><th>Date</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="enquiry-body"><tr><td colspan="7" class="loading-cell"><span class="loading-spinner" aria-hidden="true"></span><span>Loading enquiries…</span></td></tr></tbody></table></div>
       <div class="panel-foot"><span id="result-count">Loading…</span><div class="pagination" aria-label="Enquiry pages"><button class="icon-btn" id="prev-page" type="button" aria-label="Previous page">‹</button><span id="page-indicator">Page 1</span><button class="icon-btn" id="next-page" type="button" aria-label="Next page">›</button></div></div>
     </section>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <dialog class="details-dialog" id="details-dialog"><div class="dialog-head"><h2>Enquiry details</h2><button class="icon-btn" type="button" data-close-dialog aria-label="Close">×</button></div><div id="details-content"></div></dialog>
+  <dialog class="details-dialog" id="details-dialog">
+    <div class="dialog-head"><h2 id="dialog-title">Enquiry workspace</h2><button class="icon-btn" type="button" data-close-dialog aria-label="Close">×</button></div>
+    <div class="dialog-tabs"><button class="dialog-tab active" data-tab="overview" type="button">Overview</button><button class="dialog-tab" data-tab="communication" type="button">Communication</button><button class="dialog-tab" data-tab="activity" type="button">Activity</button></div>
+    <section class="dialog-section" data-panel="overview"><div id="details-content"></div><form id="meta-form" class="meta-form"><label>Assigned to<input id="assigned-to" name="assigned_to" placeholder="Staff member or team"></label><label>Communication status<select id="communication-status" name="communication_status"><option>NEW</option><option>IN_PROGRESS</option><option>WAITING_CUSTOMER</option><option>RESOLVED</option></select></label><label class="form-wide">Internal note<textarea id="internal-note" name="internal_note" placeholder="Private note for staff…"></textarea></label><div class="form-wide dialog-actions"><button class="btn btn-primary" type="submit">Save changes</button></div></form></section>
+    <section class="dialog-section" data-panel="communication" hidden><div id="message-list" class="message-list"></div><form id="message-form" class="message-form"><label>Subject<input id="message-subject" name="subject" placeholder="Email subject"></label><label style="margin-top:12px">Message<textarea id="message-body" name="body_text" required placeholder="Write a reply to the customer…"></textarea></label><div class="dialog-actions"><button class="btn btn-primary" type="submit">Send email</button></div></form></section>
+    <section class="dialog-section" data-panel="activity" hidden><div id="activity-list" class="activity-list"></div></section>
+  </dialog>
   <script src="/js/admin.js" defer></script>
 </body>
 </html>
