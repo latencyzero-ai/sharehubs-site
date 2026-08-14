@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#800000">
+  <title><%= title %></title>
+  <link rel="icon" href="/img/favicon_io%20(1)/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon_io%20(1)/favicon-32x32.png"><link rel="apple-touch-icon" href="/img/favicon_io%20(1)/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/design-system-v4.css"><link rel="stylesheet" href="/css/admin.css"><link rel="stylesheet" href="/css/admin-unified.css">
+  <script>(function(){const s=localStorage.getItem('sh-theme');const d=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.setAttribute('data-theme',s||(d?'dark':'light'));})();</script>
+  <style>
+    :root{--admin-bg:var(--sh-bg);--admin-surface:var(--sh-surface);--admin-text:var(--sh-text);--admin-muted:var(--sh-text-muted);--admin-border:var(--sh-border);--admin-brand:var(--sh-brand);--admin-brand-dark:var(--sh-brand-dark);--admin-shadow:var(--sh-shadow-md)}
+    .admin-auth-page{background:var(--sh-bg)!important;color:var(--sh-text)!important}.auth-card{background:var(--sh-surface)!important;color:var(--sh-text)!important;border-color:var(--sh-border)!important}.auth-card h1{color:var(--sh-text)!important}.auth-form label{color:var(--sh-text-secondary)!important}.auth-form input{background:var(--sh-surface-alt)!important;color:var(--sh-text)!important;border-color:var(--sh-border-strong)!important}.auth-foot{color:var(--sh-text-secondary)!important}.auth-foot a{color:var(--sh-brand)!important}.theme-control{width:44px!important;height:24px!important;min-width:44px!important;padding:2px!important;border:1px solid var(--sh-border-strong)!important;border-radius:9999px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;background:var(--sh-surface-alt)!important;box-shadow:0 1px 2px rgba(0,0,0,.08)!important;cursor:pointer!important}.theme-control::before{content:'';display:block;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18);transform:translateX(0);transition:transform .18s ease,background .18s ease}.theme-control span{display:none!important}[data-theme="dark"] .theme-control{background:#1c1c1c!important}.theme-control:hover{border-color:var(--sh-brand)!important}.theme-control:focus-visible{outline:2px solid var(--sh-brand);outline-offset:2px}[data-theme="dark"] .theme-control::before{transform:translateX(18px);background:var(--sh-brand)}
+  </style>
+</head>
+<body class="admin-auth-page">
+  <main class="auth-card">
+    <button class="theme-control" id="theme-control" type="button" aria-label="Toggle dark mode" title="Toggle dark mode"><span aria-hidden="true">◐</span></button>
+    <a href="/" aria-label="Share Hubs Engineering home"><img src="/img/logo-light.png" alt="Share Hubs Engineering" class="brand-logo logo-for-light"><img src="/img/logo-dark.png" alt="Share Hubs Engineering" class="brand-logo logo-for-dark"></a>
+    <p class="eyebrow">STAFF PORTAL</p><h1>Staff sign in</h1><p class="muted">Access the enquiries and communications dashboard.</p>
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %><% if (verified === 'success') { %><div class="alert alert-success">Your company email has been verified. You can now sign in.</div><% } %><% if (verified === 'pending') { %><div class="alert alert-success">Check your company inbox for the verification link.</div><% } %>
+    <form method="post" action="/admin/login" class="auth-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label>Email<input type="email" name="email" autocomplete="email" required placeholder="name@sharehubsengineering.com"></label><label>Password<input type="password" name="password" autocomplete="current-password" required></label><button class="btn btn-primary" type="submit">Sign in</button></form>
+    <p class="auth-foot">Need an account? <a href="/admin/register">Create staff account</a></p>
+  </main>
+  <script>document.getElementById('theme-control')?.addEventListener('click',()=>{const d=document.documentElement;const dark=d.getAttribute('data-theme')==='dark';d.setAttribute('data-theme',dark?'light':'dark');localStorage.setItem('sh-theme',dark?'light':'dark');});</script>
+</body>
+</html>
