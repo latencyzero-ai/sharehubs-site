@@ -3,6 +3,22 @@
 <head>
   <%- include('../partials/head') %>
   <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    .sh-admin-thread { display:flex; flex-direction:column; gap:1rem; }
+    .sh-admin-thread__messages { display:flex; flex-direction:column; gap:.85rem; max-height:560px; overflow-y:auto; padding:.25rem; }
+    .sh-admin-message { max-width:86%; padding:1rem 1.1rem; border:1px solid var(--sh-border, #e2e1dc); border-radius:12px; background:var(--sh-surface-alt, #fafaf8); }
+    .sh-admin-message--outbound { align-self:flex-end; background:rgba(128,0,0,.06); border-color:rgba(128,0,0,.16); }
+    .sh-admin-message__meta { display:flex; flex-wrap:wrap; gap:.45rem .75rem; align-items:center; margin-bottom:.5rem; font-size:.78rem; color:var(--sh-text-muted, #8a877c); }
+    .sh-admin-message__meta strong { color:var(--sh-text, #000); }
+    .sh-admin-message__body { white-space:pre-wrap; color:var(--sh-text-secondary, #4a4842); line-height:1.65; }
+    .sh-admin-message__subject { margin:0 0 .45rem; font-size:.9rem; font-weight:600; color:var(--sh-text, #000); }
+    .sh-admin-thread__empty { padding:1.25rem; border:1px dashed var(--sh-border-strong, #cfccc4); border-radius:10px; color:var(--sh-text-muted, #8a877c); text-align:center; }
+    .sh-admin-compose { display:flex; flex-direction:column; gap:.75rem; padding-top:1rem; border-top:1px solid var(--sh-border, #e2e1dc); }
+    .sh-admin-compose textarea { min-height:140px; resize:vertical; }
+    .sh-admin-compose__row { display:flex; gap:.75rem; align-items:center; justify-content:space-between; }
+    .sh-admin-compose__hint { margin:0; font-size:.78rem; color:var(--sh-text-muted, #8a877c); }
+    @media (max-width:640px) { .sh-admin-message { max-width:100%; } .sh-admin-compose__row { align-items:stretch; flex-direction:column; } }
+  </style>
 </head>
 <body class="sh-admin-body sh-admin-app">
   <header class="sh-admin-topbar">
@@ -29,7 +45,7 @@
           <p><%= enquiry.subject || enquiry.service || enquiry.topic || 'Website enquiry' %></p>
         </div>
         <div class="sh-admin-detail-actions">
-          <a class="sh-btn sh-btn--outline" href="mailto:<%= enquiry.email %>?subject=<%= encodeURIComponent('Re: ' + (enquiry.subject || enquiry.reference_id)) %>">Reply by email</a>
+          <a class="sh-btn sh-btn--outline" href="mailto:<%= enquiry.email %>?subject=<%= encodeURIComponent('Re: ' + (enquiry.subject || enquiry.reference_id)) %>">Open email app</a>
         </div>
       </div>
 
@@ -58,6 +74,38 @@
             <h2>Request</h2>
             <h3><%= enquiry.subject || enquiry.service || enquiry.topic || 'Message' %></h3>
             <p><%= enquiry.details || enquiry.message || 'No message supplied.' %></p>
+          </section>
+
+          <section class="sh-admin-detail-card">
+            <div class="sh-admin-section-heading">
+              <div>
+                <h2>Communication</h2>
+                <p style="margin:0">Customer correspondence for <strong><%= enquiry.email %></strong></p>
+              </div>
+              <span class="sh-admin-role">EMAIL</span>
+            </div>
+
+            <div class="sh-admin-thread" data-communication-reference="<%= enquiry.reference_id %>">
+              <div id="communication-messages" class="sh-admin-thread__messages" aria-live="polite">
+                <div class="sh-admin-thread__empty">Loading communication history…</div>
+              </div>
+
+              <form id="communication-compose" class="sh-admin-compose">
+                <div class="sh-admin-field">
+                  <label for="communication-subject">Subject</label>
+                  <input id="communication-subject" type="text" maxlength="500" value="Re: <%= enquiry.subject || enquiry.service || enquiry.topic || enquiry.reference_id %>">
+                </div>
+                <div class="sh-admin-field">
+                  <label for="communication-message">Reply</label>
+                  <textarea id="communication-message" maxlength="30000" placeholder="Write a professional response to the customer…" required></textarea>
+                </div>
+                <div class="sh-admin-compose__row">
+                  <p class="sh-admin-compose__hint">Sent from the configured Share Hubs Engineering mailbox. Reference: <%= enquiry.reference_id %></p>
+                  <button id="communication-send" class="sh-btn sh-btn--primary" type="submit">Send reply</button>
+                </div>
+                <div id="communication-state" class="sh-admin-alert" role="status" hidden></div>
+              </form>
+            </div>
           </section>
 
           <section class="sh-admin-detail-card">
@@ -157,6 +205,77 @@
         catch (error) { show(error.message, true); }
         finally { saveNote.disabled = false; }
       });
+
+      const thread = document.querySelector('[data-communication-reference]');
+      const messages = document.querySelector('#communication-messages');
+      const compose = document.querySelector('#communication-compose');
+      const subject = document.querySelector('#communication-subject');
+      const message = document.querySelector('#communication-message');
+      const send = document.querySelector('#communication-send');
+      const communicationState = document.querySelector('#communication-state');
+
+      const showCommunication = (text, error = false) => {
+        communicationState.hidden = false;
+        communicationState.textContent = text;
+        communicationState.className = `sh-admin-alert ${error ? 'sh-admin-alert--error' : 'sh-admin-alert--success'}`;
+      };
+
+      const escape = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
+      const formatDate = (value) => {
+        try { return new Date(value).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }); }
+        catch (_) { return value || ''; }
+      };
+
+      const renderMessages = (items) => {
+        if (!items.length) {
+          messages.innerHTML = '<div class="sh-admin-thread__empty">No messages have been sent from the dashboard yet.</div>';
+          return;
+        }
+        messages.innerHTML = items.map((item) => {
+          const outbound = item.direction === 'OUTBOUND';
+          return `<article class="sh-admin-message ${outbound ? 'sh-admin-message--outbound' : ''}">
+            <div class="sh-admin-message__meta"><strong>${escape(outbound ? (item.sender_name || 'Share Hubs Engineering') : (item.sender_name || 'Customer'))}</strong><span>${escape(item.sender_email || '')}</span><span>${escape(formatDate(item.sent_at || item.created_at))}</span><span>${escape(item.status || '')}</span></div>
+            ${item.subject ? `<p class="sh-admin-message__subject">${escape(item.subject)}</p>` : ''}
+            <div class="sh-admin-message__body">${escape(item.body_text)}</div>
+          </article>`;
+        }).join('');
+        messages.scrollTop = messages.scrollHeight;
+      };
+
+      const loadMessages = async () => {
+        try {
+          const response = await fetch(`/admin/api/enquiries/${encodeURIComponent(reference)}/messages`, { headers: { Accept: 'application/json' } });
+          const result = await response.json();
+          if (!response.ok || !result.ok) throw new Error(result.error || 'Unable to load communication history.');
+          renderMessages(result.messages || []);
+        } catch (error) {
+          messages.innerHTML = `<div class="sh-admin-thread__empty">${escape(error.message)}</div>`;
+        }
+      };
+
+      compose.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!message.value.trim()) { showCommunication('Enter a reply before sending.', true); return; }
+        send.disabled = true;
+        send.textContent = 'Sending…';
+        try {
+          const result = await request(`/admin/api/enquiries/${encodeURIComponent(reference)}/messages`, 'POST', { subject: subject.value, message: message.value });
+          message.value = '';
+          renderMessages([...(await (async () => {
+            const response = await fetch(`/admin/api/enquiries/${encodeURIComponent(reference)}/messages`, { headers: { Accept: 'application/json' } });
+            const data = await response.json();
+            return data.messages || [];
+          })())]);
+          showCommunication('Reply sent successfully.');
+        } catch (error) {
+          showCommunication(error.message, true);
+        } finally {
+          send.disabled = false;
+          send.textContent = 'Send reply';
+        }
+      });
+
+      if (thread) loadMessages();
     })();
   </script>
 </body>
