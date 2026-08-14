@@ -274,4 +274,55 @@ router.get('/api/overview', requireAdmin, async (req, res) => {
   }
 });
 
+function messageText(value, max = 30000) { return safe(value, max); }
+function messageHtml(value) { return messageText(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char])).replace(/\r?\n/g, '<br>'); }
+
+router.get('/api/enquiries/:reference/messages', requireAdmin, async (req, res) => {
+  const referenceId = safe(req.params.reference, 64);
+  if (!referenceId) return res.status(422).json({ ok: false, error: 'Invalid enquiry reference.' });
+  try {
+    const enquiry = await findEnquiry(referenceId);
+    if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' });
+    const [messages] = await db.query(`SELECT m.id, m.reference_id, m.direction, m.sender_type, m.sender_name, m.sender_email, m.recipient_email, m.subject, m.body_text, m.status, m.sent_at, m.created_at, u.name AS actor_name, u.email AS actor_email FROM communication_messages m LEFT JOIN admin_users u ON u.id = m.actor_id WHERE m.reference_id = ? ORDER BY m.created_at ASC, m.id ASC`, [referenceId]);
+    return res.json({ ok: true, reference: referenceId, messages });
+  } catch (error) {
+    console.error('Communication thread load error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to load the communication thread.' });
+  }
+});
+
+router.post('/api/enquiries/:reference/messages', requireAdmin, [
+  body('message').trim().isLength({ min: 1, max: 30000 }).withMessage('Enter a message before sending.'),
+  body('subject').optional({ checkFalsy: true }).trim().isLength({ max: 500 }).withMessage('Subject is too long.')
+], async (req, res) => {
+  const referenceId = safe(req.params.reference, 64);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(422).json({ ok: false, error: errors.array()[0].msg });
+  try {
+    const enquiry = await findEnquiry(referenceId);
+    if (!enquiry) return res.status(404).json({ ok: false, error: 'Enquiry not found.' });
+    const subjectBase = safe(enquiry.subject || enquiry.service || enquiry.topic || 'Your Share Hubs Engineering enquiry', 450);
+    const subject = safe(req.body.subject || `Re: ${subjectBase}`, 500);
+    const bodyText = messageText(req.body.message);
+    const [lastMessages] = await db.query(`SELECT message_id FROM communication_messages WHERE reference_id = ? AND message_id IS NOT NULL ORDER BY created_at DESC, id DESC LIMIT 1`, [referenceId]);
+    const inReplyTo = lastMessages[0]?.message_id || null;
+    const recipient = safe(enquiry.email, 255);
+    const sender = config.smtp.from;
+    const [pending] = await db.query(`INSERT INTO communication_messages (reference_id, direction, sender_type, sender_name, sender_email, recipient_email, subject, body_text, body_html, in_reply_to, status, actor_id) VALUES (?, 'OUTBOUND', 'STAFF', ?, ?, ?, ?, ?, ?, ?, 'QUEUED', ?)`, [referenceId, req.admin.name, sender, recipient, subject, bodyText, messageHtml(bodyText), inReplyTo, req.admin.id]);
+    try {
+      const info = await transporter.sendMail({ from: sender, to: recipient, replyTo: sender, subject, text: bodyText, html: messageHtml(bodyText), headers: { 'X-Share-Hubs-Reference': referenceId, 'X-Share-Hubs-Message': String(pending.insertId) }, inReplyTo: inReplyTo || undefined, references: inReplyTo || undefined });
+      await db.query(`UPDATE communication_messages SET status = 'SENT', message_id = ?, sent_at = NOW() WHERE id = ?`, [info.messageId || null, pending.insertId]);
+      await db.query(`INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, note) VALUES (?, ?, 'MESSAGE_SENT', ?)`, [referenceId, req.admin.id, `Email sent to ${recipient}: ${subject}`]);
+      return res.status(201).json({ ok: true, message: { id: pending.insertId, reference_id: referenceId, direction: 'OUTBOUND', sender_type: 'STAFF', sender_name: req.admin.name, sender_email: sender, recipient_email: recipient, subject, body_text: bodyText, status: 'SENT', actor_name: req.admin.name, created_at: new Date().toISOString() } });
+    } catch (mailError) {
+      await db.query(`UPDATE communication_messages SET status = 'FAILED' WHERE id = ?`, [pending.insertId]);
+      await db.query(`INSERT INTO admin_enquiry_activity (reference_id, actor_id, action, note) VALUES (?, ?, 'MESSAGE_FAILED', ?)`, [referenceId, req.admin.id, `Email failed for ${recipient}: ${mailError.message}`]);
+      return res.status(502).json({ ok: false, error: 'The message could not be sent. It has been marked as failed.' });
+    }
+  } catch (error) {
+    console.error('Communication send error:', error.message);
+    return res.status(500).json({ ok: false, error: 'Unable to send this message.' });
+  }
+});
+
 module.exports = { router, requireAdmin };
