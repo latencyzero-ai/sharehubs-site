@@ -1,0 +1,32 @@
+/* Industry overview image alignment fix */
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child {
+  align-self: flex-start !important;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0 !important;
+}
+
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 !important;
+}
+
+main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+}
+
+@media (max-width: 991.98px) {
+  main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child {
+    justify-content: stretch;
+    margin-top: var(--sh-space-6) !important;
+  }
+
+  main#main-content > section.sh-section[aria-labelledby="overview-heading"] .row > .col-lg-6:last-child .sh-card {
+    max-width: 100%;
+  }
+}
