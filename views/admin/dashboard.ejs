@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-page">
+  <header class="admin-topbar">
+    <a class="admin-brand" href="/admin" aria-label="Share Hubs Engineering admin home">
+      <span class="brand-mark small">SH</span>
+      <span><strong>Share Hubs</strong><small>Engineering · Admin</small></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="admin-user"><span class="avatar"><%= (admin.name || 'A').slice(0,1).toUpperCase() %></span><span class="user-copy"><strong><%= admin.name %></strong><small><%= admin.role %></small></span></span>
+      <form method="post" action="/admin/logout"><button class="btn btn-ghost" type="submit">Sign out</button></form>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <section class="page-heading">
+      <div><p class="eyebrow">OPERATIONS</p><h1>Dashboard</h1><p class="muted">Monitor enquiries, follow-ups and customer communication.</p></div>
+      <a class="btn btn-primary" href="/admin">Refresh data</a>
+    </section>
+
+    <% if (dashboardError) { %><div class="alert alert-error"><%= dashboardError %></div><% } %>
+
+    <section class="stats-grid" aria-label="Overview">
+      <article class="stat-card"><span>Total enquiries</span><strong><%= Number(counts.total || 0).toLocaleString() %></strong><small>All channels</small></article>
+      <article class="stat-card"><span>Today</span><strong><%= Number(counts.today || 0).toLocaleString() %></strong><small>Received today</small></article>
+      <article class="stat-card"><span>New</span><strong><%= Number(counts.tracked_new || 0).toLocaleString() %></strong><small>Needs review</small></article>
+      <article class="stat-card"><span>Won</span><strong><%= Number(counts.won || 0).toLocaleString() %></strong><small>Converted</small></article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>Recent enquiries</h2><p class="muted">The latest customer requests across contact, quote and consultation forms.</p></div>
+        <div class="toolbar">
+          <label class="search-box"><span class="sr-only">Search enquiries</span><input id="enquiry-search" type="search" placeholder="Search name, email or reference"></label>
+          <select id="status-filter" aria-label="Filter by status"><option value="ALL">All statuses</option><% statuses.forEach((status) => { %><option value="<%= status %>"><%= status %></option><% }) %></select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="enquiry-table">
+          <thead><tr><th>Reference</th><th>Customer</th><th>Type</th><th>Subject</th><th>Date</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead>
+          <tbody id="enquiry-body">
+          <% if (!enquiries.length) { %><tr><td colspan="7" class="empty">No enquiries found.</td></tr><% } %>
+          <% enquiries.forEach((item) => { %>
+            <tr data-reference="<%= item.reference_id || '' %>" data-search="<%= `${item.reference_id || ''} ${item.name || ''} ${item.email || ''} ${item.subject || ''}`.toLowerCase() %>" data-status="<%= item.status || 'NEW' %>">
+              <td><strong class="reference"><%= item.reference_id || '—' %></strong></td>
+              <td><strong><%= item.name || '—' %></strong><small><%= item.email || '' %></small></td>
+              <td><span class="type-pill"><%= item.type %></span></td>
+              <td class="subject-cell"><%= item.subject || '—' %></td>
+              <td><%= item.created_at ? new Date(item.created_at).toLocaleString() : '—' %></td>
+              <td><select class="status-select" data-status-select data-reference="<%= item.reference_id || '' %>" aria-label="Status for <%= item.reference_id || item.name %>"><% statuses.forEach((status) => { %><option value="<%= status %>" <%= (item.status || 'NEW') === status ? 'selected' : '' %>><%= status %></option><% }) %></select></td>
+              <td><button class="icon-btn" type="button" data-details data-reference="<%= item.reference_id || '' %>" aria-label="View enquiry details">›</button></td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-foot"><span id="result-count"><%= enquiries.length %> shown</span><span>Dashboard actions are saved without reloading the page.</span></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="details-dialog" id="details-dialog"><div class="dialog-head"><h2>Enquiry details</h2><button class="icon-btn" type="button" data-close-dialog aria-label="Close">×</button></div><div id="details-content"></div></dialog>
+  <script src="/js/admin.js" defer></script>
+</body>
+</html>
