@@ -1,16 +1,28 @@
-/** cPanel SMTP mailer. No test email on boot; failures are logged, not fatal. */
-const nodemailer = require('nodemailer');
+/** cPanel mail bridge client. Sends over HTTPS to a PHP endpoint on cPanel
+ *  hosting, since Railway blocks outbound SMTP on the trial plan. */
 const config = require('./env');
 
-const transporter = nodemailer.createTransport({
-  host: config.smtp.host, port: config.smtp.port, secure: config.smtp.secure,
-  auth: { user: config.smtp.user, pass: config.smtp.pass },
-});
-
-transporter.verify((err) => {
-  if (err) console.error('\u274C SMTP verification failed:', err.message);
-  else console.log('\u2705 SMTP ready (cPanel)');
-});
+const transporter = {
+  async sendMail({ from, to, replyTo, subject, text, html }) {
+    const res = await fetch(config.smtp.bridgeUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secret: config.smtp.bridgeSecret,
+        from: from || config.smtp.from,
+        to, replyTo, subject,
+        body: html || text,
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      const err = new Error(`mail bridge send failed: ${res.status} ${errText}`);
+      console.error('\u274C Mail bridge send failed:', err.message);
+      throw err;
+    }
+    return res.json();
+  },
+};
 
 async function sendVerificationEmail(to, link) {
   return transporter.sendMail({

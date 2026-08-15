@@ -1,7 +1,7 @@
 /** Centralised, validated environment config. Fails fast if secrets are missing. */
 require('dotenv').config();
 
-const required = ['DB_HOST', 'DB_USER', 'DB_NAME', 'SESSION_SECRET', 'SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'MAIL_FROM'];
+const required = ['DB_HOST', 'DB_USER', 'DB_NAME', 'SESSION_SECRET', 'MAIL_BRIDGE_URL', 'MAIL_BRIDGE_SECRET', 'MAIL_FROM'];
 const missing = required.filter((k) => !process.env[k]);
 if (missing.length) {
   console.error(`\u274C Missing env vars: ${missing.join(', ')}\nCopy .env.example to .env and fill them in.`);
@@ -21,11 +21,8 @@ module.exports = {
   },
   sessionSecret: process.env.SESSION_SECRET,
   smtp: {
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT, 10) || 465,
-    secure: process.env.SMTP_SECURE !== 'false',
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
     from: process.env.MAIL_FROM,
+    bridgeUrl: process.env.MAIL_BRIDGE_URL,
+    bridgeSecret: process.env.MAIL_BRIDGE_SECRET,
   },
 };
